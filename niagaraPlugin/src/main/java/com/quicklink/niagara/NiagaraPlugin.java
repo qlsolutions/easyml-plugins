@@ -52,9 +52,11 @@ public class NiagaraPlugin extends Plugin {
   @Override
   public Collection<Serie> getSeries(Context ctx) {
     String seriesResponse;
+    int port = ctx.param("port");
     try {
-      seriesResponse = AuthClientExample.runGet(ctx.param("protocol"), "series", ctx.param("host"),
-          ctx.param("port"), ctx.param("username"), ctx.param("password"));
+      seriesResponse = NiagaraAuthClient.sendGet(ctx.param("protocol"), ctx.param("host"),
+          String.valueOf(port), ctx.param("username"), ctx.param("password"),
+          "series");
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
@@ -78,17 +80,17 @@ public class NiagaraPlugin extends Plugin {
     String password = ctx.param("password");
 
     return ctx.dateRangeStream(Calendar.WEEK_OF_MONTH)
-        .flatMap(dateRange -> sendRequests(protocol, host, port, username, password, serieId,
+        .flatMap(dateRange -> sendRequests(protocol, host, String.valueOf(port), username, password, serieId,
             dateRange.start().getTime(), dateRange.end().getTime()))
         .collect(Collectors.toList());
   }
 
   @Override
   public About status(Context ctx) {
+    int port = ctx.param("port");
     try {
-      var aboutResponse = AuthClientExample.runGet(ctx.param("protocol"), "about",
-          ctx.param("host"),
-          ctx.param("port"), ctx.param("username"), ctx.param("password"));
+      var aboutResponse = NiagaraAuthClient.sendGet(ctx.param("protocol"), ctx.param("host"),
+          String.valueOf(port), ctx.param("username"), ctx.param("password"), "about");
 
       NiagaraAbout niagaraAbout = gson.fromJson(aboutResponse, NiagaraAbout.class);
       return new About(true, niagaraAbout.host_id(), niagaraAbout.version());
@@ -98,7 +100,7 @@ public class NiagaraPlugin extends Plugin {
   }
 
 
-  private Stream<Record> sendRequests(String protocol, String host, int port, String username,
+  private Stream<Record> sendRequests(String protocol, String host, String port, String username,
       String password, String serieId, long startTs, long endTs) {
     getLogger().info("Sending {} from {} to {}", serieId, startTs, endTs);
 
@@ -106,9 +108,8 @@ public class NiagaraPlugin extends Plugin {
     try {
 //            var body = new SerieDetailsBody(Long.parseLong("1662336000000"), Long.parseLong("1662365505000"), 0L);
       var body = new SerieDetailsBody(startTs, endTs, 0L);
-      serieDataResponse = AuthClientExample.runPost(protocol, "serie/" + serieId,
-          host, port, gson.toJson(body), username,
-          password);
+      serieDataResponse = NiagaraAuthClient.sendPost(protocol, host, port, username,
+          password, "serie/" + serieId, gson.toJson(body));
 //            System.out.println("SerieDataResponse " + serieDataResponse);
     } catch (Exception e) {
       throw new RuntimeException(e);
