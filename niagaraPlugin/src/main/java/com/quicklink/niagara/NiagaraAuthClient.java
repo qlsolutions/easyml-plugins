@@ -4,14 +4,16 @@ package com.quicklink.niagara;/*
  *
  */
 
-import com.quicklink.niagara.ScramSha256Client;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.time.Instant;
 import java.util.Base64;
 import java.util.List;
 import java.util.Map;
@@ -22,6 +24,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.naming.AuthenticationException;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -33,22 +36,15 @@ import org.jetbrains.annotations.Nullable;
 public class NiagaraAuthClient {
 
   /**
-   *
-   * @param protocol
-   * @param host
-   * @param port
-   * @param username
-   * @param password
+   * @param client
    * @param spec
    * @return
    * @throws Exception
    * @author Denis Mehilli
    */
   // // USAGE EXAMPLE: java NiagaraAuthClient https://demo5.qlsol.com easylink qlsol2016
-  public static String sendGet(String protocol, String host, String port, String username,
-      String password, String spec/*api_v1/plants*/)
+  public static String sendGet(@NotNull NiagaraAuthClient client, String spec/*api_v1/plants*/)
       throws Exception {
-    NiagaraAuthClient client = parametersCreator(protocol, host, port, username, password);
 
     // TODO: here you should implement the requests that you want to call
 //    demoRequests(client);
@@ -65,22 +61,16 @@ public class NiagaraAuthClient {
   }
 
   /**
-   *
-   * @param protocol
-   * @param host
-   * @param port
-   * @param username
-   * @param password
+   * @param client
    * @param spec
    * @param body
    * @return
    * @throws Exception
    * @author Denis MeHILLI
    */
-  public static String sendPost(String protocol, String host, String port, String username,
-      String password, String spec/*api_v1/plants*/, @Nullable String body)
+  public static String sendPost(@NotNull NiagaraAuthClient client, String spec/*api_v1/plants*/,
+      @Nullable String body)
       throws Exception {
-    NiagaraAuthClient client = parametersCreator(protocol, host, port, username, password);
 
     // TODO: here you should implement the requests that you want to call
 //    demoRequests(client);
@@ -127,6 +117,13 @@ public class NiagaraAuthClient {
           logoutUrl, username, password);
       client.loginHeader();
       log("login successful");
+
+      log("Client created, " + client.toString());
+
+      log("Checking timeout");
+      client.timeoutReq();
+      log("Timeout of " + client.mainUrl + " is " + client.timeout);
+
       return client;
     } catch (Exception e) {
       log("failed to log in");
@@ -202,6 +199,99 @@ public class NiagaraAuthClient {
     }
 
     return sessionId;
+  }
+
+  private void timeoutReq() throws Exception {
+    URL plantsUrl = new URL(mainUrl, "timeout");
+
+    String response = NiagaraAuthClient.this.sendGetRequest(plantsUrl);
+    final var millis = Integer.parseInt(response.replaceAll("\n", ""));
+    if (millis == -1) {
+      timeout = null;
+      return;
+    }
+    renewSessionTimeMillis = millis;
+    timeout = Instant.now().plusMillis(millis);
+  }
+
+  public boolean isExpired() {
+    log("Now  " + Instant.now() + ", timeout " + timeout);
+    return timeout != null && timeout.isBefore(Instant.now());
+  }
+
+  public void renewAccessReq() throws Exception {
+    if(renewSessionTimeMillis == -1) {
+      return;// infite expire time
+    }
+    // Url
+    URL plantsUrl = new URL(mainUrl, "timeout");
+
+    //
+
+    HttpURLConnection connection = null;
+
+    try {
+      connection = (HttpURLConnection) plantsUrl.openConnection();
+
+      connection.setRequestMethod("POST");
+      connection.setDoInput(true);
+
+      if (niagaraParameters instanceof Niagara4HeaderParameters) {
+        if (sessionId != null) {
+          AuthMessage message = new AuthMessage();
+          message.setScheme("BEARER");
+          message.setParameter("authToken", sessionId);
+          connection.addRequestProperty("Authorization", message.encodeToString());
+        }
+      } else {
+        connection.addRequestProperty("Cookie",
+            niagaraParameters.getUserCookieName() + "=" + username);
+        if (sessionId != null) {
+          connection.addRequestProperty("Cookie",
+              niagaraParameters.getSessionCookieName() + "=" + sessionId);
+        }
+      }
+
+      {
+        String formData = "offset=" + URLEncoder.encode("1200000", StandardCharsets.UTF_8) +
+            "&value=" + URLEncoder.encode(String.valueOf(renewSessionTimeMillis),
+            StandardCharsets.UTF_8);
+
+        connection.setDoOutput(true);
+        try (OutputStream os = connection.getOutputStream();
+            OutputStreamWriter osw = new OutputStreamWriter(os, StandardCharsets.UTF_8)) {
+          osw.write(formData);
+          osw.flush();
+        }
+      }
+
+
+      connection.connect();
+
+      StringBuilder builder = new StringBuilder();
+      try (BufferedReader reader = new BufferedReader(
+          new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8))) {
+        String line;
+        while ((line = reader.readLine()) != null) {
+          builder.append(line + "\n");
+        }
+      }
+
+      String response = builder.toString();
+      Matcher match = CSRF_TOKEN_PATTERN.matcher(response);
+      if (match.find()) {
+        String csrfTokenElement = match.group(0);
+        match = VALUE_PATTERN.matcher(csrfTokenElement);
+        if (match.find() && match.groupCount() >= 1) {
+          csrfToken = match.group(1);
+        }
+      }
+
+    } finally {
+      if (connection != null) {
+        connection.disconnect();
+      }
+    }
   }
 
   public String loginHeader() throws Exception {
@@ -671,6 +761,22 @@ public class NiagaraAuthClient {
   private String password;
   private String sessionId;
   private String csrfToken;
+  private Instant timeout;
+  private int renewSessionTimeMillis;
+
+  @Override
+  public String toString() {
+    return "NiagaraAuthClient{" +
+        "niagaraParameters=" + niagaraParameters +
+        ", mainUrl=" + mainUrl +
+        ", loginUrl=" + loginUrl +
+        ", logoutUrl=" + logoutUrl +
+        ", username='" + username + '\'' +
+        ", password='" + password + '\'' +
+        ", sessionId='" + sessionId + '\'' +
+        ", csrfToken='" + csrfToken + '\'' +
+        '}';
+  }
 
   public static boolean debugFlag = false;
 
