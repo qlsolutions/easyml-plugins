@@ -83,7 +83,7 @@ public class NiagaraPlugin extends Plugin {
     final String password = ctx.param("password");
     var client = cacheAccess.computeIfAbsent(ctx.idApp(), id -> {
       try {
-        return NiagaraAuthClient.parametersCreator(protocol, host, String.valueOf(port), username,
+        return NiagaraAuthClient.parametersCreator(NiagaraPlugin.this, protocol, host, String.valueOf(port), username,
             password);
       } catch (Exception e) {
         throw new RuntimeException(e);
@@ -94,7 +94,7 @@ public class NiagaraPlugin extends Plugin {
     Supplier<NiagaraAuthClient> updateClient = () -> {
       NiagaraAuthClient c;
       try {
-        c = NiagaraAuthClient.parametersCreator(protocol, host, String.valueOf(port), username,
+        c = NiagaraAuthClient.parametersCreator(NiagaraPlugin.this, protocol, host, String.valueOf(port), username,
             password);
       } catch (Exception e) {
         throw new RuntimeException(e);
@@ -131,7 +131,7 @@ public class NiagaraPlugin extends Plugin {
 
     var client = cacheAccess.computeIfAbsent(ctx.idApp(), id -> {
       try {
-        return NiagaraAuthClient.parametersCreator(protocol, host, String.valueOf(port), username,
+        return NiagaraAuthClient.parametersCreator(NiagaraPlugin.this, protocol, host, String.valueOf(port), username,
             password);
       } catch (Exception e) {
         throw new RuntimeException(e);
@@ -142,7 +142,7 @@ public class NiagaraPlugin extends Plugin {
     Supplier<NiagaraAuthClient> updateClient = () -> {
       NiagaraAuthClient c;
       try {
-        c = NiagaraAuthClient.parametersCreator(protocol, host, String.valueOf(port), username,
+        c = NiagaraAuthClient.parametersCreator(NiagaraPlugin.this, protocol, host, String.valueOf(port), username,
             password);
       } catch (Exception e) {
         throw new RuntimeException(e);
@@ -182,7 +182,7 @@ public class NiagaraPlugin extends Plugin {
       var client = cacheAccess.computeIfAbsent(ctx.idApp(),
           integer -> {
             try {
-              return NiagaraAuthClient.parametersCreator(protocol, host, String.valueOf(port),
+              return NiagaraAuthClient.parametersCreator(NiagaraPlugin.this, protocol, host, String.valueOf(port),
                   username,
                   password);
             } catch (Exception e) {
@@ -195,7 +195,7 @@ public class NiagaraPlugin extends Plugin {
       Supplier<NiagaraAuthClient> updateClient = () -> {
         NiagaraAuthClient c;
         try {
-          c = NiagaraAuthClient.parametersCreator(protocol, host, String.valueOf(port), username,
+          c = NiagaraAuthClient.parametersCreator(NiagaraPlugin.this, protocol, host, String.valueOf(port), username,
               password);
         } catch (Exception e) {
           throw new RuntimeException(e);

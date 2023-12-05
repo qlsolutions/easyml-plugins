@@ -4,6 +4,7 @@ package com.quicklink.niagara;/*
  *
  */
 
+import com.quicklink.pluginservice.Plugin;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
@@ -55,7 +56,7 @@ public class NiagaraAuthClient {
 //    System.out.println("RESPONSE: " + response);
 
     // ALWAYS call this method in the end
-    niagaraClientLogout(client);
+    // niagaraClientLogout(client);
 
     return response;
   }
@@ -81,12 +82,12 @@ public class NiagaraAuthClient {
 //    System.out.println("RESPONSE: " + response);
 
     // ALWAYS call this method in the end
-    niagaraClientLogout(client);
+    // niagaraClientLogout(client);
 
     return response;
   }
 
-  public static NiagaraAuthClient parametersCreator(String protocol, String host, String port,
+  public static NiagaraAuthClient parametersCreator(Plugin plugin, String protocol, String host, String port,
       String username, String password)
       throws Exception {
     NiagaraParameters niagaraParameters = new Niagara4HeaderParameters();
@@ -108,25 +109,27 @@ public class NiagaraAuthClient {
     String decodedUsername = URLDecoder.decode(username, "UTF-8");
     String decodedPassword = URLDecoder.decode(password, "UTF-8");
 
-    log("loginUrl : " + loginUrl);
-    log("decodedUsername : " + decodedUsername);
-    log("decodedPassword : " + decodedPassword);
+
+    NiagaraAuthClient client = new NiagaraAuthClient(plugin, niagaraParameters, fullHost, loginUrl,
+        logoutUrl, username, password);
+    client.log("loginUrl : " + loginUrl);
+    client.log("decodedUsername : " + decodedUsername);
+    client.log("decodedPassword : " + decodedPassword);
 
     try {
-      NiagaraAuthClient client = new NiagaraAuthClient(niagaraParameters, fullHost, loginUrl,
-          logoutUrl, username, password);
+
       client.loginHeader();
-      log("login successful");
+      client.log("login successful");
 
-      log("Client created, " + client.toString());
+      client.log("Client created, " + client.toString());
 
-      log("Checking timeout");
+      client.log("Checking timeout");
       client.timeoutReq();
-      log("Timeout of " + client.mainUrl + " is " + client.timeout);
+      client.log("Timeout of " + client.mainUrl + " is " + client.timeout);
 
       return client;
     } catch (Exception e) {
-      log("failed to log in");
+      client.log("failed to log in");
       throw e;
     }
   }
@@ -144,11 +147,12 @@ public class NiagaraAuthClient {
   private static void niagaraClientLogout(NiagaraAuthClient client)
       throws Exception {
     client.logout();
-    log("logout successful");
+    client.log("logout successful");
   }
 
-  private NiagaraAuthClient(NiagaraParameters niagaraParameters, URL mainUrl, URL loginUrl,
+  private NiagaraAuthClient(Plugin plugin, NiagaraParameters niagaraParameters, URL mainUrl, URL loginUrl,
       URL logoutUrl, String username, String password) {
+    this.plugin = plugin;
     this.niagaraParameters = niagaraParameters;
     this.mainUrl = mainUrl;
     this.loginUrl = loginUrl;
@@ -631,9 +635,9 @@ public class NiagaraAuthClient {
   //   System.exit(-1);
   // }
 
-  private static final void log(String msg) {
+  private void log(String msg) {
     if (debugFlag) {
-      System.err.println("[NiagaraAuthClient] " + msg);
+      plugin.getLogger().error("[NiagaraAuthClient] " + msg);
     }
   }
 
@@ -753,6 +757,7 @@ public class NiagaraAuthClient {
     private Map<String, String> params = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
   }
 
+  private final Plugin plugin;
   private NiagaraParameters niagaraParameters;
   private URL mainUrl;
   private URL loginUrl;
@@ -778,7 +783,7 @@ public class NiagaraAuthClient {
         '}';
   }
 
-  public static boolean debugFlag = false;
+  public static boolean debugFlag = true;
 
   private static final String USER_AGENT = "ScramSha EasyML Niagara Auth Client/1.2";
   private static final String CMD_CLIENT_FIRST_MESSAGE = "sendClientFirstMessage";
