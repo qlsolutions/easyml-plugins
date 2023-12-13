@@ -112,18 +112,18 @@ public class NiagaraAuthClient {
 
     NiagaraAuthClient client = new NiagaraAuthClient(plugin, niagaraParameters, fullHost, loginUrl,
         logoutUrl, username, password);
-    client.log("loginUrl : " + loginUrl);
-    client.log("decodedUsername : " + decodedUsername);
-    client.log("decodedPassword : " + decodedPassword);
+//    client.log("loginUrl : " + loginUrl);
+//    client.log("decodedUsername : " + decodedUsername);
+//    client.log("decodedPassword : " + decodedPassword);
 
     try {
 
       client.loginHeader();
-      client.log("login successful");
+      client.log("login successful of " + fullHost);
 
-      client.log("Client created, " + client.toString());
+//      client.log("Client created, " + client.toString());
 
-      client.log("Checking timeout");
+//      client.log("Checking timeout");
       client.timeoutReq();
       client.log("Timeout of " + client.mainUrl + " is " + client.timeout);
 
@@ -147,7 +147,7 @@ public class NiagaraAuthClient {
   private static void niagaraClientLogout(NiagaraAuthClient client)
       throws Exception {
     client.logout();
-    client.log("logout successful");
+    client.log("logout successful of " + client.mainUrl);
   }
 
   private NiagaraAuthClient(Plugin plugin, NiagaraParameters niagaraParameters, URL mainUrl, URL loginUrl,
@@ -219,7 +219,7 @@ public class NiagaraAuthClient {
   }
 
   public boolean isExpired() {
-    log("Now  " + Instant.now() + ", timeout " + timeout);
+//    log("Now  " + Instant.now() + ", timeout " + timeout);
     return timeout != null && timeout.isBefore(Instant.now());
   }
 
@@ -549,7 +549,7 @@ public class NiagaraAuthClient {
       // Make the POST request
       try (OutputStream out = connection.getOutputStream()) {
         //#ifdef DEBUG
-        log("sending request to server: " + request);
+//        log("sending request to server: " + request);
         //#endif
         out.write(request.getBytes(StandardCharsets.UTF_8));
         out.flush();
@@ -572,7 +572,7 @@ public class NiagaraAuthClient {
       // Check the response code
       int status = connection.getResponseCode();
       //#ifdef DEBUG
-      log("status code from the remote server = " + status);
+//      log("status code from the remote server = " + status);
       //#endif
       if (status != HttpURLConnection.HTTP_OK) {
         throw new AuthenticationException();
@@ -605,13 +605,13 @@ public class NiagaraAuthClient {
       connection.setRequestProperty("Authorization", message.encodeToString());
 
       //#ifdef DEBUG
-      log("sending request to server: " + message.encodeToString());
+//      log("sending request to server: " + message.encodeToString());
       //#endif
 
       // Check the response code
       int status = connection.getResponseCode();
       //#ifdef DEBUG
-      log("status code from the remote server = " + status);
+//      log("status code from the remote server = " + status);
       //#endif
       if (status != HttpURLConnection.HTTP_OK && status != HttpURLConnection.HTTP_UNAUTHORIZED) {
         throw new AuthenticationException();
