@@ -4,7 +4,7 @@ package com.quicklink.niagara;/*
  *
  */
 
-import com.quicklink.pluginservice.Plugin;
+import com.quicklink.pluginservice.DPPlugin;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
@@ -87,7 +87,7 @@ public class NiagaraAuthClient {
     return response;
   }
 
-  public static NiagaraAuthClient parametersCreator(Plugin plugin, String protocol, String host, String port,
+  public static NiagaraAuthClient parametersCreator(DPPlugin plugin, String protocol, String host, String port,
       String username, String password)
       throws Exception {
     NiagaraParameters niagaraParameters = new Niagara4HeaderParameters();
@@ -150,7 +150,7 @@ public class NiagaraAuthClient {
     client.log("logout successful of " + client.mainUrl);
   }
 
-  private NiagaraAuthClient(Plugin plugin, NiagaraParameters niagaraParameters, URL mainUrl, URL loginUrl,
+  private NiagaraAuthClient(DPPlugin plugin, NiagaraParameters niagaraParameters, URL mainUrl, URL loginUrl,
       URL logoutUrl, String username, String password) {
     this.plugin = plugin;
     this.niagaraParameters = niagaraParameters;
@@ -757,7 +757,7 @@ public class NiagaraAuthClient {
     private Map<String, String> params = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
   }
 
-  private final Plugin plugin;
+  private final DPPlugin plugin;
   private NiagaraParameters niagaraParameters;
   private URL mainUrl;
   private URL loginUrl;

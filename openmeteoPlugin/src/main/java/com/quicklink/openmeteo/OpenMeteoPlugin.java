@@ -1,9 +1,11 @@
 package com.quicklink.openmeteo;
 
 import com.google.gson.Gson;
+import com.quicklink.parameters.api.KeyParam;
 import com.quicklink.pluginservice.*;
 import com.quicklink.pluginservice.Record;
 
+import java.security.Key;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -13,38 +15,40 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class OpenMeteoPlugin extends Plugin {
+public class OpenMeteoPlugin extends DPPlugin {
+
+
+  static KeyParam<String> LATITUDE = KeyParam.of("latitude", "0");
+  static KeyParam<String> LONGITUDE = KeyParam.of("longitude", "0");
+  static KeyParam<String> API_KEY = KeyParam.ofSecret("apiKey", "",
+      "Key obtained from https://open-meteo.com/en/docs");
 
   final Gson gson = new Gson();
   final DateTimeFormatter formatter =
       DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm", Locale.ENGLISH);
   final List<Serie> serieList = new ArrayList<>();
 
+  public OpenMeteoPlugin() {
+    super(5, "Days limit for request",
+        LATITUDE, LONGITUDE, API_KEY);
+  }
+
   @Override
   public void onEnable() {
     this.loadSeries();
   }
 
-  @Override
-  public ParametersMap getDefaultParameters() {
-    return ParametersMap.builder()
-        .limit(5, "Days limit for request")
-        .param("latitude", "0")
-        .param("longitude", "0")
-        .secret("apiKey", "", "Key obtained from https://open-meteo.com/en/docs")
-        .build();
-  }
 
   @Override
-  public Collection<Serie> getSeries(Context ctx) {
+  public Collection<Serie> getSeries(DPContext ctx) {
     return serieList;
   }
 
   @Override
-  public List<Record> getSerieData(Context ctx, String serieId, long startTs, long endTs) {
-    String latitude = ctx.param("latitude");
-    String longitude = ctx.param("longitude");
-    String apiKey = ctx.param("apiKey");
+  public List<Record> getSerieData(DPContext ctx, String serieId, long startTs, long endTs) {
+    var latitude = ctx.param(LATITUDE);
+    var longitude = ctx.param(LONGITUDE);
+    var apiKey = ctx.param(API_KEY);
 
     var list = ctx.dateRangeStream(Calendar.DAY_OF_MONTH)
         .flatMap(dateRange -> sendRequest(apiKey, latitude, longitude, serieId, dateRange.start(),
@@ -52,33 +56,6 @@ public class OpenMeteoPlugin extends Plugin {
         .toList();
 
     return list;
-
-//        var endDate = new Date(endTs * 1000);
-//        if(ctx.limit() == 0) {
-//            return sendRequest(latitude, longitude, serieId, new Date(startTs), endDate);
-//        } else {
-//            Calendar prev = Calendar.getInstance();
-//            prev.setTime(new Date(startTs));
-//
-//            Calendar curr = Calendar.getInstance();
-//            curr.setTime(new Date(startTs));
-//
-//
-//            var allData = new ArrayList<Record>();
-//
-//            while (true) {
-//                curr.add(Calendar.DAY_OF_MONTH, ctx.limit());
-//
-//                if(curr.getTime().before(endDate)) {
-//                    allData.addAll(sendRequest(latitude, longitude, serieId, prev.getTime(), curr.getTime()));
-//                    prev.setTime(curr.getTime());
-//                } else {
-//                    allData.addAll(sendRequest(latitude, longitude, serieId, prev.getTime(), endDate));
-//                    break;
-//                }
-//            }
-//            return allData;
-//        }
   }
 
 
@@ -87,15 +64,15 @@ public class OpenMeteoPlugin extends Plugin {
   }
 
   @Override
-  public About status(Context ctx) {
+  public About status(DPContext ctx) {
     return new About(true, "hostId", "1.0.0");
   }
 
   @Override
-  public List<Record> getFutureData(Context ctx, String serieId, long startTs, long endTs) {
-    String latitude = ctx.param("latitude");
-    String longitude = ctx.param("longitude");
-    String apiKey = ctx.param("apiKey");
+  public List<Record> getFutureData(DPContext ctx, String serieId, long startTs, long endTs) {
+    var latitude = ctx.param(LATITUDE);
+    var longitude = ctx.param(LONGITUDE);
+    var apiKey = ctx.param(API_KEY);
 
     return sendRequest(apiKey, latitude, longitude, serieId, new Date(startTs), new Date(endTs),
         true).toList();

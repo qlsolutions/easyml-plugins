@@ -5,24 +5,33 @@ import com.quicklink.niagara.model.SerieDetailsModel;
 import com.quicklink.niagara.model.SeriesModel;
 import com.quicklink.niagara.model.request.SerieDetailsBody;
 import com.google.gson.Gson;
+import com.quicklink.parameters.api.KeyParam;
 import com.quicklink.pluginservice.*;
 import com.quicklink.pluginservice.Record;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.BiFunction;
-import java.util.function.Consumer;
-import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 
-public class NiagaraPlugin extends Plugin {
-
+public class NiagaraPlugin extends DPPlugin {
   private static final boolean debug = true;
+
+  static KeyParam<String> PROTOCOL = KeyParam.of("protocol", "http");
+  static KeyParam<String> HOST = KeyParam.of("host", "192.168.1.1");
+  static KeyParam<Integer> PORT = KeyParam.of("port", 8080);
+  static KeyParam<String> USERNAME = KeyParam.of("username", "energylink_debug");
+  static KeyParam<String> PASSWORD = KeyParam.ofSecret("password", "");
+
   private Gson gson;
   private Map<Integer, NiagaraAuthClient> cacheAccess;
+
+  public NiagaraPlugin() {
+    super(5, "Weeks limit for request",
+        PROTOCOL, HOST, PORT, USERNAME, PASSWORD);
+  }
 
   private NiagaraAuthClient renewToken(NiagaraAuthClient client, Supplier<NiagaraAuthClient> updateClient) {
     // is expired?
@@ -47,40 +56,21 @@ public class NiagaraPlugin extends Plugin {
   @Override
   public void onEnable() {
     gson = new Gson();
-//        try {
-//            Thread.sleep(1000);
-//        } catch (InterruptedException e) {
-//            throw new RuntimeException(e);
-//        }
     cacheAccess = new ConcurrentHashMap<>();
     getLogger().info("Loaded");
   }
 
-  @Override
-  public ParametersMap getDefaultParameters() {
-//        var map = new ParametersMap();
-//        map.put("protocol", "http");
-//        map.put("host", "192.168.1.1");
-//        map.put("port", 8080);
-//        map.put("username", "energylink_debug");
-//        map.putPassword("password", "");
-//
-
-    return ParametersMap.builder().limit(5, "Weeks limit for request").param("protocol", "http")
-        .param("host", "192.168.1.1").param("port", 8080).param("username", "energylink_debug")
-        .secret("password", "").build();
-
-  }
 
   @Override
-  public Collection<Serie> getSeries(Context ctx) {
+  public Collection<Serie> getSeries(DPContext ctx) {
     String seriesResponse;
-    final int port = ctx.param("port");
 
-    final String protocol = ctx.param("protocol");
-    final String host = ctx.param("host");
-    final String username = ctx.param("username");
-    final String password = ctx.param("password");
+    var protocol = ctx.param(PROTOCOL);
+    var host = ctx.param(HOST);
+    var port = ctx.param(PORT);
+    var username = ctx.param(USERNAME);
+    var password = ctx.param(PASSWORD);
+
     var client = cacheAccess.computeIfAbsent(ctx.idApp(), id -> {
       try {
         return NiagaraAuthClient.parametersCreator(NiagaraPlugin.this, protocol, host, String.valueOf(port), username,
@@ -122,12 +112,12 @@ public class NiagaraPlugin extends Plugin {
   }
 
   @Override
-  public List<Record> getSerieData(Context ctx, String serieId, long startTs, long endTs) {
-    String protocol = ctx.param("protocol");
-    String host = ctx.param("host");
-    int port = ctx.param("port");
-    String username = ctx.param("username");
-    String password = ctx.param("password");
+  public List<Record> getSerieData(DPContext ctx, String serieId, long startTs, long endTs) {
+    var protocol = ctx.param(PROTOCOL);
+    var host = ctx.param(HOST);
+    var port = ctx.param(PORT);
+    var username = ctx.param(USERNAME);
+    var password = ctx.param(PASSWORD);
 
     var client = cacheAccess.computeIfAbsent(ctx.idApp(), id -> {
       try {
@@ -170,13 +160,12 @@ public class NiagaraPlugin extends Plugin {
   }
 
   @Override
-  public About status(Context ctx) {
-    int port = ctx.param("port");
-
-    String protocol = ctx.param("protocol");
-    String host = ctx.param("host");
-    String username = ctx.param("username");
-    String password = ctx.param("password");
+  public About status(DPContext ctx) {
+    var protocol = ctx.param(PROTOCOL);
+    var host = ctx.param(HOST);
+    var port = ctx.param(PORT);
+    var username = ctx.param(USERNAME);
+    var password = ctx.param(PASSWORD);
 
     try {
       var client = cacheAccess.computeIfAbsent(ctx.idApp(),

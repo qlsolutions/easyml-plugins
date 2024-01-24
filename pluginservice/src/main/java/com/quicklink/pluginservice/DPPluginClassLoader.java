@@ -6,21 +6,21 @@ import org.jetbrains.annotations.ApiStatus.Internal;
 import org.slf4j.LoggerFactory;
 
 @Internal
-public abstract class PluginClassLoader  extends URLClassLoader {
+public abstract class DPPluginClassLoader extends URLClassLoader {
 
-  public PluginClassLoader(URL[] urls, ClassLoader parent) {
+  public DPPluginClassLoader(URL[] urls, ClassLoader parent) {
     super(urls, parent);
   }
 
-  public abstract PluginDescription getPluginDescription();
+  public abstract DPPluginDescription getPluginDescription();
 
-  public abstract Plugin getPlugin();
+  public abstract DPPlugin getPlugin();
 
-  public abstract Plugin getPluginInit();
+  public abstract DPPlugin getPluginInit();
 
-  public abstract void setPluginInit(Plugin pluginInit);
+  public abstract void setPluginInit(DPPlugin pluginInit);
 
-  void initialize(Plugin plugin) {
+  void initialize(DPPlugin plugin) {
     if (this.getPlugin() != null || this.getPluginInit() != null) {
       throw new IllegalArgumentException("Plugin already initialized!");
     }

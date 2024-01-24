@@ -42,6 +42,13 @@
             <version>2.0.7</version>
             <scope>provided</scope>
         </dependency>
+
+        <dependency>
+            <groupId>com.github.mehillid</groupId>
+            <artifactId>parameters-api</artifactId>
+            <version>7357328426</version>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 
 </project>

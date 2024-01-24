@@ -1,12 +1,14 @@
 package com.quicklink.pluginservice;
 
 
+import com.quicklink.parameters.api.KeyParam;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
 import java.util.stream.Stream;
+import org.jetbrains.annotations.NotNull;
 
-public class Context {
+public class DPContext {
 
   private final int idApp;
   private final String nameApp;
@@ -15,7 +17,7 @@ public class Context {
   private final long startTs;
   private final long endTs;
 
-  public Context(int idApp, String nameApp, Map<String, ?> parameters, long startTs, long endTs) {
+  public DPContext(int idApp, String nameApp, Map<String, ?> parameters, long startTs, long endTs) {
     this.idApp = idApp;
     this.nameApp = nameApp;
     this.parameters = parameters;
@@ -23,7 +25,7 @@ public class Context {
     this.endTs = endTs;
   }
 
-  public Context(int idApp, String nameApp, Map<String, ?> parameters) {
+  public DPContext(int idApp, String nameApp, Map<String, ?> parameters) {
     this(idApp, nameApp, parameters, -1, -1);
   }
 
@@ -35,8 +37,8 @@ public class Context {
     return nameApp;
   }
 
-  public <T> T param(String key) {
-    return (T) parameters.get(key);
+  public <T> T param(@NotNull KeyParam<T> key) {
+    return (T) parameters.get(key.getId());
   }
 
   public int limit() {
