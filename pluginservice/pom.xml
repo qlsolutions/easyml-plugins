@@ -31,22 +31,9 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>com.github.mehillid</groupId>
-            <artifactId>ObjectMapper4j</artifactId>
-            <version>master-8f29f49468-1</version>
-        </dependency>
-
-        <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-simple</artifactId>
             <version>2.0.7</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>com.github.mehillid</groupId>
-            <artifactId>parameters-api</artifactId>
-            <version>7357328426</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>

@@ -3,7 +3,7 @@ package com.quicklink.pluginservice;
 import org.jetbrains.annotations.ApiStatus.Internal;
 
 @Internal
-public interface DPPluginLoader {
+public interface PluginLoader {
   Class<?> getClassByName(final String name);
 
   void setClass(final String name, final Class<?> clazz);

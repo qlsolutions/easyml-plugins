@@ -1,4 +1,4 @@
-package com.quicklink.pluginservice;
+package com.quicklink.pluginservice.providers;
 
 import java.util.Arrays;
 import java.util.List;

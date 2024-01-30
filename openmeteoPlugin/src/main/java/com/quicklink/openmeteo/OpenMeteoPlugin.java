@@ -1,11 +1,13 @@
 package com.quicklink.openmeteo;
 
 import com.google.gson.Gson;
-import com.quicklink.parameters.api.KeyParam;
-import com.quicklink.pluginservice.*;
-import com.quicklink.pluginservice.Record;
 
-import java.security.Key;
+import com.quicklink.pluginservice.KeyParam;
+import com.quicklink.pluginservice.providers.About;
+import com.quicklink.pluginservice.providers.ProviderContext;
+import com.quicklink.pluginservice.providers.ProviderPlugin;
+import com.quicklink.pluginservice.providers.Record;
+import com.quicklink.pluginservice.providers.Serie;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -15,7 +17,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class OpenMeteoPlugin extends DPPlugin {
+public class OpenMeteoPlugin extends ProviderPlugin {
 
 
   static KeyParam<String> LATITUDE = KeyParam.of("latitude", "0");
@@ -29,8 +31,7 @@ public class OpenMeteoPlugin extends DPPlugin {
   final List<Serie> serieList = new ArrayList<>();
 
   public OpenMeteoPlugin() {
-    super(5, "Days limit for request",
-        LATITUDE, LONGITUDE, API_KEY);
+    super("OpenMeteo","1.0.0", 5, "Days limit for request", LATITUDE, LONGITUDE, API_KEY);
   }
 
   @Override
@@ -40,12 +41,12 @@ public class OpenMeteoPlugin extends DPPlugin {
 
 
   @Override
-  public Collection<Serie> getSeries(DPContext ctx) {
+  public Collection<Serie> getSeries(ProviderContext ctx) {
     return serieList;
   }
 
   @Override
-  public List<Record> getSerieData(DPContext ctx, String serieId, long startTs, long endTs) {
+  public List<Record> getSerieData(ProviderContext ctx, String serieId, long startTs, long endTs) {
     var latitude = ctx.param(LATITUDE);
     var longitude = ctx.param(LONGITUDE);
     var apiKey = ctx.param(API_KEY);
@@ -64,12 +65,12 @@ public class OpenMeteoPlugin extends DPPlugin {
   }
 
   @Override
-  public About status(DPContext ctx) {
+  public About status(ProviderContext ctx) {
     return new About(true, "hostId", "1.0.0");
   }
 
   @Override
-  public List<Record> getFutureData(DPContext ctx, String serieId, long startTs, long endTs) {
+  public List<Record> getFutureData(ProviderContext ctx, String serieId, long startTs, long endTs) {
     var latitude = ctx.param(LATITUDE);
     var longitude = ctx.param(LONGITUDE);
     var apiKey = ctx.param(API_KEY);

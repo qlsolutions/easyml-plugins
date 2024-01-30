@@ -1,14 +1,14 @@
-package com.quicklink.pluginservice;
+package com.quicklink.pluginservice.providers;
 
 
-import com.quicklink.parameters.api.KeyParam;
+import com.quicklink.pluginservice.KeyParam;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
 import java.util.stream.Stream;
 import org.jetbrains.annotations.NotNull;
 
-public class DPContext {
+public class ProviderContext {
 
   private final int idApp;
   private final String nameApp;
@@ -17,7 +17,7 @@ public class DPContext {
   private final long startTs;
   private final long endTs;
 
-  public DPContext(int idApp, String nameApp, Map<String, ?> parameters, long startTs, long endTs) {
+  public ProviderContext(int idApp, String nameApp, Map<String, ?> parameters, long startTs, long endTs) {
     this.idApp = idApp;
     this.nameApp = nameApp;
     this.parameters = parameters;
@@ -25,7 +25,7 @@ public class DPContext {
     this.endTs = endTs;
   }
 
-  public DPContext(int idApp, String nameApp, Map<String, ?> parameters) {
+  public ProviderContext(int idApp, String nameApp, Map<String, ?> parameters) {
     this(idApp, nameApp, parameters, -1, -1);
   }
 

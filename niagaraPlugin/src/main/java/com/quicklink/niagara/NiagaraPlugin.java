@@ -5,10 +5,13 @@ import com.quicklink.niagara.model.SerieDetailsModel;
 import com.quicklink.niagara.model.SeriesModel;
 import com.quicklink.niagara.model.request.SerieDetailsBody;
 import com.google.gson.Gson;
-import com.quicklink.parameters.api.KeyParam;
-import com.quicklink.pluginservice.*;
-import com.quicklink.pluginservice.Record;
 
+import com.quicklink.pluginservice.KeyParam;
+import com.quicklink.pluginservice.providers.About;
+import com.quicklink.pluginservice.providers.ProviderContext;
+import com.quicklink.pluginservice.providers.ProviderPlugin;
+import com.quicklink.pluginservice.providers.Record;
+import com.quicklink.pluginservice.providers.Serie;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
@@ -16,7 +19,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 
-public class NiagaraPlugin extends DPPlugin {
+public class NiagaraPlugin extends ProviderPlugin {
   private static final boolean debug = true;
 
   static KeyParam<String> PROTOCOL = KeyParam.of("protocol", "http");
@@ -29,7 +32,7 @@ public class NiagaraPlugin extends DPPlugin {
   private Map<Integer, NiagaraAuthClient> cacheAccess;
 
   public NiagaraPlugin() {
-    super(5, "Weeks limit for request",
+    super("Niagara","1.0.0", 5, "Weeks limit for request",
         PROTOCOL, HOST, PORT, USERNAME, PASSWORD);
   }
 
@@ -62,7 +65,7 @@ public class NiagaraPlugin extends DPPlugin {
 
 
   @Override
-  public Collection<Serie> getSeries(DPContext ctx) {
+  public Collection<Serie> getSeries(ProviderContext ctx) {
     String seriesResponse;
 
     var protocol = ctx.param(PROTOCOL);
@@ -112,7 +115,7 @@ public class NiagaraPlugin extends DPPlugin {
   }
 
   @Override
-  public List<Record> getSerieData(DPContext ctx, String serieId, long startTs, long endTs) {
+  public List<Record> getSerieData(ProviderContext ctx, String serieId, long startTs, long endTs) {
     var protocol = ctx.param(PROTOCOL);
     var host = ctx.param(HOST);
     var port = ctx.param(PORT);
@@ -160,7 +163,7 @@ public class NiagaraPlugin extends DPPlugin {
   }
 
   @Override
-  public About status(DPContext ctx) {
+  public About status(ProviderContext ctx) {
     var protocol = ctx.param(PROTOCOL);
     var host = ctx.param(HOST);
     var port = ctx.param(PORT);
