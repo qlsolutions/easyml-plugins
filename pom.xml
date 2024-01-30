@@ -10,8 +10,8 @@
     <packaging>pom</packaging>
     <modules>
         <module>pluginservice</module>
-        <module>NiagaraPlugin</module>
-        <module>OpenmeteoPlugin</module>
+<!--        <module>NiagaraPlugin</module>-->
+<!--        <module>OpenmeteoPlugin</module>-->
     </modules>
 
     <properties>
