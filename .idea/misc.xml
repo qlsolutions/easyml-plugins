@@ -5,6 +5,9 @@
     <option name="originalFiles">
       <list>
         <option value="$PROJECT_DIR$/pom.xml" />
+        <option value="$PROJECT_DIR$/examples/hooks/webserverPlugin/pom.xml" />
+        <option value="$PROJECT_DIR$/examples/providers/niagaraPlugin/pom.xml" />
+        <option value="$PROJECT_DIR$/examples/providers/openmeteoPlugin/pom.xml" />
       </list>
     </option>
     <option name="ignoredFiles">
