@@ -36,7 +36,7 @@ public class KeyParam<T> {
   }
 
 
-  private static final Pattern keyPattern = Pattern.compile("[a-zA-Z]+");
+  private static final Pattern keyPattern = Pattern.compile("[a-zA-Z-]+");
 
   private static void isValidKey(String key) {
     if (!keyPattern.matcher(key).matches()) {
