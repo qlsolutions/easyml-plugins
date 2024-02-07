@@ -13,9 +13,11 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.function.Consumer;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import org.slf4j.Logger;
 
 public class OpenMeteoPlugin extends ProviderPlugin {
 
@@ -81,7 +83,7 @@ public class OpenMeteoPlugin extends ProviderPlugin {
 
   private Stream<Record> sendRequest(String apiKey, String latitude, String longitude,
       String serieId, Date start, Date end, boolean forecast) {
-    getLogger().info("Sending {} from {} to {}", serieId, start, end);
+    getLogger().ifPresent(logger -> logger.info("Sending {} from {} to {}", serieId, start, end));
 
     String request;
     if (apiKey.isEmpty()) {
@@ -109,11 +111,14 @@ public class OpenMeteoPlugin extends ProviderPlugin {
       request += "&apikey=" + apiKey;
     }
 
-    getLogger().info("Request to " + request);
+    var finalRequest = request;
+    getLogger().ifPresent(logger -> logger.info("Request to " + finalRequest));
+
     var response = EasyHttp.get(request);
     if (response.responseCode() > 299) {
       // error
-      getLogger().error("Error request: " + response.response());
+      getLogger().ifPresent(logger -> logger.error("Error request: " + response.response()));
+
       return Stream.empty();
     }
 

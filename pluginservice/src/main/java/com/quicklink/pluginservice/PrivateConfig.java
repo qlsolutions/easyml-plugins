@@ -10,12 +10,12 @@ public class PrivateConfig {
 
   public final AbstractPlugin plugin;
   final Logger logger;
-  private final ClassLoader classLoader;
+  public final ClassLoader classLoader;
+  private final List<Parameter> parameters;
 
   public boolean enabled = false;
   public boolean debugMode = false;
 
-  private final List<Parameter> parameters;
 
   public PrivateConfig(AbstractPlugin plugin, KeyParam<?>... keys) {
     this.plugin = plugin;
@@ -29,10 +29,6 @@ public class PrivateConfig {
     // add keys
     parameters = new ArrayList<>();
     parameters.addAll(Arrays.stream(keys).map(KeyParam::asParameter).toList());
-  }
-
-  public List<Parameter> getParameters() {
-    return parameters;
   }
 
 }
