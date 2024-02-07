@@ -11,7 +11,7 @@ public class PrivateConfig {
   public final AbstractPlugin plugin;
   final Logger logger;
   public final ClassLoader classLoader;
-  private final List<Parameter> parameters;
+  public final List<Parameter> parameters;
 
   public boolean enabled = false;
   public boolean debugMode = false;
