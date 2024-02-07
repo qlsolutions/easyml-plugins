@@ -27,8 +27,7 @@
         <dependency>
             <groupId>com.github.qlsolutions</groupId>
             <artifactId>easyml-plugins</artifactId>
-            <version>cf4ac26205</version>
-            <scope>6549ec0</scope>
+            <version>6549ec0</version>
         </dependency>
         <dependency>
             <groupId>com.google.code.gson</groupId>

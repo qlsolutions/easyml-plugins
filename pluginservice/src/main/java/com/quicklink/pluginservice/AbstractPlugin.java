@@ -4,19 +4,23 @@ package com.quicklink.pluginservice;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import org.jetbrains.annotations.ApiStatus.Internal;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public abstract class AbstractPlugin {
 
-  public @NotNull Logger getLogger() {
-    return pluginLogger;
+  public @Nullable Logger getLogger() {
+    if(debugMode) {
+      return pluginLogger;
+    }
+    return null;
   }
 
   public abstract void onEnable();
-
 
   /* INTERNAL */
 
@@ -28,6 +32,8 @@ public abstract class AbstractPlugin {
 
   private boolean enabled;
   private final List<Parameter> parameters;
+
+  private boolean debugMode = true;
 
   public @NotNull String getName() {
     return name;
@@ -70,5 +76,9 @@ public abstract class AbstractPlugin {
 
   public @Internal @NotNull List<Parameter> getParameters() {
     return parameters;
+  }
+
+  public @Internal void setDebugMode(boolean debugMode) {
+    this.debugMode = debugMode;
   }
 }

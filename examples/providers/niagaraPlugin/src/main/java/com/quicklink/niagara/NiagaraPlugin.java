@@ -20,7 +20,6 @@ import java.util.stream.Stream;
 
 
 public class NiagaraPlugin extends ProviderPlugin {
-  private static final boolean debug = true;
 
   static KeyParam<String> PROTOCOL = KeyParam.of("protocol", "http");
   static KeyParam<String> HOST = KeyParam.of("host", "192.168.1.1");
@@ -46,7 +45,7 @@ public class NiagaraPlugin extends ProviderPlugin {
         // renew token
         client.renewAccessReq();
       } catch (Exception e) {
-        if(debug) {
+        if(isDebugMode()) {
           e.printStackTrace();
         }
         // new login if renew fails
@@ -205,7 +204,7 @@ public class NiagaraPlugin extends ProviderPlugin {
       NiagaraAbout niagaraAbout = gson.fromJson(aboutResponse, NiagaraAbout.class);
       return new About(true, niagaraAbout.host_id(), niagaraAbout.version());
     } catch (Exception e) {
-      if(debug) {
+      if(isDebugMode()) {
         e.printStackTrace();
       }
       return new About(false, null, null);
