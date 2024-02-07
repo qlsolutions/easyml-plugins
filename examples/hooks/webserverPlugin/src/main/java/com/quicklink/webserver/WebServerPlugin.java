@@ -4,7 +4,8 @@ import com.quicklink.pluginservice.KeyParam;
 import com.quicklink.pluginservice.hooks.HookContext;
 import com.quicklink.pluginservice.hooks.HookPlugin;
 import java.io.IOException;
-import java.security.Key;
+import java.util.Base64;
+import okhttp3.Credentials;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -71,12 +72,22 @@ public class WebServerPlugin extends HookPlugin {
 
     try {
       switch (ctx.param(authenticationType)) {
-        case "NONE" -> {
-          var build = req.build();
-          try (var response = client.newCall(build).execute()) {
-//           response.body().string();
-          }
+        case "NONE" -> {}
+        case "BASIC" -> {
+          String credential = Credentials.basic(ctx.param(username), ctx.param(password));
+          req.addHeader("Authorization", credential);
         }
+        case "BEARER_TOKEN" -> {
+          var token = "Bearer " + ctx.param(password);
+          req.addHeader("Authorization", token);
+        }
+        default -> {
+          throw  new RuntimeException("Invalid authentication type '%s'".formatted(ctx.param(authenticationType)));
+        }
+      }
+      var build = req.build();
+      try (var response = client.newCall(build).execute()) {
+//        response.body().string();
       }
     } catch (IOException e) {
       getLogger().ifPresent(logger -> logger.error("Error making the request", e));
@@ -86,6 +97,6 @@ public class WebServerPlugin extends HookPlugin {
 
   @Override
   public void onEnable() {
-
+    getLogger().ifPresent(logger -> logger.info("Loaded"));
   }
 }
