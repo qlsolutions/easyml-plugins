@@ -18,7 +18,7 @@ public abstract class AbstractPlugin {
   public AbstractPlugin(@NotNull String name, @NotNull String version, KeyParam<?>... keys) {
     this.name = name;
     this.version = version;
-    this.pvt = new PrivateConfig(this, keys);
+    this.pvt = new PrivateConfig(this, this.getClass().getClassLoader(), keys);
   }
 
   public abstract void onEnable();

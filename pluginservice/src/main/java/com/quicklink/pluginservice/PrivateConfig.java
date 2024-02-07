@@ -17,10 +17,10 @@ public class PrivateConfig {
   public boolean debugMode = false;
 
 
-  public PrivateConfig(AbstractPlugin plugin, KeyParam<?>... keys) {
+  public PrivateConfig(AbstractPlugin plugin, ClassLoader cl, KeyParam<?>... keys) {
     this.plugin = plugin;
     this.logger = LoggerFactory.getLogger("Plugin %sv%s".formatted(plugin.getName(), plugin.getVersion()));
-    this.classLoader = this.getClass().getClassLoader();
+    this.classLoader = cl;
     if (!(classLoader instanceof PluginClassLoader)) {
       throw new IllegalStateException("Plugin requires " + PluginClassLoader.class.getName());
     }
