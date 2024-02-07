@@ -79,7 +79,7 @@ public class WebServerPlugin extends HookPlugin {
         }
       }
     } catch (IOException e) {
-
+      getLogger().ifPresent(logger -> logger.error("Error making the request", e));
     }
 
   }

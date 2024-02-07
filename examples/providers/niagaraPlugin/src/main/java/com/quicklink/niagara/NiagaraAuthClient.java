@@ -195,9 +195,7 @@ public class NiagaraAuthClient {
       sendGetRequest(loginUrl);
     } catch (Exception e) {
       //#ifdef DEBUG
-      if (debugFlag) {
-        e.printStackTrace();
-      }
+      plugin.getLogger().ifPresent(logger -> logger.error("Error login", e));
       //#endif
       throw new AuthenticationException();
     }
@@ -356,9 +354,7 @@ public class NiagaraAuthClient {
       sendGetRequest(loginUrl);
     } catch (Exception e) {
       //#ifdef DEBUG
-      if (debugFlag) {
-        e.printStackTrace();
-      }
+      plugin.getLogger().ifPresent(logger -> logger.error("Error login", e));
       //#endif
       throw new AuthenticationException();
     }
@@ -636,9 +632,7 @@ public class NiagaraAuthClient {
   // }
 
   private void log(String msg) {
-    if (debugFlag) {
-      plugin.getLogger().error("[NiagaraAuthClient] " + msg);
-    }
+    plugin.getLogger().ifPresent(logger -> logger.error("[NiagaraAuthClient] " + msg));
   }
 
   private static abstract class NiagaraParameters {
@@ -782,8 +776,6 @@ public class NiagaraAuthClient {
         ", csrfToken='" + csrfToken + '\'' +
         '}';
   }
-
-  public static boolean debugFlag = true;
 
   private static final String USER_AGENT = "ScramSha EasyML Niagara Auth Client/1.2";
   private static final String CMD_CLIENT_FIRST_MESSAGE = "sendClientFirstMessage";

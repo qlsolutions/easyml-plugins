@@ -45,9 +45,7 @@ public class NiagaraPlugin extends ProviderPlugin {
         // renew token
         client.renewAccessReq();
       } catch (Exception e) {
-        if(isDebugMode()) {
-          e.printStackTrace();
-        }
+        getLogger().ifPresent(logger -> logger.info("Error renewing token", e));
         // new login if renew fails
         client = updateClient.get();
       }
@@ -59,7 +57,7 @@ public class NiagaraPlugin extends ProviderPlugin {
   public void onEnable() {
     gson = new Gson();
     cacheAccess = new ConcurrentHashMap<>();
-    getLogger().info("Loaded");
+    getLogger().ifPresent(logger -> logger.info("Loaded"));
   }
 
 
@@ -204,10 +202,7 @@ public class NiagaraPlugin extends ProviderPlugin {
       NiagaraAbout niagaraAbout = gson.fromJson(aboutResponse, NiagaraAbout.class);
       return new About(true, niagaraAbout.host_id(), niagaraAbout.version());
     } catch (Exception e) {
-      var logger = getLogger();
-      if(logger != null) {
-        logger.error("Error retrieving status", e);
-      }
+      getLogger().ifPresent(logger -> logger.error("Error retrieving status", e));
       return new About(false, null, null);
     }
   }
@@ -215,7 +210,7 @@ public class NiagaraPlugin extends ProviderPlugin {
 
   private Stream<Record> sendRequests(NiagaraAuthClient client, String serieId, long startTs,
       long endTs) throws Exception {
-    getLogger().info("Sending {} from {} to {}", serieId, startTs, endTs);
+    getLogger().ifPresent(logger -> logger.info("Sending {} from {} to {}", serieId, startTs, endTs));
 
     String serieDataResponse;
 
