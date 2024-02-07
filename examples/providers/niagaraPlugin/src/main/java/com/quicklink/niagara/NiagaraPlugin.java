@@ -204,8 +204,9 @@ public class NiagaraPlugin extends ProviderPlugin {
       NiagaraAbout niagaraAbout = gson.fromJson(aboutResponse, NiagaraAbout.class);
       return new About(true, niagaraAbout.host_id(), niagaraAbout.version());
     } catch (Exception e) {
-      if(isDebugMode()) {
-        e.printStackTrace();
+      var logger = getLogger();
+      if(logger != null) {
+        logger.error("Error retrieving status", e);
       }
       return new About(false, null, null);
     }

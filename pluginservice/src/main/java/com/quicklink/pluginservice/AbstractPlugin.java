@@ -13,11 +13,11 @@ import org.slf4j.LoggerFactory;
 
 public abstract class AbstractPlugin {
 
-  public @Nullable Logger getLogger() {
+  public @NotNull Optional<Logger> getLogger() {
     if(debugMode) {
-      return pluginLogger;
+      return Optional.ofNullable(pluginLogger);
     }
-    return null;
+    return Optional.empty();
   }
 
   public abstract void onEnable();
