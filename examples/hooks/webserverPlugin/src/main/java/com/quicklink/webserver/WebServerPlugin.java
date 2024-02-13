@@ -54,7 +54,7 @@ public class WebServerPlugin extends HookPlugin {
   public static final MediaType JSON = MediaType.get("application/json");
   @Override
   public void run(HookContext ctx) {
-    var url = "%s://%s".formatted(ctx.param(protocol), ctx.param(addr));
+    var url = "%s://%s".formatted(ctx.param(protocol).toLowerCase(), ctx.param(addr));
 
     var body = ctx.param(template_to_send)
         .replaceAll("\\{model}", "" + ctx.getModelId())
