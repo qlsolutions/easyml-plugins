@@ -22,6 +22,7 @@ public class WebServerPlugin extends HookPlugin {
           "modelId": {model},
           "timestamp": {timestamp},
           "status": {anomalyStatus},
+          "score": {predicted},
           "max-predicted": {max-predicted},
           "min-predicted": {min-predicted},
           "observed": {observed},
@@ -56,14 +57,7 @@ public class WebServerPlugin extends HookPlugin {
   public void run(HookContext ctx) {
     var url = "%s://%s".formatted(ctx.param(protocol).toLowerCase(), ctx.param(addr));
 
-    var body = ctx.param(template_to_send)
-        .replaceAll("\\{model}", "" + ctx.getModelId())
-        .replaceAll("\\{timestamp}", "" + ctx.getTimestamp())
-        .replaceAll("\\{anomalyStatus}", ctx.getStatus())
-        .replaceAll("\\{max-predicted}", "" + ctx.getMaxPredicted())
-        .replaceAll("\\{min-predicted}","" + ctx.getMinPredicted())
-        .replaceAll("\\{observed}", "" + ctx.getObserver())
-        ;
+    var body = ctx.parseString(ctx.param(template_to_send));
 
     var client = new OkHttpClient();
     var req = new Request.Builder()
