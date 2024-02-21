@@ -1,5 +1,7 @@
 package com.quicklink.openmeteo;
 
+import static com.quicklink.openmeteo.Keys.*;
+
 import com.google.gson.Gson;
 
 import com.quicklink.pluginservice.KeyParam;
@@ -13,19 +15,11 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
-import java.util.function.Consumer;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import org.slf4j.Logger;
 
 public class OpenMeteoPlugin extends ProviderPlugin {
-
-
-  static KeyParam<String> LATITUDE = KeyParam.of("latitude", "0");
-  static KeyParam<String> LONGITUDE = KeyParam.of("longitude", "0");
-  static KeyParam<String> API_KEY = KeyParam.ofSecret("apiKey", "",
-      "Key obtained from https://open-meteo.com/en/docs");
 
   final Gson gson = new Gson();
   final DateTimeFormatter formatter =

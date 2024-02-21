@@ -1,45 +1,84 @@
 package com.quicklink.hookemail;
 
-import com.quicklink.pluginservice.KeyParam;
+import static com.quicklink.hookemail.Keys.*;
+
 import com.quicklink.pluginservice.hooks.HookContext;
 import com.quicklink.pluginservice.hooks.HookPlugin;
-import java.security.Key;
-import org.jetbrains.annotations.NotNull;
+import org.simplejavamail.api.mailer.config.TransportStrategy;
+import org.simplejavamail.email.EmailBuilder;
+import org.simplejavamail.mailer.MailerBuilder;
 
 public class HookEmailPlugin extends HookPlugin {
 
-  static KeyParam<Double> tolerance_high = KeyParam.of("tolerance-high", 0D);
-  static KeyParam<Double> tolerance_low = KeyParam.of("tolerance-low", 0D);
-  static KeyParam<String> from_name = KeyParam.of("From (name)", "Quicklink EasyML Server");
-  static KeyParam<String> from_address = KeyParam.of("From (address)", "easyml@qlsol.com");
-  static KeyParam<String> to_name = KeyParam.of("To (name)", "Info Quicklink");
-  static KeyParam<String> to_address = KeyParam.of("To (address)", "info@qlsol.com");
-
-  static KeyParam<String> object_start = KeyParam.of("Mail object on anomaly start", "[EasyML] anomaly detected! (score{model}, score={predicted})");
-  static KeyParam<String> content_start = KeyParam.of("Mail content on anomaly start",
-      "Anomaly detected by EasyML! model={model}, date={timestamp}, predicted={predicted}, max-predicted={max-predicted}, min-predicted={min-predicted}, observed={observed}");
-
-  static KeyParam<String> object_end = KeyParam.of("Mail object on anomaly end", "[EasyML] anomaly end! (score{model}, score={predicted})");
-  static KeyParam<String> content_end = KeyParam.of("Mail content on anomaly end",
-      "Anomaly end! model={model}, date={timestamp}, predicted={predicted}, max-predicted={max-predicted}, min-predicted={min-predicted}, observed={observed}");
-
-
-
   public HookEmailPlugin() {
-    super("Email", "1.0.0");
+    super("Email", "1.0.0",
+      tolerance_high,
+      tolerance_low,
+      from_name,
+      from_address,
+      to_name,
+      to_address,
+      object_start,
+      content_start,
+      object_end,
+      content_end,
+      smtp_host,
+      smtp_port,
+      smtp_username,
+      smtp_password,
+      smtp_transport_strategy
+    );
   }
+
 
   @Override
   public void run(HookContext ctx) {
+
+    TransportStrategy strategy ;
+    try {
+      strategy = TransportStrategy.valueOf(ctx.param(smtp_transport_strategy));
+    } catch (IllegalArgumentException e) {
+
+      getLogger().ifPresent(logger -> logger.error("Invalid strategy of type " + ctx.param(smtp_transport_strategy), e));
+
+      return;
+    }
+
+    String object, content;
     if(ctx.getStatus().equalsIgnoreCase("started")) {
-
+      object = ctx.param(object_start);
+      content = ctx.param(content_start);
     } else {
+      object = ctx.param(object_end);
+      content = ctx.param(content_end);
+    }
 
+    // parse variables
+    object = ctx.parseString(object);
+    content = ctx.parseString(content);
+
+    var email = EmailBuilder.startingBlank()
+        .from(ctx.param(from_name), ctx.param(from_address))
+        .to(ctx.param(to_name), ctx.param(to_address))
+        .withSubject(object)
+        .withHTMLText(content)
+        .buildEmail();
+
+
+    try(var mailer =  MailerBuilder
+        .withSMTPServer(ctx.param(smtp_host), ctx.param(smtp_port), ctx.param(smtp_username), ctx.param(smtp_password))
+        .withTransportStrategy(strategy).buildMailer()) {
+
+      mailer.sendMail(email);
+      getLogger().ifPresent(logger -> logger.info("Sent email"));
+
+    } catch (Exception e) {
+      getLogger().ifPresent(logger -> logger.error("Error sending the email", e));
     }
   }
 
   @Override
   public void onEnable() {
-
+    getLogger().ifPresent(logger -> logger.info("Loaded"));
   }
 }
