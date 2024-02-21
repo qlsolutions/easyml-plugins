@@ -39,7 +39,7 @@ public class WebServerPlugin extends HookPlugin {
   public WebServerPlugin() {
     super(
         "WebServer",
-        "1.0",
+        "1.0.0",
         tolerance_high,
         tolerance_low,
         addr,

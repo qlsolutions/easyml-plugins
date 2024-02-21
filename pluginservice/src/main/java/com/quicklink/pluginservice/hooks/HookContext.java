@@ -64,4 +64,14 @@ public class HookContext {
     return (T) parameters.get(key.getId());
   }
 
+  public @NotNull String parseString(@NotNull String s) {
+    return s
+      .replaceAll("\\{model}", "" + getModelId())
+      .replaceAll("\\{timestamp}", "" + getTimestamp())
+      .replaceAll("\\{anomalyStatus}", getStatus())
+      .replaceAll("\\{max-predicted}", "" + getMaxPredicted())
+      .replaceAll("\\{min-predicted}","" + getMinPredicted())
+      .replaceAll("\\{observed}", "" + getObserver())
+      ;
+  }
 }
