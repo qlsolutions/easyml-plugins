@@ -2,9 +2,8 @@ package com.quicklink.webserver;
 
 import static com.quicklink.webserver.Keys.*;
 
-import com.quicklink.pluginservice.KeyParam;
-import com.quicklink.pluginservice.hooks.HookContext;
-import com.quicklink.pluginservice.hooks.HookPlugin;
+import com.quicklink.plugins.api.hooks.HookContext;
+import com.quicklink.plugins.api.hooks.HookPlugin;
 import java.io.IOException;
 import java.util.Base64;
 import okhttp3.Credentials;
@@ -12,6 +11,7 @@ import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
+import org.jetbrains.annotations.NotNull;
 
 public class WebServerPlugin extends HookPlugin {
 
@@ -32,7 +32,7 @@ public class WebServerPlugin extends HookPlugin {
   }
   public static final MediaType JSON = MediaType.get("application/json");
   @Override
-  public void run(HookContext ctx) {
+  public void run(@NotNull HookContext ctx) {
     var url = "%s://%s".formatted(ctx.param(protocol).toLowerCase(), ctx.param(addr));
 
     var body = ctx.parseString(ctx.param(template_to_send));

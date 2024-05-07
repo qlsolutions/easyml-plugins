@@ -4,7 +4,7 @@ package com.quicklink.niagara;/*
  *
  */
 
-import com.quicklink.pluginservice.providers.ProviderPlugin;
+import com.quicklink.plugins.api.providers.ProviderPlugin;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.OutputStream;

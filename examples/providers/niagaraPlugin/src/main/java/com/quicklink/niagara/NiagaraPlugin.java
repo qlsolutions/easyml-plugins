@@ -8,17 +8,17 @@ import com.quicklink.niagara.model.SeriesModel;
 import com.quicklink.niagara.model.request.SerieDetailsBody;
 import com.google.gson.Gson;
 
-import com.quicklink.pluginservice.KeyParam;
-import com.quicklink.pluginservice.providers.About;
-import com.quicklink.pluginservice.providers.ProviderContext;
-import com.quicklink.pluginservice.providers.ProviderPlugin;
-import com.quicklink.pluginservice.providers.Record;
-import com.quicklink.pluginservice.providers.Serie;
+import com.quicklink.plugins.api.providers.About;
+import com.quicklink.plugins.api.providers.ProviderContext;
+import com.quicklink.plugins.api.providers.ProviderPlugin;
+import com.quicklink.plugins.api.providers.Record;
+import com.quicklink.plugins.api.providers.Serie;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import org.jetbrains.annotations.NotNull;
 
 public class NiagaraPlugin extends ProviderPlugin {
 
@@ -57,7 +57,7 @@ public class NiagaraPlugin extends ProviderPlugin {
 
 
   @Override
-  public Collection<Serie> getSeries(ProviderContext ctx) {
+  public @NotNull Collection<Serie> getSeries(@NotNull ProviderContext ctx) {
     String seriesResponse;
 
     var protocol = ctx.param(PROTOCOL);
@@ -107,7 +107,7 @@ public class NiagaraPlugin extends ProviderPlugin {
   }
 
   @Override
-  public List<Record> getSerieData(ProviderContext ctx, String serieId, long startTs, long endTs) {
+  public @NotNull List<Record> getSerieData(ProviderContext ctx, String serieId, long startTs, long endTs) {
     var protocol = ctx.param(PROTOCOL);
     var host = ctx.param(HOST);
     var port = ctx.param(PORT);
@@ -155,7 +155,7 @@ public class NiagaraPlugin extends ProviderPlugin {
   }
 
   @Override
-  public About status(ProviderContext ctx) {
+  public @NotNull About status(ProviderContext ctx) {
     var protocol = ctx.param(PROTOCOL);
     var host = ctx.param(HOST);
     var port = ctx.param(PORT);

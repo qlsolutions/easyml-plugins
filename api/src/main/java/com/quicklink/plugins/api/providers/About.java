@@ -1,7 +1,7 @@
 package com.quicklink.plugins.api.providers;
 
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-public record About(boolean status, @NotNull String hostId, @NotNull String version) {
+public record About(boolean status, @Nullable String hostId, @Nullable String version) {
 
 }

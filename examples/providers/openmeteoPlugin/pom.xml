@@ -25,9 +25,9 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.github.qlsolutions</groupId>
-            <artifactId>easyml-plugins</artifactId>
-            <version>7d87dd7</version>
+            <groupId>com.github.qlsolutions.easyml-plugins</groupId>
+            <artifactId>api</artifactId>
+            <version>15f8723432</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -39,6 +39,12 @@
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-simple</artifactId>
             <version>2.0.7</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jetbrains</groupId>
+            <artifactId>annotations</artifactId>
+            <version>24.0.1</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>

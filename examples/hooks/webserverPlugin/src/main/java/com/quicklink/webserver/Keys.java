@@ -1,6 +1,7 @@
 package com.quicklink.webserver;
 
-import com.quicklink.pluginservice.KeyParam;
+
+import com.quicklink.plugins.api.KeyParam;
 
 public final class Keys {
   static KeyParam<Double> tolerance_high = KeyParam.of("tolerance-high", 0D);

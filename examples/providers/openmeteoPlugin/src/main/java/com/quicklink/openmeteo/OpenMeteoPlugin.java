@@ -4,12 +4,11 @@ import static com.quicklink.openmeteo.Keys.*;
 
 import com.google.gson.Gson;
 
-import com.quicklink.pluginservice.KeyParam;
-import com.quicklink.pluginservice.providers.About;
-import com.quicklink.pluginservice.providers.ProviderContext;
-import com.quicklink.pluginservice.providers.ProviderPlugin;
-import com.quicklink.pluginservice.providers.Record;
-import com.quicklink.pluginservice.providers.Serie;
+import com.quicklink.plugins.api.providers.About;
+import com.quicklink.plugins.api.providers.ProviderContext;
+import com.quicklink.plugins.api.providers.ProviderPlugin;
+import com.quicklink.plugins.api.providers.Record;
+import com.quicklink.plugins.api.providers.Serie;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -18,6 +17,7 @@ import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import org.jetbrains.annotations.NotNull;
 
 public class OpenMeteoPlugin extends ProviderPlugin {
 
@@ -37,22 +37,20 @@ public class OpenMeteoPlugin extends ProviderPlugin {
 
 
   @Override
-  public Collection<Serie> getSeries(ProviderContext ctx) {
+  public @NotNull Collection<Serie> getSeries(ProviderContext ctx) {
     return serieList;
   }
 
   @Override
-  public List<Record> getSerieData(ProviderContext ctx, String serieId, long startTs, long endTs) {
+  public @NotNull List<Record> getSerieData(ProviderContext ctx, String serieId, long startTs, long endTs) {
     var latitude = ctx.param(LATITUDE);
     var longitude = ctx.param(LONGITUDE);
     var apiKey = ctx.param(API_KEY);
 
-    var list = ctx.dateRangeStream(Calendar.DAY_OF_MONTH)
+    return ctx.dateRangeStream(Calendar.DAY_OF_MONTH)
         .flatMap(dateRange -> sendRequest(apiKey, latitude, longitude, serieId, dateRange.start(),
             dateRange.end(), false))
         .toList();
-
-    return list;
   }
 
 
@@ -61,7 +59,7 @@ public class OpenMeteoPlugin extends ProviderPlugin {
   }
 
   @Override
-  public About status(ProviderContext ctx) {
+  public @NotNull About status(ProviderContext ctx) {
     return new About(true, "hostId", "1.0.0");
   }
 
@@ -136,23 +134,7 @@ public class OpenMeteoPlugin extends ProviderPlugin {
   private final Pattern regexSeries = Pattern.compile("([a-zA-Z0-9_]+) +\\| +([a-zA-Z,]+)");
 
   private void loadSeries() {
-    var matcher = regexSeries.matcher(series);
-    while (matcher.find()) {
-      var e = matcher.group(1);
-      var arrE = Arrays.stream(e.split("_"))
-          .map(s -> {
-            if (Character.isDigit(s.charAt(0))) {
-              return "(" + s + ")";
-            } else {
-              return Character.toUpperCase(s.charAt(0)) + s.substring(1);
-            }
-          })
-          .collect(Collectors.joining(" "));
-      serieList.add(new Serie(e, arrE, matcher.group(2).split(",")));
-    }
-  }
-
-  private final String series = """
+    String series = """
         temperature_2m                 |  temperature
         relativehumidity_2m            |  humidity
         dewpoint_2m                    |  dewpoint
@@ -183,6 +165,21 @@ public class OpenMeteoPlugin extends ProviderPlugin {
         soil_moisture_28_to_100cm      |  humidity,soil
         soil_moisture_100_to_255cm     |  humidity,soil
         """;
+    var matcher = regexSeries.matcher(series);
+    while (matcher.find()) {
+      var e = matcher.group(1);
+      var arrE = Arrays.stream(e.split("_"))
+          .map(s -> {
+            if (Character.isDigit(s.charAt(0))) {
+              return "(" + s + ")";
+            } else {
+              return Character.toUpperCase(s.charAt(0)) + s.substring(1);
+            }
+          })
+          .collect(Collectors.joining(" "));
+      serieList.add(new Serie(e, arrE, matcher.group(2).split(",")));
+    }
+  }
 
 
 }
