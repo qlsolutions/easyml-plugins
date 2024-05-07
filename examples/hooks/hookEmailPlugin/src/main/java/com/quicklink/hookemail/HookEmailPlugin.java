@@ -2,8 +2,11 @@ package com.quicklink.hookemail;
 
 import static com.quicklink.hookemail.Keys.*;
 
-import com.quicklink.pluginservice.hooks.HookContext;
-import com.quicklink.pluginservice.hooks.HookPlugin;
+
+import com.quicklink.plugins.api.hooks.HookContext;
+import com.quicklink.plugins.api.hooks.HookPlugin;
+import java.util.Objects;
+import org.jetbrains.annotations.NotNull;
 import org.simplejavamail.api.mailer.config.TransportStrategy;
 import org.simplejavamail.email.EmailBuilder;
 import org.simplejavamail.mailer.MailerBuilder;
@@ -32,7 +35,7 @@ public class HookEmailPlugin extends HookPlugin {
 
 
   @Override
-  public void run(HookContext ctx) {
+  public void run(@NotNull HookContext ctx) {
 
     TransportStrategy strategy ;
     try {
@@ -53,12 +56,16 @@ public class HookEmailPlugin extends HookPlugin {
       content = ctx.param(content_end);
     }
 
+
     // parse variables
+    assert object != null;
     object = ctx.parseString(object);
+
+    assert content != null;
     content = ctx.parseString(content);
 
     var email = EmailBuilder.startingBlank()
-        .from(ctx.param(from_name), ctx.param(from_address))
+        .from(ctx.param(from_name), Objects.requireNonNull(ctx.param(from_address)))
         .to(ctx.param(to_name), ctx.param(to_address))
         .withSubject(object)
         .withHTMLText(content)

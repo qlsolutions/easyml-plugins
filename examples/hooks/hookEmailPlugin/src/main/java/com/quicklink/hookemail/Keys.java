@@ -1,7 +1,7 @@
 package com.quicklink.hookemail;
 
-import com.quicklink.pluginservice.KeyParam;
-import org.simplejavamail.api.mailer.config.TransportStrategy;
+
+import com.quicklink.plugins.api.KeyParam;
 
 public final class Keys {
 
