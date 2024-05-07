@@ -1,17 +1,19 @@
-package com.quicklink.pluginservice.providers;
+package com.quicklink.plugins.api.providers;
 
 
 
-import com.quicklink.pluginservice.AbstractPlugin;
-import com.quicklink.pluginservice.KeyParam;
+import com.quicklink.plugins.api.AbstractPlugin;
+import com.quicklink.plugins.api.KeyParam;
 import java.util.Collection;
 import java.util.List;
 
 public abstract class ProviderPlugin extends AbstractPlugin {
 
-  public abstract Collection<Serie> getSeries(ProviderContext ctx);
+  public abstract Collection<Serie> getSeries(
+      ProviderContext ctx);
 
-  public abstract List<Record> getSerieData(ProviderContext ctx, String serieId, long startTs, long endTs);
+  public abstract List<Record> getSerieData(
+      ProviderContext ctx, String serieId, long startTs, long endTs);
 
   public abstract About status(ProviderContext ctx);
 

@@ -8,8 +8,13 @@
     <artifactId>PluginService</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
+    
     <modules>
-        <module>pluginservice</module>
+        <module>api</module>
+        <module>examples/providers/openmeteoPlugin</module>
+        <module>examples/providers/niagaraPlugin</module>
+        <module>examples/hooks/hookEmailPlugin</module>
+        <module>examples/hooks/webserverPlugin</module>
     </modules>
 
     <properties>

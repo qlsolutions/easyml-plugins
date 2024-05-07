@@ -1,7 +1,7 @@
-package com.quicklink.pluginservice.hooks;
+package com.quicklink.plugins.api.hooks;
 
-import com.quicklink.pluginservice.AbstractPlugin;
-import com.quicklink.pluginservice.KeyParam;
+import com.quicklink.plugins.api.AbstractPlugin;
+import com.quicklink.plugins.api.KeyParam;
 import org.jetbrains.annotations.NotNull;
 
 public abstract class HookPlugin extends AbstractPlugin {

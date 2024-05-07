@@ -1,8 +1,8 @@
-package com.quicklink.pluginservice.hooks;
+package com.quicklink.plugins.api.hooks;
 
 
 
-import com.quicklink.pluginservice.KeyParam;
+import com.quicklink.plugins.api.KeyParam;
 import java.util.Map;
 import org.jetbrains.annotations.NotNull;
 

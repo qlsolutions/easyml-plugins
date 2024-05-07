@@ -1,4 +1,4 @@
-package com.quicklink.pluginservice.providers;
+package com.quicklink.plugins.api.providers;
 
 import java.util.Date;
 
