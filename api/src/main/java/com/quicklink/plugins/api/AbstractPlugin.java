@@ -25,7 +25,7 @@ public abstract class AbstractPlugin {
 
   public @NotNull Optional<Logger> getLogger() {
     if(pvt.debugMode) {
-      return Optional.ofNullable(pvt.logger);
+      return pvt.logger;
     }
     return Optional.empty();
   }

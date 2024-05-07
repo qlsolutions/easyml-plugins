@@ -58,11 +58,11 @@ public class KeyParam<T> {
     isValidKey(id);
   }
 
-  public String getId() {
+  public @NotNull String getId() {
     return id;
   }
 
-  public Parameter asParameter() {
+  public @NotNull Parameter asParameter() {
     return new Parameter(id, type, defaultValue, description);
   }
 

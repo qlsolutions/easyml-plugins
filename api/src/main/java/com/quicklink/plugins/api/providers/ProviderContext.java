@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.Map;
 import java.util.stream.Stream;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class ProviderContext {
 
@@ -14,10 +15,10 @@ public class ProviderContext {
   private final String nameApp;
   private final Map<String, ?> parameters;
 
-  private final long startTs;
-  private final long endTs;
+  @Nullable private final Long startTs;
+  @Nullable private final Long endTs;
 
-  public ProviderContext(int idApp, String nameApp, Map<String, ?> parameters, long startTs, long endTs) {
+  public ProviderContext(int idApp, @NotNull String nameApp, @NotNull Map<String, ?> parameters, @Nullable Long startTs, @Nullable Long endTs) {
     this.idApp = idApp;
     this.nameApp = nameApp;
     this.parameters = parameters;
@@ -25,20 +26,20 @@ public class ProviderContext {
     this.endTs = endTs;
   }
 
-  public ProviderContext(int idApp, String nameApp, Map<String, ?> parameters) {
-    this(idApp, nameApp, parameters, -1, -1);
+  public ProviderContext(int idApp, @NotNull String nameApp, @NotNull Map<String, ?> parameters) {
+    this(idApp, nameApp, parameters, null, null);
   }
 
   public int idApp() {
     return idApp;
   }
 
-  public String nameApp() {
+  public @NotNull String nameApp() {
     return nameApp;
   }
 
-  public <T> T param(@NotNull KeyParam<T> key) {
-    return (T) parameters.get(key.getId());
+  public @Nullable<T> T param(@NotNull KeyParam<T> key) {
+    return (T) parameters.getOrDefault(key.getId(), null);
   }
 
   public int limit() {
@@ -46,7 +47,7 @@ public class ProviderContext {
   }
 
   public Stream<DateRange> dateRangeStream(int field) {
-    if (startTs == -1 || endTs == -1) {
+    if (startTs == null || endTs == null) {
       throw new UnsupportedOperationException("Start ts or end ts not set");
     }
     Calendar start = Calendar.getInstance();

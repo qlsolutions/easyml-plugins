@@ -1,16 +1,17 @@
 package com.quicklink.plugins.api;
 
 import java.io.Serializable;
+import org.jetbrains.annotations.NotNull;
 
 public record Parameter(
-    String key,
-    String type,
-    Object defaultValue,
-    String description
+    @NotNull String key,
+    @NotNull String type,
+    @NotNull Object defaultValue,
+    @NotNull String description
 ) implements Serializable {
 
   @Override
-  protected Object clone() throws CloneNotSupportedException {
+  protected @NotNull Object clone() throws CloneNotSupportedException {
     return super.clone();
   }
 

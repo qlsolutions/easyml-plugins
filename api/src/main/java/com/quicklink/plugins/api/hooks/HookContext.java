@@ -5,6 +5,7 @@ package com.quicklink.plugins.api.hooks;
 import com.quicklink.plugins.api.KeyParam;
 import java.util.Map;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class HookContext {
 
@@ -20,14 +21,14 @@ public class HookContext {
 
 
   public HookContext(
-      Integer modelId,
-      Long timestamp,
-      String status,
-      Double predicted,
-      Double minPredicted,
-      Double maxPredicted,
-      Double observed,
-      Map<String, ?> parameters
+      @NotNull Integer modelId,
+      @NotNull Long timestamp,
+      @NotNull String status,
+      @NotNull Double predicted,
+      @NotNull Double minPredicted,
+      @NotNull Double maxPredicted,
+      @NotNull Double observed,
+      @NotNull Map<String, ?> parameters
   ) {
     this.modelId = modelId;
     this.timestamp = timestamp;
@@ -40,36 +41,36 @@ public class HookContext {
 
   }
 
-  public Integer getModelId() {
+  public @NotNull Integer getModelId() {
     return modelId;
   }
 
-  public Long getTimestamp() {
+  public @NotNull Long getTimestamp() {
     return timestamp;
   }
 
-  public String getStatus() {
+  public @NotNull String getStatus() {
     return status;
   }
 
-  public Double getPredicted() {
+  public @NotNull Double getPredicted() {
     return predicted;
   }
 
-  public Double getMinPredicted() {
+  public @NotNull Double getMinPredicted() {
     return minPredicted;
   }
 
-  public Double getMaxPredicted() {
+  public @NotNull Double getMaxPredicted() {
     return maxPredicted;
   }
 
-  public Double getObserved() {
+  public @NotNull Double getObserved() {
     return observed;
   }
 
-  public <T> T param(@NotNull KeyParam<T> key) {
-    return (T) parameters.get(key.getId());
+  public @Nullable <T> T param(@NotNull KeyParam<T> key) {
+    return (T) parameters.getOrDefault(key.getId(), null);
   }
 
   public @NotNull String parseString(@NotNull String s) {

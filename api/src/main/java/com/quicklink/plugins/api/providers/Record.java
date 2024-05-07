@@ -1,5 +1,7 @@
 package com.quicklink.plugins.api.providers;
 
-public record Record(Long timestamp, Double value) {
+import org.jetbrains.annotations.NotNull;
+
+public record Record(@NotNull Long timestamp, @NotNull Double value) {
 
 }

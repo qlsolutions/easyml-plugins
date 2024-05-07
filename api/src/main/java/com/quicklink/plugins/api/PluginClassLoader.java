@@ -3,6 +3,8 @@ package com.quicklink.plugins.api;
 import java.net.URL;
 import java.net.URLClassLoader;
 import org.jetbrains.annotations.ApiStatus.Internal;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 @Internal
 public abstract class PluginClassLoader extends URLClassLoader {
@@ -11,20 +13,18 @@ public abstract class PluginClassLoader extends URLClassLoader {
     super(urls, parent);
   }
 
-  public abstract AbstractPlugin getPlugin();
+  public abstract @NotNull AbstractPlugin getPlugin();
 
-  public abstract AbstractPlugin getPluginInit();
+  public abstract @Nullable AbstractPlugin getPluginInit();
 
-  public abstract void setPluginInit(AbstractPlugin pluginInit);
+  public abstract void setPluginInit(@NotNull AbstractPlugin pluginInit);
 
-  void initialize(AbstractPlugin plugin) {
-    if (this.getPlugin() != null || this.getPluginInit() != null) {
+  void initialize(@NotNull AbstractPlugin plugin) {
+    if (this.getPluginInit() != null) {
       throw new IllegalArgumentException("Plugin already initialized!");
     }
 
     this.setPluginInit(plugin);
-
-
   }
 
 }

@@ -3,6 +3,7 @@ package com.quicklink.plugins.api.providers;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
+import org.jetbrains.annotations.NotNull;
 
 class DateRangeIterator implements Iterator<DateRange> {
 
@@ -14,7 +15,7 @@ class DateRangeIterator implements Iterator<DateRange> {
   private final Calendar prev;
   private boolean hasNext = true;
 
-  DateRangeIterator(Calendar start, Date endDate, int limit, int field) {
+  DateRangeIterator(@NotNull Calendar start, @NotNull Date endDate, int limit, int field) {
     this.curr = start;
     this.endDate = endDate;
     this.limit = limit;
