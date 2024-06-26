@@ -1,7 +1,7 @@
-package com.quicklink.plugins.api.providers;
+package com.quicklink.easyml.plugins.api.providers;
 
 
-import com.quicklink.plugins.api.KeyParam;
+import com.quicklink.easyml.plugins.api.KeyParam;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;

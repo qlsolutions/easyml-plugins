@@ -1,4 +1,4 @@
-package com.quicklink.plugins.api;
+package com.quicklink.easyml.plugins.api;
 
 import java.io.Serializable;
 import org.jetbrains.annotations.NotNull;

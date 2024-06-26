@@ -1,16 +1,17 @@
-package com.quicklink.plugins.api.providers;
+package com.quicklink.easyml.plugins.api.providers;
 
 
 
-import com.quicklink.plugins.api.AbstractPlugin;
-import com.quicklink.plugins.api.KeyParam;
+import com.quicklink.easyml.plugins.api.AbstractPlugin;
+import com.quicklink.easyml.plugins.api.KeyParam;
 import java.util.Collection;
 import java.util.List;
 import org.jetbrains.annotations.NotNull;
 
 public abstract class ProviderPlugin extends AbstractPlugin {
 
-  public abstract @NotNull Collection<Serie> getSeries(ProviderContext ctx);
+  public abstract @NotNull Collection<Serie> getSeries(
+      ProviderContext ctx);
 
   public abstract @NotNull List<Record> getSerieData(
       ProviderContext ctx, String serieId, long startTs, long endTs);

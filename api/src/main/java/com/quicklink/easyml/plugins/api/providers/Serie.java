@@ -1,4 +1,4 @@
-package com.quicklink.plugins.api.providers;
+package com.quicklink.easyml.plugins.api.providers;
 
 import java.util.Arrays;
 import java.util.List;
