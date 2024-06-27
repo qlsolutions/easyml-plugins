@@ -2,8 +2,8 @@ package com.quicklink.webserver;
 
 import static com.quicklink.webserver.Keys.*;
 
-import com.quicklink.plugins.api.hooks.HookContext;
-import com.quicklink.plugins.api.hooks.HookPlugin;
+import com.quicklink.easyml.plugins.api.hooks.HookContext;
+import com.quicklink.easyml.plugins.api.hooks.HookPlugin;
 import java.io.IOException;
 import java.util.Base64;
 import okhttp3.Credentials;

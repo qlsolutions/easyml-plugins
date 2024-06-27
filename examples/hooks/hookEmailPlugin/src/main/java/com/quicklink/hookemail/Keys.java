@@ -1,7 +1,7 @@
 package com.quicklink.hookemail;
 
 
-import com.quicklink.plugins.api.KeyParam;
+import com.quicklink.easyml.plugins.api.KeyParam;
 
 public final class Keys {
 

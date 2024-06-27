@@ -1,7 +1,7 @@
 package com.quicklink.niagara;
 
 
-import com.quicklink.plugins.api.KeyParam;
+import com.quicklink.easyml.plugins.api.KeyParam;
 
 public final class Keys {
   static KeyParam<String> PROTOCOL = KeyParam.of("protocol", "http");

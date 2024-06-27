@@ -2,17 +2,18 @@ package com.quicklink.niagara;
 
 import static com.quicklink.niagara.Keys.*;
 
+import com.quicklink.easyml.plugins.api.providers.About;
+import com.quicklink.easyml.plugins.api.providers.ProviderContext;
+import com.quicklink.easyml.plugins.api.providers.ProviderPlugin;
+import com.quicklink.easyml.plugins.api.providers.Record;
+import com.quicklink.easyml.plugins.api.providers.Serie;
 import com.quicklink.niagara.model.NiagaraAbout;
 import com.quicklink.niagara.model.SerieDetailsModel;
 import com.quicklink.niagara.model.SeriesModel;
 import com.quicklink.niagara.model.request.SerieDetailsBody;
 import com.google.gson.Gson;
 
-import com.quicklink.plugins.api.providers.About;
-import com.quicklink.plugins.api.providers.ProviderContext;
-import com.quicklink.plugins.api.providers.ProviderPlugin;
-import com.quicklink.plugins.api.providers.Record;
-import com.quicklink.plugins.api.providers.Serie;
+
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;

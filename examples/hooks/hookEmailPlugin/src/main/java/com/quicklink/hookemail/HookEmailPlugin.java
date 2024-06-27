@@ -3,8 +3,8 @@ package com.quicklink.hookemail;
 import static com.quicklink.hookemail.Keys.*;
 
 
-import com.quicklink.plugins.api.hooks.HookContext;
-import com.quicklink.plugins.api.hooks.HookPlugin;
+import com.quicklink.easyml.plugins.api.hooks.HookContext;
+import com.quicklink.easyml.plugins.api.hooks.HookPlugin;
 import java.util.Objects;
 import org.jetbrains.annotations.NotNull;
 import org.simplejavamail.api.mailer.config.TransportStrategy;

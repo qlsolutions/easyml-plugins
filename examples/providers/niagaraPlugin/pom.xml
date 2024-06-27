@@ -27,7 +27,7 @@
         <dependency>
             <groupId>com.github.qlsolutions.easyml-plugins</groupId>
             <artifactId>api</artifactId>
-            <version>15f8723432</version>
+            <version>0.1.0rc1</version>
             <scope>provided</scope>
         </dependency>
         <dependency>

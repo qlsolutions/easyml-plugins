@@ -4,11 +4,11 @@ import static com.quicklink.openmeteo.Keys.*;
 
 import com.google.gson.Gson;
 
-import com.quicklink.plugins.api.providers.About;
-import com.quicklink.plugins.api.providers.ProviderContext;
-import com.quicklink.plugins.api.providers.ProviderPlugin;
-import com.quicklink.plugins.api.providers.Record;
-import com.quicklink.plugins.api.providers.Serie;
+import com.quicklink.easyml.plugins.api.providers.About;
+import com.quicklink.easyml.plugins.api.providers.ProviderContext;
+import com.quicklink.easyml.plugins.api.providers.ProviderPlugin;
+import com.quicklink.easyml.plugins.api.providers.Record;
+import com.quicklink.easyml.plugins.api.providers.Serie;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
