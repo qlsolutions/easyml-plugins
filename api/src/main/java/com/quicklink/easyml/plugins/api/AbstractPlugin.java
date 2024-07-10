@@ -15,7 +15,7 @@ public abstract class AbstractPlugin {
   public final PrivateConfig pvt;
 
   @Internal
-  public AbstractPlugin(@NotNull String name, @NotNull String version, KeyParam<?>... keys) {
+  public AbstractPlugin(@NotNull String name, @NotNull String version, Parameter<?>... keys) {
     this.name = name;
     this.version = version;
     this.pvt = new PrivateConfig(this, this.getClass().getClassLoader(), keys);

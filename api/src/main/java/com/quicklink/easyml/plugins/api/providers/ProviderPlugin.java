@@ -2,7 +2,8 @@ package com.quicklink.easyml.plugins.api.providers;
 
 
 import com.quicklink.easyml.plugins.api.AbstractPlugin;
-import com.quicklink.easyml.plugins.api.KeyParam;
+import com.quicklink.easyml.plugins.api.ParamLang;
+import com.quicklink.easyml.plugins.api.Parameter;
 import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
@@ -27,17 +28,19 @@ public abstract class ProviderPlugin extends AbstractPlugin {
   public static final RuntimeException notImplementedExc = new RuntimeException();
 
   public ProviderPlugin(@NotNull String name, @NotNull String version, int limit,
-      @NotNull String limitDescription, KeyParam<?>... keys) {
-    super(name, version, genParams(limit, limitDescription, keys));
+      @NotNull ParamLang eng, @NotNull ParamLang it, Parameter<?>... keys) {
+    super(name, version, genParams(limit, eng, it, keys));
   }
 
-  private static KeyParam<?>[] genParams(int limit, @NotNull String limitDescription,
-      KeyParam<?>... keys) {
-    var arr = new KeyParam[keys.length + 1];
-    arr[0] = KeyParam
+  private static Parameter<?>[] genParams(int limit, @NotNull ParamLang eng, @NotNull ParamLang it,
+      Parameter<?>... keys) {
+    var arr = new Parameter[keys.length + 1];
+    arr[0] = Parameter
         .create("limit")
         .defaultValue(limit)
-        .description(Locale.ENGLISH, limitDescription)
+        .lang(Locale.ENGLISH, eng.title(), eng.description())
+        .lang(Locale.ITALIAN, it.title(), it.description())
+
         .build();
     System.arraycopy(keys, 0, arr, 1, keys.length);
     return arr;

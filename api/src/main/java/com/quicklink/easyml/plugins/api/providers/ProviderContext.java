@@ -1,7 +1,7 @@
 package com.quicklink.easyml.plugins.api.providers;
 
 
-import com.quicklink.easyml.plugins.api.KeyParam;
+import com.quicklink.easyml.plugins.api.Parameter;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
@@ -38,8 +38,8 @@ public class ProviderContext {
     return nameApp;
   }
 
-  public @Nullable<T> T param(@NotNull KeyParam<T> key) {
-    return (T) parameters.getOrDefault(key.getId(), null);
+  public @Nullable<T> T param(@NotNull Parameter<T> key) {
+    return (T) parameters.getOrDefault(key.key(), null);
   }
 
   public int limit() {

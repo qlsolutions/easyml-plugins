@@ -1,30 +1,50 @@
 package com.quicklink.easyml.plugins.api;
 
-import com.quicklink.easyml.plugins.api.KeyParam.Type;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.util.Locale;
+import java.util.Map;
 import java.util.Objects;
+import java.util.regex.Pattern;
 import org.jetbrains.annotations.ApiStatus.AvailableSince;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-public final class Parameter {
+public final class Parameter<T> {
+
+
+  public enum Type {
+    DOUBLE("float64"),
+    INT("int"),
+    STRING("string"),
+    SECRET("secret");
+
+    private final String name;
+
+    Type(String name) {
+      this.name = name;
+    }
+  }
+
 
   private @NotNull String key;
   private @NotNull String type;
-  private @NotNull Object defaultValue;
-  private @NotNull String description;
+  private @NotNull T defaultValue;
+
+  @JsonIgnore
+  private Map<Locale, ParamLang> lang = null;
+
 
   public Parameter(
       @NotNull String key,
       @NotNull String type,
-      @NotNull Object defaultValue,
-      @NotNull String description
+      @NotNull T defaultValue
   ) {
     this.key = key;
     this.type = type;
     this.defaultValue = defaultValue;
-    this.description = description;
   }
 
-  @AvailableSince(value = "0.1.0rc2")
+  @AvailableSince(value = "0.1.0rc3")
   public boolean isSecret() {
     return type.equals(Type.SECRET.name());
   }
@@ -41,29 +61,30 @@ public final class Parameter {
     return defaultValue;
   }
 
-  public @NotNull String description() {
-    return description;
+  public @Nullable Map<Locale, ParamLang> lang() {
+    return lang;
   }
 
-  public Parameter key(@NotNull String key) {
+  public Parameter<T> key(@NotNull String key) {
     this.key = key;
     return this;
   }
 
-  public Parameter type(@NotNull String type) {
+  public Parameter<T> type(@NotNull String type) {
     this.type = type;
     return this;
   }
 
-  public Parameter defaultValue(@NotNull Object defaultValue) {
+  public Parameter<T> defaultValue(@NotNull T defaultValue) {
     this.defaultValue = defaultValue;
     return this;
   }
 
-  public Parameter description(@NotNull String description) {
-    this.description = description;
+  @Nullable Parameter<T> lang(@NotNull  Map<Locale, ParamLang> lang) {
+    this.lang = lang;
     return this;
   }
+
 
   @Override
   public boolean equals(Object obj) {
@@ -76,13 +97,11 @@ public final class Parameter {
     var that = (Parameter) obj;
     return Objects.equals(this.key, that.key) &&
         Objects.equals(this.type, that.type) &&
-        Objects.equals(this.defaultValue, that.defaultValue) &&
-        Objects.equals(this.description, that.description);
+        Objects.equals(this.defaultValue, that.defaultValue);
   }
-
   @Override
   public int hashCode() {
-    return Objects.hash(key, type, defaultValue, description);
+    return Objects.hash(key, type, defaultValue);
   }
 
   @Override
@@ -90,9 +109,70 @@ public final class Parameter {
     return "Parameter[" +
         "key=" + key + ", " +
         "type=" + type + ", " +
-        "defaultValue=" + defaultValue + ", " +
-        "description=" + description + ']';
+        "defaultValue=" + defaultValue + ']';
   }
 
 
+  @AvailableSince(value = "0.1.0rc3")
+  public static <T> Builder<T> create(@NotNull String name) {
+    return new Builder<T>(name);
+  }
+
+  public static class Builder<T> {
+
+    private static final Pattern keyPattern = Pattern.compile("[a-zA-Z-]+");
+
+    private static void isValidKey(String key) {
+      if (!keyPattern.matcher(key).matches()) {
+        throw new IllegalStateException("Invalid parameter key '%s'".formatted(key));
+      }
+    }
+
+
+    private final String id;
+    private Object defaultValue;
+    private Type type;
+
+    private Map<Locale, ParamLang> lang = null;
+
+    public Builder(@NotNull String id) {
+      this.id = id;
+      isValidKey(id);
+    }
+
+
+    public Builder<T> defaultValue(@NotNull String defaultValue) {
+      this.defaultValue = defaultValue;
+      this.type = Type.STRING;
+      return this;
+    }
+
+    public Builder<T> defaultValue(double defaultValue) {
+      this.defaultValue = defaultValue;
+      this.type = Type.DOUBLE;
+      return this;
+    }
+
+    public Builder<T> defaultValue(int defaultValue) {
+      this.defaultValue = defaultValue;
+      this.type = Type.INT;
+      return this;
+    }
+
+    public Builder<T> lang(@NotNull Locale language, @NotNull String title, @NotNull String description) {
+      this.lang.put(language, new ParamLang(title, description));
+      return this;
+    }
+
+    public Builder<T> secret() {
+      this.type = Type.SECRET;
+      return this;
+    }
+
+    public Parameter<T> build() {
+      var param = new Parameter<>(id, type.name(), (T) defaultValue);
+      param.lang(lang);
+      return param;
+    }
+  }
 }

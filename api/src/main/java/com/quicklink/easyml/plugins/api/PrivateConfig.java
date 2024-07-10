@@ -19,7 +19,7 @@ public class PrivateConfig {
   public boolean debugMode = false;
 
 
-  public PrivateConfig(@NotNull AbstractPlugin plugin, @NotNull ClassLoader cl, KeyParam<?>... keys) {
+  public PrivateConfig(@NotNull AbstractPlugin plugin, @NotNull ClassLoader cl, Parameter<?>... keys) {
     this.plugin = plugin;
     this.logger = Optional.ofNullable(LoggerFactory.getLogger("Plugin %sv%s".formatted(plugin.getName(), plugin.getVersion())));
     this.classLoader = cl;
@@ -30,7 +30,7 @@ public class PrivateConfig {
 
     // add keys
     parameters = new ArrayList<>();
-    parameters.addAll(Arrays.stream(keys).map(KeyParam::asParameter).toList());
+    parameters.addAll(Arrays.stream(keys).toList());
   }
 
 }
