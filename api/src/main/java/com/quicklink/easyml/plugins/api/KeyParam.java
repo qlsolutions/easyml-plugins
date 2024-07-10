@@ -1,38 +1,75 @@
 package com.quicklink.easyml.plugins.api;
 
 
+import java.util.Locale;
 import java.util.Objects;
 import java.util.regex.Pattern;
+import javax.swing.JLabel;
+import org.jetbrains.annotations.ApiStatus.AvailableSince;
 import org.jetbrains.annotations.NotNull;
 
 public class KeyParam<T> {
 
-  public static KeyParam<Double> of(@NotNull String id, double defaultValue, @NotNull String description) {
-    return new KeyParam<>(id, defaultValue, description, "float64");
-  }
-  public static KeyParam<Double> of(@NotNull String id, double defaultValue) {
-    return new KeyParam<>(id, defaultValue, "", "float64");
+  public enum Type {
+    DOUBLE("float64"),
+    INT("int"),
+    STRING("string"),
+    SECRET("secret");
+
+    private final String name;
+
+    Type(String name) {
+      this.name = name;
+    }
   }
 
-  public static KeyParam<Integer> of(@NotNull String id,  int defaultValue, @NotNull String description) {
-    return new KeyParam<>(id, defaultValue, description, "int");
-  }
-  public static KeyParam<Integer> of( @NotNull String id, int defaultValue) {
-    return new KeyParam<>(id, defaultValue, "", "int");
+  @AvailableSince(value = "0.1.0rc2")
+  public static Builder create(@NotNull String name) {
+    return new Builder(name);
   }
 
-  public static KeyParam<String> of(@NotNull String id, @NotNull String defaultValue, @NotNull String description) {
-    return new KeyParam<>(id, defaultValue, description, "string");
-  }
-  public static KeyParam<String> of(@NotNull String id, @NotNull String defaultValue) {
-    return new KeyParam<>(id, defaultValue, "", "string");
-  }
+  public static class Builder<T> {
+    private final String id;
+    private Object defaultValue;
+    private String description;
+    private Type type;
 
-  public static KeyParam<String> ofSecret(@NotNull String id, @NotNull String defaultValue, @NotNull String description) {
-    return new KeyParam<>(id, defaultValue, description, "secret");
-  }
-  public static KeyParam<String> ofSecret(@NotNull String id, @NotNull String defaultValue) {
-    return new KeyParam<>(id, defaultValue, "", "secret");
+    public Builder(@NotNull String id) {
+      this.id = id;
+    }
+
+
+    public Builder<T> defaultValue(@NotNull String defaultValue) {
+      this.defaultValue = defaultValue;
+      this.type = Type.STRING;
+      return this;
+    }
+
+    public Builder<T> defaultValue(double defaultValue) {
+      this.defaultValue = defaultValue;
+      this.type = Type.DOUBLE;
+      return this;
+    }
+
+    public Builder<T> defaultValue(int defaultValue) {
+      this.defaultValue = defaultValue;
+      this.type = Type.INT;
+      return this;
+    }
+
+    public Builder<T> description(@NotNull Locale language, @NotNull String description) {
+      this.description = description;
+      return this;
+    }
+
+    public Builder<T> secret() {
+      this.type = Type.SECRET;
+      return this;
+    }
+
+    public KeyParam<T> build() {
+      return  new KeyParam<T>(id, (T) defaultValue, description, type.name);
+    }
   }
 
 
