@@ -36,8 +36,7 @@ public abstract class ProviderPlugin extends AbstractPlugin {
       Parameter<?>... keys) {
     var arr = new Parameter[keys.length + 1];
     arr[0] = Parameter
-        .create("limit")
-        .defaultValue(limit)
+        .create("limit", limit)
         .lang(Locale.ENGLISH, eng.title(), eng.description())
         .lang(Locale.ITALIAN, it.title(), it.description())
 

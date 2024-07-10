@@ -6,7 +6,7 @@
 
     <groupId>com.quicklink.pluginservice</groupId>
     <artifactId>PluginService</artifactId>
-    <version>0.1.0rc3</version>
+    <version>0.1.0rc4</version>
     <packaging>pom</packaging>
     
     <modules>

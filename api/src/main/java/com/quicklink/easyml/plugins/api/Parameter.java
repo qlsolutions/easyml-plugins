@@ -1,29 +1,22 @@
 package com.quicklink.easyml.plugins.api;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.regex.Pattern;
 import org.jetbrains.annotations.ApiStatus.AvailableSince;
+import org.jetbrains.annotations.ApiStatus.Internal;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public final class Parameter<T> {
 
-
-  public enum Type {
-    DOUBLE("float64"),
-    INT("int"),
-    STRING("string"),
-    SECRET("secret");
-
-    private final String name;
-
-    Type(String name) {
-      this.name = name;
-    }
-  }
+  public static final String DOUBLE_TYPE = "float64";
+  public static final String INT_TYPE = "int";
+  public static final String STRING_TYPE = "string";
+  public static final String SECRET_TYPE = "secret";
 
 
   private @NotNull String key;
@@ -44,9 +37,8 @@ public final class Parameter<T> {
     this.defaultValue = defaultValue;
   }
 
-  @AvailableSince(value = "0.1.0rc3")
   public boolean isSecret() {
-    return type.equals(Type.SECRET.name());
+    return type.equals(SECRET_TYPE);
   }
 
   public @NotNull String key() {
@@ -80,7 +72,7 @@ public final class Parameter<T> {
     return this;
   }
 
-  @Nullable Parameter<T> lang(@NotNull  Map<Locale, ParamLang> lang) {
+  Parameter<T> lang(@NotNull Map<Locale, ParamLang> lang) {
     this.lang = lang;
     return this;
   }
@@ -99,6 +91,7 @@ public final class Parameter<T> {
         Objects.equals(this.type, that.type) &&
         Objects.equals(this.defaultValue, that.defaultValue);
   }
+
   @Override
   public int hashCode() {
     return Objects.hash(key, type, defaultValue);
@@ -113,12 +106,19 @@ public final class Parameter<T> {
   }
 
 
-  @AvailableSince(value = "0.1.0rc3")
-  public static <T> Builder<T> create(@NotNull String name) {
-    return new Builder<T>(name);
+  public static StringBuilder create(@NotNull String name, @NotNull String defaultValue) {
+    return new StringBuilder(name, defaultValue);
+  }
+  public static Builder<Double> create(@NotNull String name, double defaultValue) {
+    return new Builder<>(name, defaultValue).type(DOUBLE_TYPE);
   }
 
-  public static class Builder<T> {
+  public static Builder<Integer> create(@NotNull String name, int defaultValue) {
+    return new Builder<>(name, defaultValue).type(INT_TYPE);
+  }
+
+
+  public static class Builder<E> {
 
     private static final Pattern keyPattern = Pattern.compile("[a-zA-Z-]+");
 
@@ -130,49 +130,47 @@ public final class Parameter<T> {
 
 
     private final String id;
-    private Object defaultValue;
-    private Type type;
+    private final E defaultValue;
+    String type;
 
-    private Map<Locale, ParamLang> lang = null;
+    private final Map<Locale, ParamLang> lang = new LinkedHashMap<>();
 
-    public Builder(@NotNull String id) {
+    public Builder(@NotNull String id, @NotNull E defaultValue) {
       this.id = id;
+      this.defaultValue = defaultValue;
       isValidKey(id);
     }
 
-
-    public Builder<T> defaultValue(@NotNull String defaultValue) {
-      this.defaultValue = defaultValue;
-      this.type = Type.STRING;
+    @Internal
+    Builder<E> type(String type) {
+      this.type = type;
       return this;
     }
 
-    public Builder<T> defaultValue(double defaultValue) {
-      this.defaultValue = defaultValue;
-      this.type = Type.DOUBLE;
-      return this;
-    }
-
-    public Builder<T> defaultValue(int defaultValue) {
-      this.defaultValue = defaultValue;
-      this.type = Type.INT;
-      return this;
-    }
-
-    public Builder<T> lang(@NotNull Locale language, @NotNull String title, @NotNull String description) {
+    public Builder<E> lang(@NotNull Locale language, @NotNull String title,
+        @NotNull String description) {
       this.lang.put(language, new ParamLang(title, description));
       return this;
     }
 
-    public Builder<T> secret() {
-      this.type = Type.SECRET;
-      return this;
-    }
-
-    public Parameter<T> build() {
-      var param = new Parameter<>(id, type.name(), (T) defaultValue);
+    public Parameter<E> build() {
+      var param = new Parameter<>(id, type, (E) defaultValue);
       param.lang(lang);
       return param;
+    }
+
+  }
+
+  public static class StringBuilder extends Builder<String> {
+
+    public StringBuilder(@NotNull String id, @NotNull String defaultValue) {
+      super(id, defaultValue);
+      type(STRING_TYPE);
+    }
+
+    public StringBuilder secret() {
+      this.type = SECRET_TYPE;
+      return this;
     }
   }
 }
