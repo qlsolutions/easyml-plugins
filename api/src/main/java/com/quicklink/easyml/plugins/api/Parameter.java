@@ -21,7 +21,7 @@ public final class Parameter<T> {
 
   private @NotNull String key;
   private @NotNull String type;
-  private @NotNull T defaultValue;
+  private @NotNull Object defaultValue;
 
   @JsonIgnore
   private Map<Locale, ParamLang> lang = null;
@@ -49,8 +49,8 @@ public final class Parameter<T> {
     return type;
   }
 
-  public @NotNull Object defaultValue() {
-    return defaultValue;
+  public @NotNull T defaultValue() {
+    return (T) defaultValue;
   }
 
   public @Nullable Map<Locale, ParamLang> lang() {
@@ -173,4 +173,14 @@ public final class Parameter<T> {
       return this;
     }
   }
+
+
+  public static Parameter<String> password = Parameter
+      .create("password", "")
+      .secret()
+      .lang(Locale.ITALIAN, "titolo", "descrizione")
+      .lang(Locale.ENGLISH, "title", "description")
+      .build();
+
+
 }
