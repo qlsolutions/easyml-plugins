@@ -4,6 +4,7 @@ import static com.quicklink.openmeteo.Keys.*;
 
 import com.google.gson.Gson;
 
+import com.quicklink.easyml.plugins.api.ParamLang;
 import com.quicklink.easyml.plugins.api.providers.About;
 import com.quicklink.easyml.plugins.api.providers.ProviderContext;
 import com.quicklink.easyml.plugins.api.providers.ProviderPlugin;
@@ -27,7 +28,11 @@ public class OpenMeteoPlugin extends ProviderPlugin {
   final List<Serie> serieList = new ArrayList<>();
 
   public OpenMeteoPlugin() {
-    super("OpenMeteo","1.0.0", 5, "Days limit for request", LATITUDE, LONGITUDE, API_KEY);
+    super("OpenMeteo", "1.0.0",
+        5,
+        new ParamLang("limit", "Days limit for request"),
+        new ParamLang("limite", "Limite di giorni per richiesta"),
+        LATITUDE, LONGITUDE, API_KEY);
   }
 
   @Override
@@ -42,7 +47,8 @@ public class OpenMeteoPlugin extends ProviderPlugin {
   }
 
   @Override
-  public @NotNull List<Record> getSerieData(ProviderContext ctx, String serieId, long startTs, long endTs) {
+  public @NotNull List<Record> getSerieData(ProviderContext ctx, String serieId, long startTs,
+      long endTs) {
     var latitude = ctx.param(LATITUDE);
     var longitude = ctx.param(LONGITUDE);
     var apiKey = ctx.param(API_KEY);
@@ -79,7 +85,7 @@ public class OpenMeteoPlugin extends ProviderPlugin {
 
     String request;
     if (apiKey.isEmpty()) {
-      if(forecast) {
+      if (forecast) {
         request = String.format(
             "https://api.open-meteo.com/v1/forecast?latitude=%s&longitude=%s&hourly=%s&start_date=%s&end_date=%s",
             latitude, longitude, serieId, timestampToYYYYMMGG(start), timestampToYYYYMMGG(end));
@@ -90,7 +96,7 @@ public class OpenMeteoPlugin extends ProviderPlugin {
       }
     } else {
       // commercial plan
-      if(forecast) {
+      if (forecast) {
         request = String.format(
             "https://customer-api.open-meteo.com/v1/forecast?latitude=%s&longitude=%s&hourly=%s&start_date=%s&end_date=%s",
             latitude, longitude, serieId, timestampToYYYYMMGG(start), timestampToYYYYMMGG(end));

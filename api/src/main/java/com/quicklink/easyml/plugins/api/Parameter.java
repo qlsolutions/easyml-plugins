@@ -1,6 +1,7 @@
 package com.quicklink.easyml.plugins.api;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -18,12 +19,15 @@ public final class Parameter<T> {
   public static final String STRING_TYPE = "string";
   public static final String SECRET_TYPE = "secret";
 
+  @JsonProperty
+  private  @NotNull String key;
 
-  private @NotNull String key;
+  @JsonProperty
   private @NotNull String type;
+
+  @JsonProperty
   private @NotNull Object defaultValue;
 
-  @JsonIgnore
   private Map<Locale, ParamLang> lang = null;
 
 
@@ -37,6 +41,7 @@ public final class Parameter<T> {
     this.defaultValue = defaultValue;
   }
 
+  @JsonIgnore
   public boolean isSecret() {
     return type.equals(SECRET_TYPE);
   }

@@ -2,6 +2,7 @@ package com.quicklink.niagara;
 
 import static com.quicklink.niagara.Keys.*;
 
+import com.quicklink.easyml.plugins.api.ParamLang;
 import com.quicklink.easyml.plugins.api.providers.About;
 import com.quicklink.easyml.plugins.api.providers.ProviderContext;
 import com.quicklink.easyml.plugins.api.providers.ProviderPlugin;
@@ -27,13 +28,17 @@ public class NiagaraPlugin extends ProviderPlugin {
   private Map<Integer, NiagaraAuthClient> cacheAccess;
 
   public NiagaraPlugin() {
-    super("Niagara","1.0.0", 5, "Weeks limit for request",
+    super("Niagara", "1.0.0",
+        5,
+        new ParamLang("limit", "Weeks limit for request"),
+        new ParamLang("limite", "Limite di settimane per richiesta"),
         PROTOCOL, HOST, PORT, USERNAME, PASSWORD);
   }
 
-  private NiagaraAuthClient renewToken(NiagaraAuthClient client, Supplier<NiagaraAuthClient> updateClient) {
+  private NiagaraAuthClient renewToken(NiagaraAuthClient client,
+      Supplier<NiagaraAuthClient> updateClient) {
     // is expired?
-    if(client.isExpired()) {
+    if (client.isExpired()) {
       // new login
       client = updateClient.get();
     } else {
@@ -69,7 +74,8 @@ public class NiagaraPlugin extends ProviderPlugin {
 
     var client = cacheAccess.computeIfAbsent(ctx.idApp(), id -> {
       try {
-        return NiagaraAuthClient.parametersCreator(NiagaraPlugin.this, protocol, host, String.valueOf(port), username,
+        return NiagaraAuthClient.parametersCreator(NiagaraPlugin.this, protocol, host,
+            String.valueOf(port), username,
             password);
       } catch (Exception e) {
         throw new RuntimeException(e);
@@ -80,7 +86,8 @@ public class NiagaraPlugin extends ProviderPlugin {
     Supplier<NiagaraAuthClient> updateClient = () -> {
       NiagaraAuthClient c;
       try {
-        c = NiagaraAuthClient.parametersCreator(NiagaraPlugin.this, protocol, host, String.valueOf(port), username,
+        c = NiagaraAuthClient.parametersCreator(NiagaraPlugin.this, protocol, host,
+            String.valueOf(port), username,
             password);
       } catch (Exception e) {
         throw new RuntimeException(e);
@@ -108,7 +115,8 @@ public class NiagaraPlugin extends ProviderPlugin {
   }
 
   @Override
-  public @NotNull List<Record> getSerieData(ProviderContext ctx, String serieId, long startTs, long endTs) {
+  public @NotNull List<Record> getSerieData(ProviderContext ctx, String serieId, long startTs,
+      long endTs) {
     var protocol = ctx.param(PROTOCOL);
     var host = ctx.param(HOST);
     var port = ctx.param(PORT);
@@ -117,7 +125,8 @@ public class NiagaraPlugin extends ProviderPlugin {
 
     var client = cacheAccess.computeIfAbsent(ctx.idApp(), id -> {
       try {
-        return NiagaraAuthClient.parametersCreator(NiagaraPlugin.this, protocol, host, String.valueOf(port), username,
+        return NiagaraAuthClient.parametersCreator(NiagaraPlugin.this, protocol, host,
+            String.valueOf(port), username,
             password);
       } catch (Exception e) {
         throw new RuntimeException(e);
@@ -128,7 +137,8 @@ public class NiagaraPlugin extends ProviderPlugin {
     Supplier<NiagaraAuthClient> updateClient = () -> {
       NiagaraAuthClient c;
       try {
-        c = NiagaraAuthClient.parametersCreator(NiagaraPlugin.this, protocol, host, String.valueOf(port), username,
+        c = NiagaraAuthClient.parametersCreator(NiagaraPlugin.this, protocol, host,
+            String.valueOf(port), username,
             password);
       } catch (Exception e) {
         throw new RuntimeException(e);
@@ -140,7 +150,6 @@ public class NiagaraPlugin extends ProviderPlugin {
     client = NiagaraPlugin.this.renewToken(client, updateClient);
 
     // ---------------------------------------------------------------------------------------------
-
 
     NiagaraAuthClient finalClient = client;
     return ctx.dateRangeStream(Calendar.WEEK_OF_MONTH).flatMap(
@@ -167,7 +176,8 @@ public class NiagaraPlugin extends ProviderPlugin {
       var client = cacheAccess.computeIfAbsent(ctx.idApp(),
           integer -> {
             try {
-              return NiagaraAuthClient.parametersCreator(NiagaraPlugin.this, protocol, host, String.valueOf(port),
+              return NiagaraAuthClient.parametersCreator(NiagaraPlugin.this, protocol, host,
+                  String.valueOf(port),
                   username,
                   password);
             } catch (Exception e) {
@@ -175,12 +185,12 @@ public class NiagaraPlugin extends ProviderPlugin {
             }
           });
 
-
       // Renew token -------------------------------------------------------------------------------
       Supplier<NiagaraAuthClient> updateClient = () -> {
         NiagaraAuthClient c;
         try {
-          c = NiagaraAuthClient.parametersCreator(NiagaraPlugin.this, protocol, host, String.valueOf(port), username,
+          c = NiagaraAuthClient.parametersCreator(NiagaraPlugin.this, protocol, host,
+              String.valueOf(port), username,
               password);
         } catch (Exception e) {
           throw new RuntimeException(e);
@@ -206,7 +216,8 @@ public class NiagaraPlugin extends ProviderPlugin {
 
   private Stream<Record> sendRequests(NiagaraAuthClient client, String serieId, long startTs,
       long endTs) throws Exception {
-    getLogger().ifPresent(logger -> logger.info("Sending {} from {} to {}", serieId, startTs, endTs));
+    getLogger().ifPresent(
+        logger -> logger.info("Sending {} from {} to {}", serieId, startTs, endTs));
 
     String serieDataResponse;
 
