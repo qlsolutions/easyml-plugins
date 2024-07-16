@@ -1,30 +1,103 @@
 package com.quicklink.hookemail;
 
 
-import com.quicklink.easyml.plugins.api.KeyParam;
+import com.quicklink.easyml.plugins.api.Parameter;
+import java.util.Locale;
 
 public final class Keys {
+  static Parameter<Double> tolerance_high = Parameter
+      .create("tolerance-high", 0D)
+      .lang(Locale.ENGLISH, "High Tolerance", "High tolerance threshold for anomaly detection")
+      .lang(Locale.ITALIAN, "Tolleranza Alta", "Soglia di tolleranza alta per il rilevamento delle anomalie")
+      .build();
 
-  static KeyParam<Double> tolerance_high = KeyParam.of("tolerance-high", 0D);
-  static KeyParam<Double> tolerance_low = KeyParam.of("tolerance-low", 0D);
-  static KeyParam<String> from_name = KeyParam.of("From-name", "Quicklink EasyML Server");
-  static KeyParam<String> from_address = KeyParam.of("From-address", "easyml@qlsol.com");
-  static KeyParam<String> to_name = KeyParam.of("To-name", "Info Quicklink");
-  static KeyParam<String> to_address = KeyParam.of("To-address", "info@qlsol.com");
+  static Parameter<Double> tolerance_low = Parameter
+      .create("tolerance-low", 0D)
+      .lang(Locale.ENGLISH, "Low Tolerance", "Low tolerance threshold for anomaly detection")
+      .lang(Locale.ITALIAN, "Tolleranza Bassa", "Soglia di tolleranza bassa per il rilevamento delle anomalie")
+      .build();
 
-  static KeyParam<String> object_start = KeyParam.of("Mail-object-on-anomaly-start", "[EasyML] anomaly detected! (score{model}, score={predicted})");
-  static KeyParam<String> content_start = KeyParam.of("Mail-content-on-anomaly-start",
-      "<p>Anomaly detected by EasyML! model=<strong>{model}</strong>, date=<strong>{timestamp}</strong>, predicted=<strong>{predicted}</strong>, "
-          + "max-predicted=<strong>{max-predicted}</strong>, min-predicted=<strong>{min-predicted}</strong>, observed=<strong>{observed}</strong></p>");
+  static Parameter<String> from_name = Parameter
+      .create("from-name", "Quicklink EasyML Server")
+      .lang(Locale.ENGLISH, "Sender Name", "Name of the email sender")
+      .lang(Locale.ITALIAN, "Nome Mittente", "Nome del mittente dell'email")
+      .build();
 
-  static KeyParam<String> object_end = KeyParam.of("Mail-object-on-anomaly-end", "[EasyML] anomaly end! (score{model}, score={predicted})");
-  static KeyParam<String> content_end = KeyParam.of("Mail-content-on-anomaly-end",
-      "<p>Anomaly end! model=<strong>{model}</strong>, date=<strong>{timestamp}</strong>, predicted=<strong>{predicted}</strong>, "
-          + "max-predicted=<strong>{max-predicted}</strong>, min-predicted=<strong>{min-predicted}</strong>, observed=<strong>{observed}</strong></p>");
+  static Parameter<String> to_name = Parameter
+      .create("to-name", "Info Quicklink")
+      .lang(Locale.ENGLISH, "Receiver Name", "Name of the email receiver")
+      .lang(Locale.ITALIAN, "Nome Destinatario", "Nome del destinatario dell'email")
+      .build();
 
-  static KeyParam<String> smtp_host = KeyParam.of("SMTP-Host", "smtp.gmail.com");
-  static KeyParam<Integer> smtp_port = KeyParam.of("SMTP-Port", 25);
-  static KeyParam<String> smtp_username = KeyParam.of("SMTP-Username", "sender@gmail.com");
-  static KeyParam<String> smtp_password = KeyParam.ofSecret("SMTP-Password", "");
-  static KeyParam<String> smtp_transport_strategy = KeyParam.of("SMTP-TransportStrategy", "SMTP_TLS", "Options: SMTP/SMTP_TLS/SMTPS/SMTP_OAUTH2");
+  static Parameter<String> from_address = Parameter
+      .create("from-address", "info@qlsol.com")
+      .lang(Locale.ENGLISH, "Sender Email", "Email address of the sender")
+      .lang(Locale.ITALIAN, "Email Mittente", "Indirizzo email del mittente")
+      .build();
+
+  static Parameter<String> to_address = Parameter
+      .create("to-address", "")
+      .lang(Locale.ENGLISH, "Receiver Email", "Email address of the receiver")
+      .lang(Locale.ITALIAN, "Email Destinatario", "Indirizzo email del destinatario")
+      .build();
+
+  static Parameter<String> object_start = Parameter
+      .create("mail-object-on-anomaly-start", "[EasyML] anomaly detected! (score{model}, score={predicted})")
+      .lang(Locale.ENGLISH, "Anomaly Start Subject", "Subject line for anomaly detection email")
+      .lang(Locale.ITALIAN, "Titolo Anomalia Inizio", "Oggetto dell'email per rilevamento anomalia")
+      .build();
+
+  static Parameter<String> content_start = Parameter
+      .create("mail-content-on-anomaly-start",
+          "<p>Anomaly detected by EasyML! model=<strong>{model}</strong>, date=<strong>{timestamp}</strong>, predicted=<strong>{predicted}</strong>, "
+              + "max-predicted=<strong>{max-predicted}</strong>, min-predicted=<strong>{min-predicted}</strong>, observed=<strong>{observed}</strong></p>")
+      .lang(Locale.ENGLISH, "Anomaly Start Content", "Content of the email when an anomaly is detected")
+      .lang(Locale.ITALIAN, "Contenuto Anomalia Inizio", "Contenuto dell'email alla rilevazione di un'anomalia")
+      .build();
+
+  static Parameter<String> object_end = Parameter
+      .create("mail-object-on-anomaly-end", "[EasyML] anomaly end! (score{model}, score={predicted})")
+      .lang(Locale.ENGLISH, "Anomaly End Subject", "Subject line for anomaly resolution email")
+      .lang(Locale.ITALIAN, "Titolo Anomalia Fine", "Oggetto dell'email per la risoluzione dell'anomalia")
+      .build();
+
+  static Parameter<String> content_end = Parameter
+      .create("mail-content-on-anomaly-end",
+          "<p>Anomaly end! model=<strong>{model}</strong>, date=<strong>{timestamp}</strong>, predicted=<strong>{predicted}</strong>, "
+              + "max-predicted=<strong>{max-predicted}</strong>, min-predicted=<strong>{min-predicted}</strong>, observed=<strong>{observed}</strong></p>")
+      .lang(Locale.ENGLISH, "Anomaly End Content", "Content of the email when an anomaly is resolved")
+      .lang(Locale.ITALIAN, "Contenuto Anomalia Fine", "Contenuto dell'email alla risoluzione di un'anomalia")
+      .build();
+
+  static Parameter<String> smtp_host = Parameter
+      .create("SMTP-Host", "smtp.gmail.com")
+      .lang(Locale.ENGLISH, "SMTP Host", "SMTP server host")
+      .lang(Locale.ITALIAN, "Host SMTP", "Host del server SMTP")
+      .build();
+
+  static Parameter<Integer> smtp_port = Parameter
+      .create("SMTP-Port", 25)
+      .lang(Locale.ENGLISH, "SMTP Port", "SMTP server port")
+      .lang(Locale.ITALIAN, "Porta SMTP", "Porta del server SMTP")
+      .build();
+
+  static Parameter<String> smtp_username = Parameter
+      .create("SMTP-Username", "sender@gmail.com")
+      .lang(Locale.ENGLISH, "SMTP Username", "SMTP server username")
+      .lang(Locale.ITALIAN, "Username SMTP", "Nome utente del server SMTP")
+      .build();
+
+  static Parameter<String> smtp_password = Parameter
+      .create("SMTP-Password", "")
+      .secret()
+      .lang(Locale.ENGLISH, "SMTP Password", "SMTP server password")
+      .lang(Locale.ITALIAN, "Password SMTP", "Password del server SMTP")
+      .build();
+
+  static Parameter<String> smtp_transport_strategy = Parameter
+      .create("SMTP-TransportStrategy", "SMTP_TLS")
+      .lang(Locale.ENGLISH, "SMTP Transport Strategy", "Options: SMTP/SMTP_TLS/SMTPS/SMTP_OAUTH2")
+      .lang(Locale.ITALIAN, "Strategia di Trasporto SMTP", "Opzioni: SMTP/SMTP_TLS/SMTPS/SMTP_OAUTH2")
+      .build();
+
 }
