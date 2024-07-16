@@ -28,6 +28,7 @@ public final class Parameter<T> {
   @JsonProperty
   private @NotNull Object defaultValue;
 
+  @JsonIgnore
   private Map<Locale, ParamLang> lang = null;
 
 
@@ -177,15 +178,20 @@ public final class Parameter<T> {
       this.type = SECRET_TYPE;
       return this;
     }
+
+    @Override
+    public StringBuilder lang(@NotNull Locale language, @NotNull String title, @NotNull String description) {
+      return (StringBuilder) super.lang(language, title, description);
+    }
   }
 
 
-  public static Parameter<String> password = Parameter
-      .create("password", "")
-      .secret()
-      .lang(Locale.ITALIAN, "titolo", "descrizione")
-      .lang(Locale.ENGLISH, "title", "description")
-      .build();
+//  public static Parameter<String> password = Parameter
+//      .create("password", "")
+//      .secret()
+//      .lang(Locale.ITALIAN, "titolo", "descrizione")
+//      .lang(Locale.ENGLISH, "title", "description")
+//      .build();
 
 
 }
