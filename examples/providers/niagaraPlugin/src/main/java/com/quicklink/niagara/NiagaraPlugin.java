@@ -44,8 +44,8 @@ public class NiagaraPlugin extends ProviderPlugin {
   public NiagaraPlugin() {
     super("Niagara", "1.0.0",
         5,
-        new ParamLang("limit", "Weeks limit for request"),
-        new ParamLang("limite", "Limite di settimane per richiesta"),
+        new ParamLang("Limit", "Weeks limit for request"),
+        new ParamLang("Limite", "Limite di settimane per richiesta"),
         PROTOCOL, HOST, PORT, USERNAME, PASSWORD);
   }
 

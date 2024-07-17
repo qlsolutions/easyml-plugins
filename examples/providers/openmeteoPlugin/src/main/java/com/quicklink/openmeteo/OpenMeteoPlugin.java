@@ -47,8 +47,8 @@ public class OpenMeteoPlugin extends ProviderPlugin {
   public OpenMeteoPlugin() {
     super("OpenMeteo", "1.0.0",
         5,
-        new ParamLang("limit", "Days limit for request"),
-        new ParamLang("limite", "Limite di giorni per richiesta"),
+        new ParamLang("Limit", "Days limit for request"),
+        new ParamLang("Limite", "Limite di giorni per richiesta"),
         LATITUDE, LONGITUDE, API_KEY);
   }
 
