@@ -1,20 +1,32 @@
+/*
+ *  Copyright 2024, QuickLink Solutions - All Rights Reserved.
+ */
+
 package com.quicklink.hookemail;
 
 
 import com.quicklink.easyml.plugins.api.Parameter;
 import java.util.Locale;
 
+/**
+ * Keys - Mail parameters.
+ *
+ * @author Denis Mehilli
+ */
 public final class Keys {
+
   static Parameter<Double> tolerance_high = Parameter
       .create("tolerance-high", 0D)
       .lang(Locale.ENGLISH, "High Tolerance", "High tolerance threshold for anomaly detection")
-      .lang(Locale.ITALIAN, "Tolleranza Alta", "Soglia di tolleranza alta per il rilevamento delle anomalie")
+      .lang(Locale.ITALIAN, "Tolleranza Alta",
+          "Soglia di tolleranza alta per il rilevamento delle anomalie")
       .build();
 
   static Parameter<Double> tolerance_low = Parameter
       .create("tolerance-low", 0D)
       .lang(Locale.ENGLISH, "Low Tolerance", "Low tolerance threshold for anomaly detection")
-      .lang(Locale.ITALIAN, "Tolleranza Bassa", "Soglia di tolleranza bassa per il rilevamento delle anomalie")
+      .lang(Locale.ITALIAN, "Tolleranza Bassa",
+          "Soglia di tolleranza bassa per il rilevamento delle anomalie")
       .build();
 
   static Parameter<String> from_name = Parameter
@@ -42,7 +54,8 @@ public final class Keys {
       .build();
 
   static Parameter<String> object_start = Parameter
-      .create("mail-object-on-anomaly-start", "[EasyML] anomaly detected! (score{model}, score={predicted})")
+      .create("mail-object-on-anomaly-start",
+          "[EasyML] anomaly detected! (score{model}, score={predicted})")
       .lang(Locale.ENGLISH, "Anomaly Start Subject", "Subject line for anomaly detection email")
       .lang(Locale.ITALIAN, "Titolo Anomalia Inizio", "Oggetto dell'email per rilevamento anomalia")
       .build();
@@ -51,22 +64,28 @@ public final class Keys {
       .create("mail-content-on-anomaly-start",
           "<p>Anomaly detected by EasyML! model=<strong>{model}</strong>, date=<strong>{timestamp}</strong>, predicted=<strong>{predicted}</strong>, "
               + "max-predicted=<strong>{max-predicted}</strong>, min-predicted=<strong>{min-predicted}</strong>, observed=<strong>{observed}</strong></p>")
-      .lang(Locale.ENGLISH, "Anomaly Start Content", "Content of the email when an anomaly is detected")
-      .lang(Locale.ITALIAN, "Contenuto Anomalia Inizio", "Contenuto dell'email alla rilevazione di un'anomalia")
+      .lang(Locale.ENGLISH, "Anomaly Start Content",
+          "Content of the email when an anomaly is detected")
+      .lang(Locale.ITALIAN, "Contenuto Anomalia Inizio",
+          "Contenuto dell'email alla rilevazione di un'anomalia")
       .build();
 
   static Parameter<String> object_end = Parameter
-      .create("mail-object-on-anomaly-end", "[EasyML] anomaly end! (score{model}, score={predicted})")
+      .create("mail-object-on-anomaly-end",
+          "[EasyML] anomaly end! (score{model}, score={predicted})")
       .lang(Locale.ENGLISH, "Anomaly End Subject", "Subject line for anomaly resolution email")
-      .lang(Locale.ITALIAN, "Titolo Anomalia Fine", "Oggetto dell'email per la risoluzione dell'anomalia")
+      .lang(Locale.ITALIAN, "Titolo Anomalia Fine",
+          "Oggetto dell'email per la risoluzione dell'anomalia")
       .build();
 
   static Parameter<String> content_end = Parameter
       .create("mail-content-on-anomaly-end",
           "<p>Anomaly end! model=<strong>{model}</strong>, date=<strong>{timestamp}</strong>, predicted=<strong>{predicted}</strong>, "
               + "max-predicted=<strong>{max-predicted}</strong>, min-predicted=<strong>{min-predicted}</strong>, observed=<strong>{observed}</strong></p>")
-      .lang(Locale.ENGLISH, "Anomaly End Content", "Content of the email when an anomaly is resolved")
-      .lang(Locale.ITALIAN, "Contenuto Anomalia Fine", "Contenuto dell'email alla risoluzione di un'anomalia")
+      .lang(Locale.ENGLISH, "Anomaly End Content",
+          "Content of the email when an anomaly is resolved")
+      .lang(Locale.ITALIAN, "Contenuto Anomalia Fine",
+          "Contenuto dell'email alla risoluzione di un'anomalia")
       .build();
 
   static Parameter<String> smtp_host = Parameter
@@ -97,7 +116,8 @@ public final class Keys {
   static Parameter<String> smtp_transport_strategy = Parameter
       .create("SMTP-TransportStrategy", "SMTP_TLS")
       .lang(Locale.ENGLISH, "SMTP Transport Strategy", "Options: SMTP/SMTP_TLS/SMTPS/SMTP_OAUTH2")
-      .lang(Locale.ITALIAN, "Strategia di Trasporto SMTP", "Opzioni: SMTP/SMTP_TLS/SMTPS/SMTP_OAUTH2")
+      .lang(Locale.ITALIAN, "Strategia di Trasporto SMTP",
+          "Opzioni: SMTP/SMTP_TLS/SMTPS/SMTP_OAUTH2")
       .build();
 
 }

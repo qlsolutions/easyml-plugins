@@ -1,9 +1,18 @@
+/*
+ *  Copyright 2024, QuickLink Solutions - All Rights Reserved.
+ */
+
 package com.quicklink.openmeteo;
 
 
 import com.quicklink.easyml.plugins.api.Parameter;
 import java.util.Locale;
 
+/**
+ * Keys - OpenMeteo parameters.
+ *
+ * @author Denis Mehilli
+ */
 public final class Keys {
 
   static Parameter<String> LATITUDE = Parameter

@@ -1,10 +1,20 @@
+/*
+ *  Copyright 2024, QuickLink Solutions - All Rights Reserved.
+ */
+
 package com.quicklink.niagara;
 
 
 import com.quicklink.easyml.plugins.api.Parameter;
 import java.util.Locale;
 
+/**
+ * Keys - Niagara parameters.
+ *
+ * @author Denis Mehilli
+ */
 public final class Keys {
+
   static Parameter<String> PROTOCOL = Parameter
       .create("protocol", "https")
       .lang(Locale.ENGLISH, "Protocol", "Protocol used by the Niagara interface")

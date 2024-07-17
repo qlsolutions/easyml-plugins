@@ -1,7 +1,16 @@
+/*
+ *  Copyright 2024, QuickLink Solutions - All Rights Reserved.
+ */
+
 package com.quicklink.niagara;
 
-import static com.quicklink.niagara.Keys.*;
+import static com.quicklink.niagara.Keys.HOST;
+import static com.quicklink.niagara.Keys.PASSWORD;
+import static com.quicklink.niagara.Keys.PORT;
+import static com.quicklink.niagara.Keys.PROTOCOL;
+import static com.quicklink.niagara.Keys.USERNAME;
 
+import com.google.gson.Gson;
 import com.quicklink.easyml.plugins.api.ParamLang;
 import com.quicklink.easyml.plugins.api.providers.About;
 import com.quicklink.easyml.plugins.api.providers.ProviderContext;
@@ -12,16 +21,21 @@ import com.quicklink.niagara.model.NiagaraAbout;
 import com.quicklink.niagara.model.SerieDetailsModel;
 import com.quicklink.niagara.model.SeriesModel;
 import com.quicklink.niagara.model.request.SerieDetailsBody;
-import com.google.gson.Gson;
-
-
-import java.util.*;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * NiagaraPlugin - Plugin entrypoint.
+ *
+ * @author Denis Mehilli
+ */
 public class NiagaraPlugin extends ProviderPlugin {
 
   private Gson gson;

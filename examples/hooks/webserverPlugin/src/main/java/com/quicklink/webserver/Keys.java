@@ -1,10 +1,20 @@
+/*
+ *  Copyright 2024, QuickLink Solutions - All Rights Reserved.
+ */
+
 package com.quicklink.webserver;
 
 
 import com.quicklink.easyml.plugins.api.Parameter;
 import java.util.Locale;
 
+/**
+ * Keys - WebServer parameters.
+ *
+ * @author Denis Mehilli
+ */
 public final class Keys {
+
   static Parameter<Double> tolerance_high = Parameter
       .create("tolerance-high", 0D)
       .lang(Locale.ENGLISH, "high tolerance", "High tolerance level")
@@ -31,30 +41,34 @@ public final class Keys {
 
   static Parameter<String> template_to_send = Parameter
       .create("template-to-send", """
-        {
-            "modelId": {model},
-            "timestamp": {timestamp},
-            "status": {anomalyStatus},
-            "score": {predicted},
-            "max-predicted": {max-predicted},
-            "min-predicted": {min-predicted},
-            "observed": {observed},
-        }
-        """)
+          {
+              "modelId": {model},
+              "timestamp": {timestamp},
+              "status": {anomalyStatus},
+              "score": {predicted},
+              "max-predicted": {max-predicted},
+              "min-predicted": {min-predicted},
+              "observed": {observed},
+          }
+          """)
       .lang(Locale.ENGLISH, "template to send", "Template to send to the server")
       .lang(Locale.ITALIAN, "modello da inviare", "Modello da inviare al server")
       .build();
 
   static Parameter<String> requestMethod = Parameter
       .create("request-method", "POST")
-      .lang(Locale.ENGLISH, "request method", "HTTP request method. Options: GET, POST, PUT, PATCH, OPTIONS, HEAD, DELETE")
-      .lang(Locale.ITALIAN, "metodo richiesta", "Metodo di richiesta HTTP. Opzioni: GET, POST, PUT, PATCH, OPTIONS, HEAD, DELETE")
+      .lang(Locale.ENGLISH, "request method",
+          "HTTP request method. Options: GET, POST, PUT, PATCH, OPTIONS, HEAD, DELETE")
+      .lang(Locale.ITALIAN, "metodo richiesta",
+          "Metodo di richiesta HTTP. Opzioni: GET, POST, PUT, PATCH, OPTIONS, HEAD, DELETE")
       .build();
 
   static Parameter<String> authenticationType = Parameter
       .create("authentication-type", "NONE")
-      .lang(Locale.ENGLISH, "authentication type", "Type of authentication. " + "Options: NONE, BASIC, BEARER_TOKEN")
-      .lang(Locale.ITALIAN, "tipo di autenticazione", "Tipo di autenticazione. " + "Opzioni: NONE, BASIC, BEARER_TOKEN")
+      .lang(Locale.ENGLISH, "authentication type",
+          "Type of authentication. " + "Options: NONE, BASIC, BEARER_TOKEN")
+      .lang(Locale.ITALIAN, "tipo di autenticazione",
+          "Tipo di autenticazione. " + "Opzioni: NONE, BASIC, BEARER_TOKEN")
       .build();
 
   static Parameter<String> username = Parameter

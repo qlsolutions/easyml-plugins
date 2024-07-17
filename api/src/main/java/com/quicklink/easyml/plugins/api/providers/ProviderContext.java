@@ -1,3 +1,7 @@
+/*
+ *  Copyright 2024, QuickLink Solutions - All Rights Reserved.
+ */
+
 package com.quicklink.easyml.plugins.api.providers;
 
 
@@ -9,16 +13,24 @@ import java.util.stream.Stream;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * ProviderContext - Context received by easmly-app.
+ *
+ * @author Denis Mehilli
+ */
 public class ProviderContext {
 
   private final int idApp;
   private final String nameApp;
   private final Map<String, ?> parameters;
 
-  @Nullable private final Long startTs;
-  @Nullable private final Long endTs;
+  @Nullable
+  private final Long startTs;
+  @Nullable
+  private final Long endTs;
 
-  public ProviderContext(int idApp, @NotNull String nameApp, @NotNull Map<String, ?> parameters, @Nullable Long startTs, @Nullable Long endTs) {
+  public ProviderContext(int idApp, @NotNull String nameApp, @NotNull Map<String, ?> parameters,
+      @Nullable Long startTs, @Nullable Long endTs) {
     this.idApp = idApp;
     this.nameApp = nameApp;
     this.parameters = parameters;
@@ -38,7 +50,7 @@ public class ProviderContext {
     return nameApp;
   }
 
-  public @Nullable<T> T param(@NotNull Parameter<T> key) {
+  public @Nullable <T> T param(@NotNull Parameter<T> key) {
     return (T) parameters.getOrDefault(key.key(), null);
   }
 

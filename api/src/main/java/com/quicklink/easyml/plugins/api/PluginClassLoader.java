@@ -1,3 +1,7 @@
+/*
+ *  Copyright 2024, QuickLink Solutions - All Rights Reserved.
+ */
+
 package com.quicklink.easyml.plugins.api;
 
 import java.net.URL;
@@ -6,6 +10,11 @@ import org.jetbrains.annotations.ApiStatus.Internal;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * PluginClassLoader - Plugin class loader.
+ *
+ * @author Denis Mehilli
+ */
 @Internal
 public abstract class PluginClassLoader extends URLClassLoader {
 

@@ -1,3 +1,7 @@
+/*
+ *  Copyright 2024, QuickLink Solutions - All Rights Reserved.
+ */
+
 package com.quicklink.easyml.plugins.api.providers;
 
 import java.util.Calendar;
@@ -5,6 +9,11 @@ import java.util.Date;
 import java.util.Iterator;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * DateRangeIterator - Utility class for iterate on data ranges.
+ *
+ * @author Denis Mehilli
+ */
 class DateRangeIterator implements Iterator<DateRange> {
 
   private final Calendar curr;

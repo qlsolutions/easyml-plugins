@@ -1,3 +1,7 @@
+/*
+ *  Copyright 2024, QuickLink Solutions - All Rights Reserved.
+ */
+
 package com.quicklink.easyml.plugins.api;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -7,11 +11,17 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.regex.Pattern;
-import org.jetbrains.annotations.ApiStatus.AvailableSince;
 import org.jetbrains.annotations.ApiStatus.Internal;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * Parameter - Plugin's parameters.
+ * Supported types: "float64", "int", "string", "secret".
+ * Secret types are sensible data(like password/api-key) which will be encrypted in database.
+ *
+ * @author Denis Mehilli
+ */
 public final class Parameter<T> {
 
   public static final String DOUBLE_TYPE = "float64";
@@ -20,7 +30,7 @@ public final class Parameter<T> {
   public static final String SECRET_TYPE = "secret";
 
   @JsonProperty
-  private  @NotNull String key;
+  private @NotNull String key;
 
   @JsonProperty
   private @NotNull String type;
@@ -40,6 +50,18 @@ public final class Parameter<T> {
     this.key = key;
     this.type = type;
     this.defaultValue = defaultValue;
+  }
+
+  public static StringBuilder create(@NotNull String name, @NotNull String defaultValue) {
+    return new StringBuilder(name, defaultValue);
+  }
+
+  public static Builder<Double> create(@NotNull String name, double defaultValue) {
+    return new Builder<>(name, defaultValue).type(DOUBLE_TYPE);
+  }
+
+  public static Builder<Integer> create(@NotNull String name, int defaultValue) {
+    return new Builder<>(name, defaultValue).type(INT_TYPE);
   }
 
   @JsonIgnore
@@ -83,7 +105,6 @@ public final class Parameter<T> {
     return this;
   }
 
-
   @Override
   public boolean equals(Object obj) {
     if (obj == this) {
@@ -111,40 +132,24 @@ public final class Parameter<T> {
         "defaultValue=" + defaultValue + ']';
   }
 
-
-  public static StringBuilder create(@NotNull String name, @NotNull String defaultValue) {
-    return new StringBuilder(name, defaultValue);
-  }
-  public static Builder<Double> create(@NotNull String name, double defaultValue) {
-    return new Builder<>(name, defaultValue).type(DOUBLE_TYPE);
-  }
-
-  public static Builder<Integer> create(@NotNull String name, int defaultValue) {
-    return new Builder<>(name, defaultValue).type(INT_TYPE);
-  }
-
-
   public static class Builder<E> {
 
     private static final Pattern keyPattern = Pattern.compile("[a-zA-Z-]+");
-
-    private static void isValidKey(String key) {
-      if (!keyPattern.matcher(key).matches()) {
-        throw new IllegalStateException("Invalid parameter key '%s'".formatted(key));
-      }
-    }
-
-
     private final String id;
     private final E defaultValue;
-    String type;
-
     private final Map<Locale, ParamLang> lang = new LinkedHashMap<>();
+    String type;
 
     public Builder(@NotNull String id, @NotNull E defaultValue) {
       this.id = id;
       this.defaultValue = defaultValue;
       isValidKey(id);
+    }
+
+    private static void isValidKey(String key) {
+      if (!keyPattern.matcher(key).matches()) {
+        throw new IllegalStateException("Invalid parameter key '%s'".formatted(key));
+      }
     }
 
     @Internal
@@ -180,11 +185,11 @@ public final class Parameter<T> {
     }
 
     @Override
-    public StringBuilder lang(@NotNull Locale language, @NotNull String title, @NotNull String description) {
+    public StringBuilder lang(@NotNull Locale language, @NotNull String title,
+        @NotNull String description) {
       return (StringBuilder) super.lang(language, title, description);
     }
   }
-
 
 //  public static Parameter<String> password = Parameter
 //      .create("password", "")

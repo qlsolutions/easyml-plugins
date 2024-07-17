@@ -1,8 +1,8 @@
-package com.quicklink.niagara;/*
- *
- *  * Copyright (c) 2015. QuickLink Solutions, Inc. All Rights Reserved.
- *
+/*
+ *  Copyright 2024, QuickLink Solutions - All Rights Reserved.
  */
+
+package com.quicklink.niagara;
 
 import com.quicklink.easyml.plugins.api.providers.ProviderPlugin;
 import java.io.BufferedReader;
@@ -23,7 +23,6 @@ import java.util.StringTokenizer;
 import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 import javax.naming.AuthenticationException;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -35,6 +34,50 @@ import org.jetbrains.annotations.Nullable;
  * Niagara AX station.
  */
 public class NiagaraAuthClient {
+
+  private static final String USER_AGENT = "ScramSha EasyML Niagara Auth Client/1.2";
+  private static final String CMD_CLIENT_FIRST_MESSAGE = "sendClientFirstMessage";
+  private static final String CMD_CLIENT_FINAL_MESSAGE = "sendClientFinalMessage";
+  private static final Pattern CSRF_TOKEN_PATTERN = Pattern.compile(
+      "<input [^<>]*id=['\"]csrfToken['\"][^<>]*>");
+  private static final Pattern VALUE_PATTERN = Pattern.compile("value=['\"]([^\"']*)['\"]");
+  private final ProviderPlugin plugin;
+
+  ////////////////////////////////////////////////////////////////
+// Authentication
+////////////////////////////////////////////////////////////////
+  private NiagaraParameters niagaraParameters;
+  private URL mainUrl;
+  private URL loginUrl;
+  private URL logoutUrl;
+  private String username;
+  private String password;
+  private String sessionId;
+  private String csrfToken;
+  private Instant timeout;
+  private int renewSessionTimeMillis;
+
+  // private static final void usage()
+  // {
+  //   System.err.println("usage: java NiagaraAuthClient http[s]://<username>:<password>@<host>[:<port>] [client_type]");
+  //   System.err.println("\n  client_type can be \"ax\" \"n4\" or \"n4header\". Default is \"n4header\".");
+  //   System.err.println("  n4header refers to the header authentication mechanism added in Niagara 4.4.");
+  //   System.err.println("  This mechanism is not supported in N4 stations prior to 4.4. \"n4\" client_type");
+  //   System.err.println("  should be used for pre-4.4 stations.");
+  //   System.exit(-1);
+  // }
+
+  private NiagaraAuthClient(ProviderPlugin plugin, NiagaraParameters niagaraParameters, URL mainUrl,
+      URL loginUrl,
+      URL logoutUrl, String username, String password) {
+    this.plugin = plugin;
+    this.niagaraParameters = niagaraParameters;
+    this.mainUrl = mainUrl;
+    this.loginUrl = loginUrl;
+    this.logoutUrl = logoutUrl;
+    this.username = username;
+    this.password = password;
+  }
 
   /**
    * @param client
@@ -60,6 +103,24 @@ public class NiagaraAuthClient {
 
     return response;
   }
+
+//   private static class NiagaraAXParameters
+//     extends NiagaraParameters
+//   {
+//     public String getSessionCookieName() { return "niagara_session"; }
+//     public String getLoginServletName() { return "login"; }
+//     public String getLogoutServletName() { return "logout"; }
+//     public String getUserCookieName() { return "niagara_userid"; }
+//   }
+
+//   private static class Niagara4Parameters
+//     extends NiagaraParameters
+//   {
+//     public String getSessionCookieName() { return "JSESSIONID"; }
+//     public String getLoginServletName() { return "j_security_check"; }
+//     public String getLogoutServletName() { return "logout"; }
+//     public String getUserCookieName() { return "niagara_userid"; }
+//   }
 
   /**
    * @param client
@@ -87,7 +148,8 @@ public class NiagaraAuthClient {
     return response;
   }
 
-  public static NiagaraAuthClient parametersCreator(ProviderPlugin plugin, String protocol, String host, String port,
+  public static NiagaraAuthClient parametersCreator(ProviderPlugin plugin, String protocol,
+      String host, String port,
       String username, String password)
       throws Exception {
     NiagaraParameters niagaraParameters = new Niagara4HeaderParameters();
@@ -108,7 +170,6 @@ public class NiagaraAuthClient {
 
     String decodedUsername = URLDecoder.decode(username, "UTF-8");
     String decodedPassword = URLDecoder.decode(password, "UTF-8");
-
 
     NiagaraAuthClient client = new NiagaraAuthClient(plugin, niagaraParameters, fullHost, loginUrl,
         logoutUrl, username, password);
@@ -149,21 +210,6 @@ public class NiagaraAuthClient {
     client.logout();
     client.log("logout successful of " + client.mainUrl);
   }
-
-  private NiagaraAuthClient(ProviderPlugin plugin, NiagaraParameters niagaraParameters, URL mainUrl, URL loginUrl,
-      URL logoutUrl, String username, String password) {
-    this.plugin = plugin;
-    this.niagaraParameters = niagaraParameters;
-    this.mainUrl = mainUrl;
-    this.loginUrl = loginUrl;
-    this.logoutUrl = logoutUrl;
-    this.username = username;
-    this.password = password;
-  }
-
-////////////////////////////////////////////////////////////////
-// Authentication
-////////////////////////////////////////////////////////////////
 
   /**
    * Logs in to the station using digest authentication.
@@ -222,7 +268,7 @@ public class NiagaraAuthClient {
   }
 
   public void renewAccessReq() throws Exception {
-    if(renewSessionTimeMillis == -1) {
+    if (renewSessionTimeMillis == -1) {
       return;// infite expire time
     }
     // Url
@@ -266,7 +312,6 @@ public class NiagaraAuthClient {
           osw.flush();
         }
       }
-
 
       connection.connect();
 
@@ -621,18 +666,22 @@ public class NiagaraAuthClient {
     }
   }
 
-  // private static final void usage()
-  // {
-  //   System.err.println("usage: java NiagaraAuthClient http[s]://<username>:<password>@<host>[:<port>] [client_type]");
-  //   System.err.println("\n  client_type can be \"ax\" \"n4\" or \"n4header\". Default is \"n4header\".");
-  //   System.err.println("  n4header refers to the header authentication mechanism added in Niagara 4.4.");
-  //   System.err.println("  This mechanism is not supported in N4 stations prior to 4.4. \"n4\" client_type");
-  //   System.err.println("  should be used for pre-4.4 stations.");
-  //   System.exit(-1);
-  // }
-
   private void log(String msg) {
     plugin.getLogger().ifPresent(logger -> logger.error("[NiagaraAuthClient] " + msg));
+  }
+
+  @Override
+  public String toString() {
+    return "NiagaraAuthClient{" +
+        "niagaraParameters=" + niagaraParameters +
+        ", mainUrl=" + mainUrl +
+        ", loginUrl=" + loginUrl +
+        ", logoutUrl=" + logoutUrl +
+        ", username='" + username + '\'' +
+        ", password='" + password + '\'' +
+        ", sessionId='" + sessionId + '\'' +
+        ", csrfToken='" + csrfToken + '\'' +
+        '}';
   }
 
   private static abstract class NiagaraParameters {
@@ -645,24 +694,6 @@ public class NiagaraAuthClient {
 
     public abstract String getUserCookieName();
   }
-
-//   private static class NiagaraAXParameters
-//     extends NiagaraParameters
-//   {
-//     public String getSessionCookieName() { return "niagara_session"; }
-//     public String getLoginServletName() { return "login"; }
-//     public String getLogoutServletName() { return "logout"; }
-//     public String getUserCookieName() { return "niagara_userid"; }
-//   }
-
-//   private static class Niagara4Parameters
-//     extends NiagaraParameters
-//   {
-//     public String getSessionCookieName() { return "JSESSIONID"; }
-//     public String getLoginServletName() { return "j_security_check"; }
-//     public String getLogoutServletName() { return "logout"; }
-//     public String getUserCookieName() { return "niagara_userid"; }
-//   }
 
   private static class Niagara4HeaderParameters
       extends NiagaraParameters {
@@ -686,6 +717,9 @@ public class NiagaraAuthClient {
   }
 
   private static class AuthMessage {
+
+    private String scheme;
+    private Map<String, String> params = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
 
     public static AuthMessage decodeFromString(String message) {
       AuthMessage auth = new AuthMessage();
@@ -731,12 +765,12 @@ public class NiagaraAuthClient {
       return builder.toString();
     }
 
-    public void setScheme(String scheme) {
-      this.scheme = scheme;
-    }
-
     public String getScheme() {
       return scheme;
+    }
+
+    public void setScheme(String scheme) {
+      this.scheme = scheme;
     }
 
     public void setParameter(String key, String value) {
@@ -746,41 +780,5 @@ public class NiagaraAuthClient {
     public String getParameter(String key) {
       return params.get(key);
     }
-
-    private String scheme;
-    private Map<String, String> params = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
   }
-
-  private final ProviderPlugin plugin;
-  private NiagaraParameters niagaraParameters;
-  private URL mainUrl;
-  private URL loginUrl;
-  private URL logoutUrl;
-  private String username;
-  private String password;
-  private String sessionId;
-  private String csrfToken;
-  private Instant timeout;
-  private int renewSessionTimeMillis;
-
-  @Override
-  public String toString() {
-    return "NiagaraAuthClient{" +
-        "niagaraParameters=" + niagaraParameters +
-        ", mainUrl=" + mainUrl +
-        ", loginUrl=" + loginUrl +
-        ", logoutUrl=" + logoutUrl +
-        ", username='" + username + '\'' +
-        ", password='" + password + '\'' +
-        ", sessionId='" + sessionId + '\'' +
-        ", csrfToken='" + csrfToken + '\'' +
-        '}';
-  }
-
-  private static final String USER_AGENT = "ScramSha EasyML Niagara Auth Client/1.2";
-  private static final String CMD_CLIENT_FIRST_MESSAGE = "sendClientFirstMessage";
-  private static final String CMD_CLIENT_FINAL_MESSAGE = "sendClientFinalMessage";
-  private static final Pattern CSRF_TOKEN_PATTERN = Pattern.compile(
-      "<input [^<>]*id=['\"]csrfToken['\"][^<>]*>");
-  private static final Pattern VALUE_PATTERN = Pattern.compile("value=['\"]([^\"']*)['\"]");
 }

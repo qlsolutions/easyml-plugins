@@ -1,3 +1,7 @@
+/*
+ *  Copyright 2024, QuickLink Solutions - All Rights Reserved.
+ */
+
 package com.quicklink.easyml.plugins.api;
 
 
@@ -6,13 +10,17 @@ import org.jetbrains.annotations.ApiStatus.Internal;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 
+/**
+ * AbstractPlugin - Plugin abstract class, extended by HookPlugin, ProviderPlugin.
+ *
+ * @author Denis Mehilli
+ */
 public abstract class AbstractPlugin {
-
-  private final String name;
-  private final String version;
 
   @Internal
   public final PrivateConfig pvt;
+  private final String name;
+  private final String version;
 
   @Internal
   public AbstractPlugin(@NotNull String name, @NotNull String version, Parameter<?>... keys) {
@@ -24,7 +32,7 @@ public abstract class AbstractPlugin {
   public abstract void onEnable();
 
   public @NotNull Optional<Logger> getLogger() {
-    if(pvt.debugMode) {
+    if (pvt.debugMode) {
       return pvt.logger;
     }
     return Optional.empty();

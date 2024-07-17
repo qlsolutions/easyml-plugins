@@ -1,9 +1,14 @@
+/*
+ *  Copyright 2024, QuickLink Solutions - All Rights Reserved.
+ */
+
 package com.quicklink.openmeteo;
 
-import static com.quicklink.openmeteo.Keys.*;
+import static com.quicklink.openmeteo.Keys.API_KEY;
+import static com.quicklink.openmeteo.Keys.LATITUDE;
+import static com.quicklink.openmeteo.Keys.LONGITUDE;
 
 import com.google.gson.Gson;
-
 import com.quicklink.easyml.plugins.api.ParamLang;
 import com.quicklink.easyml.plugins.api.providers.About;
 import com.quicklink.easyml.plugins.api.providers.ProviderContext;
@@ -14,18 +19,30 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * OpenMeteo - Plugin entrypoint.
+ *
+ * @author Denis Mehilli
+ */
 public class OpenMeteoPlugin extends ProviderPlugin {
 
   final Gson gson = new Gson();
   final DateTimeFormatter formatter =
       DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm", Locale.ENGLISH);
   final List<Serie> serieList = new ArrayList<>();
+  private final Pattern regexSeries = Pattern.compile("([a-zA-Z0-9_]+) +\\| +([a-zA-Z,]+)");
 
   public OpenMeteoPlugin() {
     super("OpenMeteo", "1.0.0",
@@ -35,11 +52,14 @@ public class OpenMeteoPlugin extends ProviderPlugin {
         LATITUDE, LONGITUDE, API_KEY);
   }
 
+  private static String timestampToYYYYMMGG(Date date) {
+    return new SimpleDateFormat("yyyy-MM-dd").format(date);
+  }
+
   @Override
   public void onEnable() {
     this.loadSeries();
   }
-
 
   @Override
   public @NotNull Collection<Serie> getSeries(ProviderContext ctx) {
@@ -57,11 +77,6 @@ public class OpenMeteoPlugin extends ProviderPlugin {
         .flatMap(dateRange -> sendRequest(apiKey, latitude, longitude, serieId, dateRange.start(),
             dateRange.end(), false))
         .toList();
-  }
-
-
-  private static String timestampToYYYYMMGG(Date date) {
-    return new SimpleDateFormat("yyyy-MM-dd").format(date);
   }
 
   @Override
@@ -135,9 +150,6 @@ public class OpenMeteoPlugin extends ProviderPlugin {
     }
     return records.stream().map(record -> new Record(record.timestamp() * 1000, record.value()));
   }
-
-
-  private final Pattern regexSeries = Pattern.compile("([a-zA-Z0-9_]+) +\\| +([a-zA-Z,]+)");
 
   private void loadSeries() {
     String series = """
