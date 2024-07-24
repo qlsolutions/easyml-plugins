@@ -29,10 +29,13 @@ public final class Parameter<T> {
   public static final String STRING_TYPE = "string";
   public static final String SECRET_TYPE = "secret";
 
+  @JsonProperty("key")
   private @NotNull String key;
 
+  @JsonProperty("type")
   private @NotNull String type;
 
+  @JsonProperty("defaultValue")
   private @NotNull Object defaultValue;
 
   @JsonIgnore
@@ -40,11 +43,12 @@ public final class Parameter<T> {
 
 
   @Internal
-  @JsonCreator
-  public Parameter(
-      @JsonProperty("key") @NotNull String key,
-      @JsonProperty("type") @NotNull String type,
-      @JsonProperty("defaultValue") @NotNull T defaultValue
+  public Parameter() {}
+
+  private Parameter(
+       @NotNull String key,
+       @NotNull String type,
+       @NotNull T defaultValue
   ) {
     this.key = key;
     this.type = type;
