@@ -12,6 +12,8 @@
     <module>examples/providers/niagaraPlugin</module>
     <module>examples/hooks/hookEmailPlugin</module>
     <module>examples/hooks/webserverPlugin</module>
+    <module>examples/hooks/resendPlugin</module>
+
   </modules>
   <packaging>pom</packaging>
 
