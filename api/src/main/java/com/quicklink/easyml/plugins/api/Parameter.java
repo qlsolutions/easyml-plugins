@@ -5,6 +5,8 @@
 package com.quicklink.easyml.plugins.api;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.LinkedHashMap;
 import java.util.Locale;
@@ -21,7 +23,13 @@ import org.jetbrains.annotations.Nullable;
  *
  * @author Denis Mehilli
  */
+@JsonInclude(Include.NON_NULL)
 public final class Parameter<T> {
+
+  public enum Flags {
+    SELECT
+  }
+
 
   public static StringBuilder create(@NotNull String name, @NotNull String defaultValue) {
     return new StringBuilder(name, defaultValue);
@@ -39,8 +47,10 @@ public final class Parameter<T> {
     return new Builder<>(name, defaultValue).type(BOOL_TYPE);
   }
 
+
   @Internal
-  public static <E> Parameter<E> unsafeParameter(@NotNull String key, @NotNull String type, @NotNull E defaultValue) {
+  public static <E> Parameter<E> unsafeParameter(@NotNull String key, @NotNull String type,
+      @NotNull E defaultValue) {
     return new Parameter<>(key, type, defaultValue);
   }
 
@@ -59,8 +69,13 @@ public final class Parameter<T> {
   @JsonProperty("defaultValue")
   private Object defaultValue;
 
+  @JsonProperty("extra")
+  private Map<Flags, Object> extra;
+
   @JsonIgnore
   private Map<Locale, ParamLang> lang = null;
+
+
 
   @Internal
   public Parameter() {
@@ -149,12 +164,16 @@ public final class Parameter<T> {
     private static final Pattern keyPattern = Pattern.compile("[a-zA-Z-]+");
     private final String id;
     private final E defaultValue;
+
+
+    private E[] select;
     private final Map<Locale, ParamLang> lang = new LinkedHashMap<>();
     String type;
 
     public Builder(@NotNull String id, @NotNull E defaultValue) {
       this.id = id;
       this.defaultValue = defaultValue;
+
       isValidKey(id);
     }
 
@@ -176,9 +195,19 @@ public final class Parameter<T> {
       return this;
     }
 
+    public Builder<E> select(@NotNull E... values) {
+      this.select = values;
+      return this;
+    }
+
     public Parameter<E> build() {
       var param = new Parameter<>(id, type, (E) defaultValue);
       param.lang(lang);
+
+      if (select != null) {
+        param.extra = new LinkedHashMap<>();
+        param.extra.put(Flags.SELECT, select);
+      }
       return param;
     }
 
@@ -200,6 +229,11 @@ public final class Parameter<T> {
     public StringBuilder lang(@NotNull Locale language, @NotNull String title,
         @NotNull String description) {
       return (StringBuilder) super.lang(language, title, description);
+    }
+
+    @Override
+    public StringBuilder select(@NotNull String... values) {
+      return (StringBuilder) super.select(values);
     }
   }
 
