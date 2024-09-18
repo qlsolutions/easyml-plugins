@@ -4,7 +4,6 @@
 
 package com.quicklink.easyml.plugins.api;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.LinkedHashMap;
@@ -17,43 +16,12 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * Parameter - Plugin's parameters. Supported types: "float64", "int", "string", "secret". Secret
- * types are sensible data(like password/api-key) which will be encrypted in database.
+ * Parameter - Plugin's parameters. Supported types: "float64", "int", "string", "secret", "bool".
+ * Secret types are sensible data(like password/api-key) which will be encrypted in database.
  *
  * @author Denis Mehilli
  */
 public final class Parameter<T> {
-
-  public static final String DOUBLE_TYPE = "float64";
-  public static final String INT_TYPE = "int";
-  public static final String STRING_TYPE = "string";
-  public static final String SECRET_TYPE = "secret";
-
-  @JsonProperty("key")
-  private @NotNull String key;
-
-  @JsonProperty("type")
-  private @NotNull String type;
-
-  @JsonProperty("defaultValue")
-  private @NotNull Object defaultValue;
-
-  @JsonIgnore
-  private Map<Locale, ParamLang> lang = null;
-
-
-  @Internal
-  public Parameter() {}
-
-  private Parameter(
-       @NotNull String key,
-       @NotNull String type,
-       @NotNull T defaultValue
-  ) {
-    this.key = key;
-    this.type = type;
-    this.defaultValue = defaultValue;
-  }
 
   public static StringBuilder create(@NotNull String name, @NotNull String defaultValue) {
     return new StringBuilder(name, defaultValue);
@@ -65,6 +33,47 @@ public final class Parameter<T> {
 
   public static Builder<Integer> create(@NotNull String name, int defaultValue) {
     return new Builder<>(name, defaultValue).type(INT_TYPE);
+  }
+
+  public static Builder<Boolean> create(@NotNull String name, boolean defaultValue) {
+    return new Builder<>(name, defaultValue).type(BOOL_TYPE);
+  }
+
+  @Internal
+  public static <E> Parameter<E> unsafeParameter(@NotNull String key, @NotNull String type, @NotNull E defaultValue) {
+    return new Parameter<>(key, type, defaultValue);
+  }
+
+  public static final String DOUBLE_TYPE = "float64";
+  public static final String INT_TYPE = "int";
+  public static final String STRING_TYPE = "string";
+  public static final String SECRET_TYPE = "secret";
+  public static final String BOOL_TYPE = "bool";
+
+  @JsonProperty("key")
+  private String key;
+
+  @JsonProperty("type")
+  private String type;
+
+  @JsonProperty("defaultValue")
+  private Object defaultValue;
+
+  @JsonIgnore
+  private Map<Locale, ParamLang> lang = null;
+
+  @Internal
+  public Parameter() {
+  }
+
+  private Parameter(
+      @NotNull String key,
+      @NotNull String type,
+      @NotNull T defaultValue
+  ) {
+    this.key = key;
+    this.type = type;
+    this.defaultValue = defaultValue;
   }
 
   @JsonIgnore
