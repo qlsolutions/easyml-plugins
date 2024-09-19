@@ -115,9 +115,9 @@ public final class Keys {
 
   static Parameter<String> smtp_transport_strategy = Parameter
       .create("SMTP-TransportStrategy", "SMTP_TLS")
-      .lang(Locale.ENGLISH, "SMTP Transport Strategy", "Options: SMTP/SMTP_TLS/SMTPS/SMTP_OAUTH2")
-      .lang(Locale.ITALIAN, "Strategia di Trasporto SMTP",
-          "Opzioni: SMTP/SMTP_TLS/SMTPS/SMTP_OAUTH2")
+      .select("SMTP", "SMTP_TLS", "SMTPS", "SMTP_OAUTH2")
+      .lang(Locale.ENGLISH, "SMTP Transport Strategy", "")
+      .lang(Locale.ITALIAN, "Strategia di Trasporto SMTP", "")
       .build();
 
 }

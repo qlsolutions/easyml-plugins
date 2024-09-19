@@ -19,6 +19,7 @@ public final class Keys {
       .create("protocol", "https")
       .lang(Locale.ENGLISH, "Protocol", "Protocol used by the Niagara interface")
       .lang(Locale.ITALIAN, "Protocollo", "Protocollo utilizzato dall'interfaccia Niagara")
+      .select("http", "https")
       .build();
 
   static Parameter<String> HOST = Parameter

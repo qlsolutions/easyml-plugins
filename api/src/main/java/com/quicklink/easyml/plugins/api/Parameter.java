@@ -13,6 +13,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import org.jetbrains.annotations.ApiStatus.Internal;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -70,7 +71,7 @@ public final class Parameter<T> {
   private Object defaultValue;
 
   @JsonProperty("extra")
-  private Map<Flags, Object> extra;
+  private Map<String, Object> extra;
 
   @JsonIgnore
   private Map<Locale, ParamLang> lang = null;
@@ -110,6 +111,19 @@ public final class Parameter<T> {
 
   public @Nullable Map<Locale, ParamLang> lang() {
     return lang;
+  }
+
+  public @Nullable Map<Flags, Object> extra() {
+    if(extra == null) {
+      return null;
+    }
+
+    Map<Flags, Object> flags = new LinkedHashMap<>();
+
+    extra.forEach((k, v) -> {
+      flags.put(Flags.valueOf(k), v);
+    });
+    return flags;
   }
 
   public Parameter<T> key(@NotNull String key) {
@@ -206,7 +220,7 @@ public final class Parameter<T> {
 
       if (select != null) {
         param.extra = new LinkedHashMap<>();
-        param.extra.put(Flags.SELECT, select);
+        param.extra.put(Flags.SELECT.name(), select);
       }
       return param;
     }

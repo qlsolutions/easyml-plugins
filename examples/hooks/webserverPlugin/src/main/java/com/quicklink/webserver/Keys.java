@@ -35,8 +35,9 @@ public final class Keys {
 
   static Parameter<String> protocol = Parameter
       .create("protocol", "HTTP")
-      .lang(Locale.ENGLISH, "protocol", "Protocol type (HTTP/HTTPS)")
-      .lang(Locale.ITALIAN, "protocollo", "Tipo di protocollo (HTTP/HTTPS)")
+      .select("HTTP", "HTTPS")
+      .lang(Locale.ENGLISH, "protocol", "Protocol type")
+      .lang(Locale.ITALIAN, "protocollo", "Tipo di protocollo")
       .build();
 
   static Parameter<String> template_to_send = Parameter
@@ -57,18 +58,20 @@ public final class Keys {
 
   static Parameter<String> requestMethod = Parameter
       .create("request-method", "POST")
+      .select("GET", "POST", "PUT", "PATCH", "OPTIONS", "HEAD", "DELETE")
       .lang(Locale.ENGLISH, "request method",
-          "HTTP request method. Options: GET, POST, PUT, PATCH, OPTIONS, HEAD, DELETE")
+          "HTTP request method.")
       .lang(Locale.ITALIAN, "metodo richiesta",
-          "Metodo di richiesta HTTP. Opzioni: GET, POST, PUT, PATCH, OPTIONS, HEAD, DELETE")
+          "Metodo di richiesta HTTP.")
       .build();
 
   static Parameter<String> authenticationType = Parameter
       .create("authentication-type", "NONE")
+      .select("NONE", "BASIC", "BEARER_TOKEN")
       .lang(Locale.ENGLISH, "authentication type",
-          "Type of authentication. " + "Options: NONE, BASIC, BEARER_TOKEN")
+          "Type of authentication.")
       .lang(Locale.ITALIAN, "tipo di autenticazione",
-          "Tipo di autenticazione. " + "Opzioni: NONE, BASIC, BEARER_TOKEN")
+          "Tipo di autenticazione.")
       .build();
 
   static Parameter<String> username = Parameter
