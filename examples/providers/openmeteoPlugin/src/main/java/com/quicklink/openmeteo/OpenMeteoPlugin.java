@@ -148,7 +148,7 @@ public class OpenMeteoPlugin extends ProviderPlugin {
         records.add(new Record(dateTimestamp.atZone(zoneId).toEpochSecond(), (Double) data.get(i)));
       }
     }
-    return records.stream().map(record -> new Record(record.timestamp() * 1000, record.value()));
+    return records.stream().peek(record -> record.setTimestamp(record.getTimestamp() * 1000));
   }
 
   private void loadSeries() {
