@@ -25,15 +25,15 @@ public final class Record {
     this.value = value;
   }
 
-  public @NotNull Long timestamp() {
+  public @NotNull Long getTimestamp() {
     return timestamp;
   }
 
-  public @NotNull Double value() {
+  public @NotNull Double getValue() {
     return value;
   }
 
-  public void timestamp(long timestamp) {
+  public void setTimestamp(long timestamp) {
     this.timestamp = timestamp;
   }
 
