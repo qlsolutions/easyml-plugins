@@ -35,10 +35,10 @@ public class PrivateConfig {
     this.logger = Optional.ofNullable(
         LoggerFactory.getLogger("Plugin %sv%s".formatted(plugin.getName(), plugin.getVersion())));
     this.classLoader = cl;
-    if (!(classLoader instanceof PluginClassLoader)) {
-      throw new IllegalStateException("Plugin requires " + PluginClassLoader.class.getName());
+    if (classLoader instanceof PluginClassLoader pluginClassLoader) {
+//      throw new IllegalStateException("Plugin requires " + PluginClassLoader.class.getName());
+      pluginClassLoader.initialize(plugin);
     }
-    ((PluginClassLoader) classLoader).initialize(plugin);
 
     // add keys
     parameters = new ArrayList<>();
