@@ -8,6 +8,8 @@ package com.quicklink.easyml.plugins.api.providers;
 import com.quicklink.easyml.plugins.api.AbstractPlugin;
 import com.quicklink.easyml.plugins.api.ParamLang;
 import com.quicklink.easyml.plugins.api.Parameter;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
@@ -23,22 +25,35 @@ public abstract class ProviderPlugin extends AbstractPlugin {
   /* INTERNAL */
   public static final RuntimeException notImplementedExc = new RuntimeException();
 
+  private final boolean limitParameterSupported;
+
   public ProviderPlugin(@NotNull String name, @NotNull String version, int limit,
       @NotNull ParamLang eng, @NotNull ParamLang it, Parameter<?>... keys) {
     super(name, version, genParams(limit, eng, it, keys));
+    limitParameterSupported = true;
   }
 
-  private static Parameter<?>[] genParams(int limit, @NotNull ParamLang eng, @NotNull ParamLang it,
-      Parameter<?>... keys) {
-    var arr = new Parameter[keys.length + 1];
-    arr[0] = Parameter
+  public ProviderPlugin(@NotNull String name, @NotNull String version, Parameter<?>... keys) {
+    super(name, version, Arrays.asList(keys));
+    limitParameterSupported = false;
+  }
+
+  public boolean isLimitParameterSupported() {
+    return limitParameterSupported;
+  }
+
+  private static List<Parameter<?>> genParams(int limit, @NotNull ParamLang eng,
+      @NotNull ParamLang it, Parameter<?>... keys) {
+    var list = new ArrayList<Parameter<?>>();
+
+    list.add(Parameter
         .create("limit", limit)
         .lang(Locale.ENGLISH, eng.title(), eng.description())
         .lang(Locale.ITALIAN, it.title(), it.description())
+        .build());
 
-        .build();
-    System.arraycopy(keys, 0, arr, 1, keys.length);
-    return arr;
+    list.addAll(Arrays.asList(keys));
+    return list;
   }
 
   public abstract @NotNull Collection<Serie> getSeries(
@@ -53,4 +68,6 @@ public abstract class ProviderPlugin extends AbstractPlugin {
       long endTs) {
     throw notImplementedExc;
   }
+
+
 }

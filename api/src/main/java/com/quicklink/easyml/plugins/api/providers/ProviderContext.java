@@ -20,6 +20,7 @@ import org.jetbrains.annotations.Nullable;
  */
 public class ProviderContext {
 
+  private final ProviderPlugin plugin;
   private final int idApp;
   private final String nameApp;
   private final Map<String, ?> parameters;
@@ -29,8 +30,9 @@ public class ProviderContext {
   @Nullable
   private final Long endTs;
 
-  public ProviderContext(int idApp, @NotNull String nameApp, @NotNull Map<String, ?> parameters,
+  public ProviderContext(ProviderPlugin plugin, int idApp, @NotNull String nameApp, @NotNull Map<String, ?> parameters,
       @Nullable Long startTs, @Nullable Long endTs) {
+    this.plugin = plugin;
     this.idApp = idApp;
     this.nameApp = nameApp;
     this.parameters = parameters;
@@ -38,8 +40,8 @@ public class ProviderContext {
     this.endTs = endTs;
   }
 
-  public ProviderContext(int idApp, @NotNull String nameApp, @NotNull Map<String, ?> parameters) {
-    this(idApp, nameApp, parameters, null, null);
+  public ProviderContext( ProviderPlugin plugin, int idApp, @NotNull String nameApp, @NotNull Map<String, ?> parameters) {
+    this(plugin, idApp, nameApp, parameters, null, null);
   }
 
   public int idApp() {
@@ -55,6 +57,9 @@ public class ProviderContext {
   }
 
   public int limit() {
+    if(!plugin.isLimitParameterSupported()) {
+      throw new UnsupportedOperationException("This plugin does not support the limit parameter");
+    }
     return (int) parameters.get("limit");
   }
 
@@ -64,6 +69,7 @@ public class ProviderContext {
     }
     Calendar start = Calendar.getInstance();
     start.setTime(new Date(startTs));
+
     var iterator = new DateRangeIterator(start, new Date(endTs), limit(), field);
     return StreamUtils.asStream(iterator);
   }

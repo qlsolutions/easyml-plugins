@@ -6,6 +6,7 @@ package com.quicklink.easyml.plugins.api.hooks;
 
 import com.quicklink.easyml.plugins.api.AbstractPlugin;
 import com.quicklink.easyml.plugins.api.Parameter;
+import java.util.Arrays;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -16,7 +17,7 @@ import org.jetbrains.annotations.NotNull;
 public abstract class HookPlugin extends AbstractPlugin {
 
   public HookPlugin(@NotNull String name, @NotNull String version, Parameter<?>... keys) {
-    super(name, version, keys);
+    super(name, version, Arrays.asList(keys));
   }
 
   public abstract void run(@NotNull HookContext ctx);

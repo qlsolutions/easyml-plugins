@@ -5,6 +5,7 @@
 package com.quicklink.easyml.plugins.api;
 
 
+import java.util.List;
 import java.util.Optional;
 import org.jetbrains.annotations.ApiStatus.Internal;
 import org.jetbrains.annotations.NotNull;
@@ -23,7 +24,7 @@ public abstract class AbstractPlugin {
   private final String version;
 
   @Internal
-  public AbstractPlugin(@NotNull String name, @NotNull String version, Parameter<?>... keys) {
+  public AbstractPlugin(@NotNull String name, @NotNull String version, @NotNull List<Parameter<?>> keys) {
     this.name = name;
     this.version = version;
     this.pvt = new PrivateConfig(this, this.getClass().getClassLoader(), keys);

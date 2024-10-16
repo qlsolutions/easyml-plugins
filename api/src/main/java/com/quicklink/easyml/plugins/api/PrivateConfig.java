@@ -5,7 +5,6 @@
 package com.quicklink.easyml.plugins.api;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
@@ -31,8 +30,7 @@ public class PrivateConfig {
   public boolean debugMode = false;
 
 
-  public PrivateConfig(@NotNull AbstractPlugin plugin, @NotNull ClassLoader cl,
-      Parameter<?>... keys) {
+  public PrivateConfig(@NotNull AbstractPlugin plugin, @NotNull ClassLoader cl, @NotNull List<Parameter<?>> keys) {
     this.plugin = plugin;
     this.logger = Optional.ofNullable(
         LoggerFactory.getLogger("Plugin %sv%s".formatted(plugin.getName(), plugin.getVersion())));
@@ -44,7 +42,7 @@ public class PrivateConfig {
 
     // add keys
     parameters = new ArrayList<>();
-    parameters.addAll(Arrays.stream(keys).toList());
+    parameters.addAll(keys);
   }
 
 }
