@@ -13,13 +13,12 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 import org.jetbrains.annotations.ApiStatus.Internal;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * Parameter - Plugin's parameters. Supported types: "float64", "int", "string", "secret", "bool".
+ * Parameter - Plugin's parameters. Supported types: "float64", "int", "string", "bool".
  * Secret types are sensible data(like password/api-key) which will be encrypted in database.
  *
  * @author Denis Mehilli
@@ -28,9 +27,15 @@ import org.jetbrains.annotations.Nullable;
 public final class Parameter<T> {
 
   public enum Flags {
-    SELECT
+    SELECT,
   }
 
+  public enum AccessType {
+    ALL,
+    READ,
+    WRITE,
+    INTERNAL
+  }
 
   public static StringBuilder create(@NotNull String name, @NotNull String defaultValue) {
     return new StringBuilder(name, defaultValue);
@@ -51,14 +56,13 @@ public final class Parameter<T> {
 
   @Internal
   public static <E> Parameter<E> unsafeParameter(@NotNull String key, @NotNull String type,
-      @NotNull E defaultValue) {
-    return new Parameter<>(key, type, defaultValue);
+      @NotNull E defaultValue, @NotNull AccessType accessType) {
+    return new Parameter<>(key, type, defaultValue, accessType);
   }
 
   public static final String DOUBLE_TYPE = "float64";
   public static final String INT_TYPE = "int";
   public static final String STRING_TYPE = "string";
-  public static final String SECRET_TYPE = "secret";
   public static final String BOOL_TYPE = "bool";
 
   @JsonProperty("key")
@@ -70,12 +74,14 @@ public final class Parameter<T> {
   @JsonProperty("defaultValue")
   private Object defaultValue;
 
+  @JsonProperty("accessType")
+  private AccessType accessType;
+
   @JsonProperty("extra")
   private Map<String, Object> extra;
 
   @JsonIgnore
   private Map<Locale, ParamLang> lang = null;
-
 
 
   @Internal
@@ -85,16 +91,18 @@ public final class Parameter<T> {
   private Parameter(
       @NotNull String key,
       @NotNull String type,
-      @NotNull T defaultValue
+      @NotNull T defaultValue,
+      @NotNull AccessType accessType
   ) {
     this.key = key;
     this.type = type;
     this.defaultValue = defaultValue;
+    this.accessType = accessType;
   }
 
   @JsonIgnore
   public boolean isSecret() {
-    return type.equals(SECRET_TYPE);
+     return type.equals(STRING_TYPE) && accessType == AccessType.WRITE;
   }
 
   public @NotNull String key() {
@@ -109,12 +117,16 @@ public final class Parameter<T> {
     return (T) defaultValue;
   }
 
+  public @NotNull AccessType accessType() {
+    return accessType;
+  }
+
   public @Nullable Map<Locale, ParamLang> lang() {
     return lang;
   }
 
   public @Nullable Map<Flags, Object> extra() {
-    if(extra == null) {
+    if (extra == null) {
       return null;
     }
 
@@ -147,30 +159,32 @@ public final class Parameter<T> {
   }
 
   @Override
-  public boolean equals(Object obj) {
-    if (obj == this) {
+  public boolean equals(Object o) {
+    if (this == o) {
       return true;
     }
-    if (obj == null || obj.getClass() != this.getClass()) {
+    if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    var that = (Parameter) obj;
-    return Objects.equals(this.key, that.key) &&
-        Objects.equals(this.type, that.type) &&
-        Objects.equals(this.defaultValue, that.defaultValue);
+    Parameter<?> parameter = (Parameter<?>) o;
+    return Objects.equals(key, parameter.key) && Objects.equals(type, parameter.type);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(key, type, defaultValue);
+    return Objects.hash(key, type);
   }
 
   @Override
   public String toString() {
-    return "Parameter[" +
-        "key=" + key + ", " +
-        "type=" + type + ", " +
-        "defaultValue=" + defaultValue + ']';
+    return "Parameter{" +
+        "key='" + key + '\'' +
+        ", type='" + type + '\'' +
+        ", defaultValue=" + defaultValue +
+        ", accessType=" + accessType +
+        ", extra=" + extra +
+        ", lang=" + lang +
+        '}';
   }
 
   public static class Builder<E> {
@@ -179,10 +193,15 @@ public final class Parameter<T> {
     private final String id;
     private final E defaultValue;
 
+    private String type;
+
+    private AccessType accessType = AccessType.ALL;
+
 
     private E[] select;
     private final Map<Locale, ParamLang> lang = new LinkedHashMap<>();
-    String type;
+
+
 
     public Builder(@NotNull String id, @NotNull E defaultValue) {
       this.id = id;
@@ -214,14 +233,21 @@ public final class Parameter<T> {
       return this;
     }
 
+    public Builder<E> access(@NotNull AccessType accessType) {
+      this.accessType = accessType;
+      return this;
+    }
+
     public Parameter<E> build() {
-      var param = new Parameter<>(id, type, (E) defaultValue);
+      var param = new Parameter<>(id, type, (E) defaultValue, accessType);
       param.lang(lang);
+
 
       if (select != null) {
         param.extra = new LinkedHashMap<>();
         param.extra.put(Flags.SELECT.name(), select);
       }
+
       return param;
     }
 
@@ -234,11 +260,6 @@ public final class Parameter<T> {
       type(STRING_TYPE);
     }
 
-    public StringBuilder secret() {
-      this.type = SECRET_TYPE;
-      return this;
-    }
-
     @Override
     public StringBuilder lang(@NotNull Locale language, @NotNull String title,
         @NotNull String description) {
@@ -249,14 +270,11 @@ public final class Parameter<T> {
     public StringBuilder select(@NotNull String... values) {
       return (StringBuilder) super.select(values);
     }
+
+    @Override
+    public StringBuilder access(@NotNull AccessType accessType) {
+      return (StringBuilder) super.access(accessType);
+    }
   }
-
-//  public static Parameter<String> password = Parameter
-//      .create("password", "")
-//      .secret()
-//      .lang(Locale.ITALIAN, "titolo", "descrizione")
-//      .lang(Locale.ENGLISH, "title", "description")
-//      .build();
-
 
 }
