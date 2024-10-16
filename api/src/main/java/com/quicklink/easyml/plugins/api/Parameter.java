@@ -30,9 +30,9 @@ public final class Parameter<T> {
   }
 
   public enum AccessType {
-    ALL,
-    READ,
-    WRITE,
+    READ_WRITE,
+    READ_ONLY,
+    WRITE_ONLY,
     INTERNAL
   }
 
@@ -189,7 +189,7 @@ public final class Parameter<T> {
 
     private String type;
 
-    private AccessType accessType = AccessType.ALL;
+    private AccessType accessType = AccessType.READ_WRITE;
 
 
     private E[] select;
