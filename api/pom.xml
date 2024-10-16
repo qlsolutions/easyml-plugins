@@ -30,7 +30,7 @@
   <parent>
     <artifactId>PluginService</artifactId>
     <groupId>com.quicklink.pluginservice</groupId>
-    <version>0.1.8</version>
+    <version>0.2.0</version>
   </parent>
 
   <properties>
