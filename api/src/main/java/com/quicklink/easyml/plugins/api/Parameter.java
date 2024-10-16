@@ -19,7 +19,6 @@ import org.jetbrains.annotations.Nullable;
 
 /**
  * Parameter - Plugin's parameters. Supported types: "float64", "int", "string", "bool".
- * Secret types are sensible data(like password/api-key) which will be encrypted in database.
  *
  * @author Denis Mehilli
  */
@@ -98,11 +97,6 @@ public final class Parameter<T> {
     this.type = type;
     this.defaultValue = defaultValue;
     this.accessType = accessType;
-  }
-
-  @JsonIgnore
-  public boolean isSecret() {
-     return type.equals(STRING_TYPE) && accessType == AccessType.WRITE;
   }
 
   public @NotNull String key() {
