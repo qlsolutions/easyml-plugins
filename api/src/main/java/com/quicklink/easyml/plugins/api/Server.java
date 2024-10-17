@@ -5,7 +5,6 @@
 package com.quicklink.easyml.plugins.api;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * Server - Insert description here.
@@ -15,8 +14,8 @@ import org.jetbrains.annotations.Nullable;
  */
 public interface Server {
 
-  <T> boolean updateHookParameter(int hookId, @NotNull Parameter<T> key, @Nullable T newValue);
+  <T> boolean updateHookParameter(int hookId, @NotNull Parameter<T> key, @NotNull T newValue);
 
-  <T> boolean updateProviderParameter(int providerId, @NotNull Parameter<T> key, @Nullable T newValue);
+  <T> boolean updateProviderParameter(int providerId, @NotNull Parameter<T> key, @NotNull T newValue);
 
 }
