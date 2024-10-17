@@ -17,7 +17,8 @@ import org.jetbrains.annotations.Nullable;
  */
 public class HookContext {
 
-  private final Integer modelId;
+  private final int hookId;
+  private final int modelId;
   private final Long timestamp;
   private final String status;
   private final Double predicted;
@@ -29,6 +30,7 @@ public class HookContext {
 
 
   public HookContext(
+      int hookId,
       @NotNull Integer modelId,
       @NotNull Long timestamp,
       @NotNull String status,
@@ -38,6 +40,7 @@ public class HookContext {
       @NotNull Double observed,
       @NotNull Map<String, ?> parameters
   ) {
+    this.hookId = hookId;
     this.modelId = modelId;
     this.timestamp = timestamp;
     this.status = status;
@@ -47,6 +50,10 @@ public class HookContext {
     this.observed = observed;
     this.parameters = parameters;
 
+  }
+
+  public int getHookId() {
+    return hookId;
   }
 
   public @NotNull Integer getModelId() {

@@ -62,6 +62,11 @@ public class OpenMeteoPlugin extends ProviderPlugin {
   }
 
   @Override
+  public void onCreate(@NotNull ProviderContext ctx) {
+
+  }
+
+  @Override
   public @NotNull Collection<Serie> getSeries(ProviderContext ctx) {
     return serieList;
   }

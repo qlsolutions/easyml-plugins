@@ -21,8 +21,8 @@ import org.jetbrains.annotations.Nullable;
 public class ProviderContext {
 
   private final ProviderPlugin plugin;
-  private final int idApp;
-  private final String nameApp;
+  private final int providerId;
+  private final String providerName;
   private final Map<String, ?> parameters;
 
   @Nullable
@@ -30,11 +30,11 @@ public class ProviderContext {
   @Nullable
   private final Long endTs;
 
-  public ProviderContext(ProviderPlugin plugin, int idApp, @NotNull String nameApp, @NotNull Map<String, ?> parameters,
+  public ProviderContext(ProviderPlugin plugin, int providerId, @NotNull String providerName, @NotNull Map<String, ?> parameters,
       @Nullable Long startTs, @Nullable Long endTs) {
     this.plugin = plugin;
-    this.idApp = idApp;
-    this.nameApp = nameApp;
+    this.providerId = providerId;
+    this.providerName = providerName;
     this.parameters = parameters;
     this.startTs = startTs;
     this.endTs = endTs;
@@ -44,12 +44,12 @@ public class ProviderContext {
     this(plugin, idApp, nameApp, parameters, null, null);
   }
 
-  public int idApp() {
-    return idApp;
+  public int providerId() {
+    return providerId;
   }
 
-  public @NotNull String nameApp() {
-    return nameApp;
+  public @NotNull String providerName() {
+    return providerName;
   }
 
   public @Nullable <T> T param(@NotNull Parameter<T> key) {
