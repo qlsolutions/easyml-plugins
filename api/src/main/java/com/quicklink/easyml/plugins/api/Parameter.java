@@ -18,7 +18,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * Parameter - Plugin's parameters. Supported types: "float64", "int", "string", "bool".
+ * Parameter - Plugin's parameters. Supported types: "float64", "integer", "string", "bool".
  *
  * @author Denis Mehilli
  */
@@ -26,14 +26,21 @@ import org.jetbrains.annotations.Nullable;
 public final class Parameter<T> {
 
   public enum Flags {
-    SELECT,
+    select,
   }
 
   public enum AccessType {
-    READ_WRITE,
-    READ_ONLY,
-    WRITE_ONLY,
-    INTERNAL
+    read_write,
+    read_only,
+    write_only,
+    internal
+  }
+
+  public enum Type {
+    float64,
+    integer,
+    string,
+    bool
   }
 
   public static StringBuilder create(@NotNull String name, @NotNull String defaultValue) {
@@ -41,34 +48,30 @@ public final class Parameter<T> {
   }
 
   public static Builder<Double> create(@NotNull String name, double defaultValue) {
-    return new Builder<>(name, defaultValue).type(DOUBLE_TYPE);
+    return new Builder<>(name, defaultValue).type(Type.float64);
   }
 
   public static Builder<Integer> create(@NotNull String name, int defaultValue) {
-    return new Builder<>(name, defaultValue).type(INT_TYPE);
+    return new Builder<>(name, defaultValue).type(Type.integer);
   }
 
   public static Builder<Boolean> create(@NotNull String name, boolean defaultValue) {
-    return new Builder<>(name, defaultValue).type(BOOL_TYPE);
+    return new Builder<>(name, defaultValue).type(Type.bool);
   }
 
 
   @Internal
-  public static <E> Parameter<E> unsafeParameter(@NotNull String key, @NotNull String type,
+  public static <E> Parameter<E> unsafeParameter(@NotNull String key, @NotNull Type type,
       @NotNull E defaultValue, @NotNull AccessType accessType) {
     return new Parameter<>(key, type, defaultValue, accessType);
   }
 
-  public static final String DOUBLE_TYPE = "float64";
-  public static final String INT_TYPE = "int";
-  public static final String STRING_TYPE = "string";
-  public static final String BOOL_TYPE = "bool";
 
   @JsonProperty("key")
   private String key;
 
   @JsonProperty("type")
-  private String type;
+  private Type type;
 
   @JsonProperty("defaultValue")
   private Object defaultValue;
@@ -89,7 +92,7 @@ public final class Parameter<T> {
 
   private Parameter(
       @NotNull String key,
-      @NotNull String type,
+      @NotNull Type type,
       @NotNull T defaultValue,
       @NotNull AccessType accessType
   ) {
@@ -103,7 +106,7 @@ public final class Parameter<T> {
     return key;
   }
 
-  public @NotNull String type() {
+  public @NotNull Type type() {
     return type;
   }
 
@@ -137,7 +140,7 @@ public final class Parameter<T> {
     return this;
   }
 
-  public Parameter<T> type(@NotNull String type) {
+  public Parameter<T> type(@NotNull Type type) {
     this.type = type;
     return this;
   }
@@ -187,14 +190,13 @@ public final class Parameter<T> {
     private final String id;
     private final E defaultValue;
 
-    private String type;
+    private Type type;
 
-    private AccessType accessType = AccessType.READ_WRITE;
+    private AccessType accessType = AccessType.read_write;
 
 
     private E[] select;
     private final Map<Locale, ParamLang> lang = new LinkedHashMap<>();
-
 
 
     public Builder(@NotNull String id, @NotNull E defaultValue) {
@@ -211,7 +213,7 @@ public final class Parameter<T> {
     }
 
     @Internal
-    Builder<E> type(String type) {
+    Builder<E> type(Type type) {
       this.type = type;
       return this;
     }
@@ -236,10 +238,9 @@ public final class Parameter<T> {
       var param = new Parameter<>(id, type, (E) defaultValue, accessType);
       param.lang(lang);
 
-
       if (select != null) {
         param.extra = new LinkedHashMap<>();
-        param.extra.put(Flags.SELECT.name(), select);
+        param.extra.put(Flags.select.name(), select);
       }
 
       return param;
@@ -251,7 +252,7 @@ public final class Parameter<T> {
 
     public StringBuilder(@NotNull String id, @NotNull String defaultValue) {
       super(id, defaultValue);
-      type(STRING_TYPE);
+      type(Type.string);
     }
 
     @Override

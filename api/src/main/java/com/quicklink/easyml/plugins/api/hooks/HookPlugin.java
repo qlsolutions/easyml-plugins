@@ -20,6 +20,8 @@ public abstract class HookPlugin extends AbstractPlugin {
     super(name, version, Arrays.asList(keys));
   }
 
+  public abstract void onCreate(@NotNull HookContext ctx);
+
   public abstract void run(@NotNull HookContext ctx);
 
 }

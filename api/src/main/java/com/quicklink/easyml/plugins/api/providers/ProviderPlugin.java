@@ -56,6 +56,8 @@ public abstract class ProviderPlugin extends AbstractPlugin {
     return list;
   }
 
+  public abstract void onCreate(@NotNull ProviderContext ctx);
+
   public abstract @NotNull Collection<Serie> getSeries(
       ProviderContext ctx);
 

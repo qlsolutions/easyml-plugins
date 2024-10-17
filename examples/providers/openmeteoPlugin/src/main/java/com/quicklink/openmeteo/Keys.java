@@ -6,6 +6,7 @@ package com.quicklink.openmeteo;
 
 
 import com.quicklink.easyml.plugins.api.Parameter;
+import com.quicklink.easyml.plugins.api.Parameter.AccessType;
 import java.util.Locale;
 
 /**
@@ -29,7 +30,7 @@ public final class Keys {
 
   static Parameter<String> API_KEY = Parameter
       .create("apiKey", "")
-      .secret()
+      .access(AccessType.write_only)
       .lang(Locale.ENGLISH, "API Key", "API key obtained from https://open-meteo.com/en/docs")
       .lang(Locale.ITALIAN, "Chiave API", "Chiave API ottenuta da https://open-meteo.com/en/docs")
       .build();
