@@ -4,6 +4,7 @@
 
 package com.quicklink.easyml.plugins.api;
 
+import java.util.UUID;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -16,6 +17,6 @@ public interface Server {
 
   <T> boolean updateHookParameter(int hookId, @NotNull Parameter<T> key, @NotNull T newValue);
 
-  <T> boolean updateProviderParameter(int providerId, @NotNull Parameter<T> key, @NotNull T newValue);
+  <T> boolean updateProviderParameter(@NotNull UUID providerId, @NotNull Parameter<T> key, @NotNull T newValue);
 
 }
