@@ -9,6 +9,7 @@ import com.quicklink.easyml.plugins.api.Parameter;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Stream;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -21,7 +22,7 @@ import org.jetbrains.annotations.Nullable;
 public class ProviderContext {
 
   private final ProviderPlugin plugin;
-  private final int providerId;
+  private final UUID providerId;
   private final String providerName;
   private final Map<String, ?> parameters;
 
@@ -30,7 +31,7 @@ public class ProviderContext {
   @Nullable
   private final Long endTs;
 
-  public ProviderContext(ProviderPlugin plugin, int providerId, @NotNull String providerName, @NotNull Map<String, ?> parameters,
+  public ProviderContext(ProviderPlugin plugin, @NotNull UUID providerId, @NotNull String providerName, @NotNull Map<String, ?> parameters,
       @Nullable Long startTs, @Nullable Long endTs) {
     this.plugin = plugin;
     this.providerId = providerId;
@@ -40,11 +41,11 @@ public class ProviderContext {
     this.endTs = endTs;
   }
 
-  public ProviderContext( ProviderPlugin plugin, int idApp, @NotNull String nameApp, @NotNull Map<String, ?> parameters) {
-    this(plugin, idApp, nameApp, parameters, null, null);
+  public ProviderContext( ProviderPlugin plugin, UUID providerId, @NotNull String nameApp, @NotNull Map<String, ?> parameters) {
+    this(plugin, providerId, nameApp, parameters, null, null);
   }
 
-  public int providerId() {
+  public UUID providerId() {
     return providerId;
   }
 
