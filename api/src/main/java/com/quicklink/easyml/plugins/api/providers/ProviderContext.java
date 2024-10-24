@@ -6,6 +6,7 @@ package com.quicklink.easyml.plugins.api.providers;
 
 
 import com.quicklink.easyml.plugins.api.Parameter;
+import java.time.Instant;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
@@ -27,18 +28,18 @@ public class ProviderContext {
   private final Map<String, ?> parameters;
 
   @Nullable
-  private final Long startTs;
+  private final Instant start;
   @Nullable
-  private final Long endTs;
+  private final Instant end;
 
   public ProviderContext(ProviderPlugin plugin, @NotNull UUID providerId, @NotNull String providerName, @NotNull Map<String, ?> parameters,
-      @Nullable Long startTs, @Nullable Long endTs) {
+      @Nullable Instant start, @Nullable Instant end) {
     this.plugin = plugin;
     this.providerId = providerId;
     this.providerName = providerName;
     this.parameters = parameters;
-    this.startTs = startTs;
-    this.endTs = endTs;
+    this.start = start;
+    this.end = end;
   }
 
   public ProviderContext( ProviderPlugin plugin, UUID providerId, @NotNull String nameApp, @NotNull Map<String, ?> parameters) {
@@ -65,13 +66,14 @@ public class ProviderContext {
   }
 
   public Stream<DateRange> dateRangeStream(int field) {
-    if (startTs == null || endTs == null) {
+    if (start == null || end == null) {
       throw new UnsupportedOperationException("Start ts or end ts not set");
     }
-    Calendar start = Calendar.getInstance();
-    start.setTime(new Date(startTs));
+    Calendar calendar = Calendar.getInstance();
+    calendar.setTimeInMillis(start.toEpochMilli());
 
-    var iterator = new DateRangeIterator(start, new Date(endTs), limit(), field);
+
+    var iterator = new DateRangeIterator(calendar, new Date(end.toEpochMilli()), limit(), field);
     return StreamUtils.asStream(iterator);
   }
 

@@ -6,6 +6,7 @@ package com.quicklink.easyml.plugins.api.hooks;
 
 
 import com.quicklink.easyml.plugins.api.Parameter;
+import java.time.Instant;
 import java.util.Map;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -19,7 +20,7 @@ public class HookContext {
 
   private final int hookId;
   private final int modelId;
-  private final Long timestamp;
+  private final Instant timestamp;
   private final String status;
   private final Double predicted;
   private final Double minPredicted;
@@ -32,7 +33,7 @@ public class HookContext {
   public HookContext(
       int hookId,
       @NotNull Integer modelId,
-      @NotNull Long timestamp,
+      @NotNull Instant timestamp,
       @NotNull String status,
       @NotNull Double predicted,
       @NotNull Double minPredicted,
@@ -60,7 +61,7 @@ public class HookContext {
     return modelId;
   }
 
-  public @NotNull Long getTimestamp() {
+  public @NotNull Instant getTimestamp() {
     return timestamp;
   }
 
@@ -91,7 +92,7 @@ public class HookContext {
   public @NotNull String parseString(@NotNull String s) {
     return s
         .replaceAll("\\{model}", "" + modelId)
-        .replaceAll("\\{timestamp}", "" + timestamp)
+        .replaceAll("\\{timestamp}", "" + timestamp.toEpochMilli())
         .replaceAll("\\{anomalyStatus}", status)
         .replaceAll("\\{predicted}", "" + predicted)
         .replaceAll("\\{max-predicted}", "" + maxPredicted)
