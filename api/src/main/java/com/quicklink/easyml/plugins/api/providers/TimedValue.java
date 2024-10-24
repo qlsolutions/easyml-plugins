@@ -4,6 +4,7 @@
 
 package com.quicklink.easyml.plugins.api.providers;
 
+
 import java.time.Instant;
 import java.util.Objects;
 import org.jetbrains.annotations.NotNull;
@@ -15,13 +16,13 @@ import org.jetbrains.annotations.NotNull;
  */
 public final class TimedValue {
 
-  private double millis;
+  private long millis;
   private double value;
 
   /**
    *
    */
-  public TimedValue(double millis, double value) {
+  public TimedValue(long millis, double value) {
     this.millis = millis;
     this.value = value;
   }
@@ -30,15 +31,15 @@ public final class TimedValue {
     this(instant.toEpochMilli(), value);
   }
 
-  public double getMillis() {
+  public long millis() {
     return millis;
   }
 
-  public double getValue() {
+  public double value() {
     return value;
   }
 
-  public void setMillis(double millis) {
+  public void setMillis(long millis) {
     this.millis = millis;
   }
 
@@ -55,7 +56,7 @@ public final class TimedValue {
       return false;
     }
     var that = (TimedValue) obj;
-    return Double.doubleToLongBits(this.millis) == Double.doubleToLongBits(that.millis) &&
+    return this.millis == that.millis &&
         Double.doubleToLongBits(this.value) == Double.doubleToLongBits(that.value);
   }
 
@@ -70,5 +71,6 @@ public final class TimedValue {
         "millis=" + millis + ", " +
         "value=" + value + ']';
   }
+
 
 }

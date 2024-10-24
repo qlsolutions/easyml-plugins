@@ -13,17 +13,15 @@ import com.quicklink.easyml.plugins.api.ParamLang;
 import com.quicklink.easyml.plugins.api.providers.About;
 import com.quicklink.easyml.plugins.api.providers.ProviderContext;
 import com.quicklink.easyml.plugins.api.providers.ProviderPlugin;
-import com.quicklink.easyml.plugins.api.providers.Record;
 import com.quicklink.easyml.plugins.api.providers.Serie;
+import com.quicklink.easyml.plugins.api.providers.TimedValue;
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
+import java.time.Instant;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.regex.Pattern;
@@ -52,8 +50,8 @@ public class OpenMeteoPlugin extends ProviderPlugin {
         LATITUDE, LONGITUDE, API_KEY);
   }
 
-  private static String timestampToYYYYMMGG(Date date) {
-    return new SimpleDateFormat("yyyy-MM-dd").format(date);
+  private static String timestampToYYYYMMGG(Instant instant) {
+    return new SimpleDateFormat("yyyy-MM-dd").format(instant);
   }
 
   @Override
@@ -72,15 +70,16 @@ public class OpenMeteoPlugin extends ProviderPlugin {
   }
 
   @Override
-  public @NotNull List<Record> getSerieData(ProviderContext ctx, String serieId, long startTs,
-      long endTs) {
+  public @NotNull List<TimedValue> getSerieData(ProviderContext ctx, String serieId,
+      @NotNull Instant start,
+      Instant end) {
     var latitude = ctx.param(LATITUDE);
     var longitude = ctx.param(LONGITUDE);
     var apiKey = ctx.param(API_KEY);
 
     return ctx.dateRangeStream(Calendar.DAY_OF_MONTH)
-        .flatMap(dateRange -> sendRequest(apiKey, latitude, longitude, serieId, dateRange.start(),
-            dateRange.end(), false))
+        .flatMap(dateRange -> sendRequest(apiKey, latitude, longitude, serieId, dateRange.start()
+            .toInstant(), dateRange.end().toInstant(), false))
         .toList();
   }
 
@@ -90,17 +89,18 @@ public class OpenMeteoPlugin extends ProviderPlugin {
   }
 
   @Override
-  public List<Record> getFutureData(ProviderContext ctx, String serieId, long startTs, long endTs) {
+  public @NotNull List<TimedValue> getFutureData(ProviderContext ctx, @NotNull String serieId,
+      @NotNull Instant start, @NotNull Instant end) {
     var latitude = ctx.param(LATITUDE);
     var longitude = ctx.param(LONGITUDE);
     var apiKey = ctx.param(API_KEY);
 
-    return sendRequest(apiKey, latitude, longitude, serieId, new Date(startTs), new Date(endTs),
+    return sendRequest(apiKey, latitude, longitude, serieId, start, end,
         true).toList();
   }
 
-  private Stream<Record> sendRequest(String apiKey, String latitude, String longitude,
-      String serieId, Date start, Date end, boolean forecast) {
+  private Stream<TimedValue> sendRequest(String apiKey, String latitude, String longitude,
+      String serieId, Instant start, Instant end, boolean forecast) {
     getLogger().ifPresent(logger -> logger.info("Sending {} from {} to {}", serieId, start, end));
 
     String request;
@@ -142,18 +142,17 @@ public class OpenMeteoPlugin extends ProviderPlugin {
 
     var json = gson.fromJson(response.response(), ResponseOpenMeteo.class).hourly();
 
-    List<Record> records = new ArrayList<>();
-    var zoneId = ZoneId.systemDefault();
+    List<TimedValue> records = new ArrayList<>();
 
     var time = json.get("time");
     var data = json.get(serieId);
     if (data != null) {
       for (int i = 0; i < data.size(); i++) {
-        var dateTimestamp = LocalDateTime.parse((String) time.get(i), formatter);
-        records.add(new Record(dateTimestamp.atZone(zoneId).toEpochSecond(), (Double) data.get(i)));
+        var instant = Instant.parse((String) time.get(i));
+        records.add(new TimedValue(instant, (double) data.get(i)));
       }
     }
-    return records.stream().peek(record -> record.setTimestamp(record.getTimestamp() * 1000));
+    return records.stream();
   }
 
   private void loadSeries() {
