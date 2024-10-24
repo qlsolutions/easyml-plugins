@@ -31,7 +31,7 @@
       <artifactId>api</artifactId>
       <groupId>com.github.qlsolutions.easyml-plugins</groupId>
       <scope>provided</scope>
-      <version>0.6.0</version>
+      <version>0.6.2</version>
     </dependency>
     <dependency>
       <artifactId>gson</artifactId>

@@ -31,11 +31,11 @@ public final class TimedValue {
     this(instant.toEpochMilli(), value);
   }
 
-  public long millis() {
+  public long getMillis() {
     return millis;
   }
 
-  public double value() {
+  public double getValue() {
     return value;
   }
 
