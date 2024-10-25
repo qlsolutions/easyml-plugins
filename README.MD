@@ -21,7 +21,7 @@ At the moment, plugins of the following types can be added:
 <dependency>
   <groupId>com.github.qlsolutions.easyml-plugins</groupId>
   <artifactId>api</artifactId>
-  <version>0.6.2</version>
+  <version>0.6.3</version>
   <scope>provided</scope>
 </dependency>
 ```
@@ -29,7 +29,7 @@ At the moment, plugins of the following types can be added:
 #### Gradle
 
 ```kotlin
-compileOnly("com.github.qlsolutions.easyml-plugins:api:0.6.2")
+compileOnly("com.github.qlsolutions.easyml-plugins:api:0.6.3")
 ```
 
 Make sure you include the <a href="https://jitpack.io/">repository</a> as well.

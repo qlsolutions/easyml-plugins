@@ -11,7 +11,7 @@ import com.quicklink.easyml.plugins.api.Parameter;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import org.jetbrains.annotations.NotNull;
@@ -59,17 +59,17 @@ public abstract class ProviderPlugin extends AbstractPlugin {
 
   public abstract void onCreate(@NotNull ProviderContext ctx);
 
-  public abstract @NotNull Collection<Serie> getSeries(
+  public abstract @NotNull List<Serie> getSeries(
       ProviderContext ctx);
 
-  public abstract @NotNull List<TimedValue> getSerieData(
+  public abstract @NotNull LinkedList<TimedValue> getSerieData(
       @NotNull ProviderContext ctx, @NotNull String serieId,
       @NotNull Instant start,
       @NotNull Instant end);
 
   public abstract @NotNull About status(@NotNull ProviderContext ctx);
 
-  public @NotNull List<TimedValue> getFutureData(@NotNull ProviderContext ctx, @NotNull String serieId,
+  public @NotNull LinkedList<TimedValue> getFutureData(@NotNull ProviderContext ctx, @NotNull String serieId,
       @NotNull Instant start, @NotNull Instant end) {
     throw notImplementedExc;
   }
