@@ -25,15 +25,11 @@ public class PrivateConfig {
   @NotNull
   public final List<Parameter> parameters;
   @NotNull
-  final Optional<Logger> logger;
-  public boolean enabled = false;
-  public boolean debugMode = false;
-
+  final Logger logger;
 
   public PrivateConfig(@NotNull AbstractPlugin plugin, @NotNull ClassLoader cl, @NotNull List<Parameter<?>> keys) {
     this.plugin = plugin;
-    this.logger = Optional.ofNullable(
-        LoggerFactory.getLogger("Plugin %sv%s".formatted(plugin.getName(), plugin.getVersion())));
+    this.logger = LoggerFactory.getLogger("Plugin %sv%s".formatted(plugin.getName(), plugin.getVersion()));
     this.classLoader = cl;
     if (classLoader instanceof PluginClassLoader pluginClassLoader) {
 //      throw new IllegalStateException("Plugin requires " + PluginClassLoader.class.getName());

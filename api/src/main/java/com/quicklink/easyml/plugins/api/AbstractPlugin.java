@@ -32,11 +32,8 @@ public abstract class AbstractPlugin {
 
   public abstract void onEnable();
 
-  public @NotNull Optional<Logger> getLogger() {
-    if (pvt.debugMode) {
-      return pvt.logger;
-    }
-    return Optional.empty();
+  public @NotNull Logger getLogger() {
+    return pvt.logger;
   }
 
   public @NotNull String getName() {

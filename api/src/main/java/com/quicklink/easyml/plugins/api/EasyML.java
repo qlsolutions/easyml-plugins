@@ -5,6 +5,7 @@
 package com.quicklink.easyml.plugins.api;
 
 import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
 
 /**
  * EasyMLPlugins - Insert description here.
@@ -13,7 +14,6 @@ import org.jetbrains.annotations.NotNull;
  * @creation 17/10/2024
  */
 public final class EasyML {
-
   private EasyML() {
 
   }

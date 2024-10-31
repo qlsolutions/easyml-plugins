@@ -6,6 +6,7 @@ package com.quicklink.niagara;
 
 
 import com.quicklink.easyml.plugins.api.Parameter;
+import com.quicklink.easyml.plugins.api.Parameter.AccessType;
 import java.util.Locale;
 
 /**
@@ -42,7 +43,7 @@ public final class Keys {
 
   static Parameter<String> PASSWORD = Parameter
       .create("password", "")
-      .secret()
+      .access(AccessType.write_only)
       .lang(Locale.ENGLISH, "Password", "Password for Niagara BASIC authentication")
       .lang(Locale.ITALIAN, "Password", "Password per l'autenticazione BASIC di Niagara")
       .build();

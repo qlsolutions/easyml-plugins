@@ -15,20 +15,21 @@ import com.quicklink.easyml.plugins.api.ParamLang;
 import com.quicklink.easyml.plugins.api.providers.About;
 import com.quicklink.easyml.plugins.api.providers.ProviderContext;
 import com.quicklink.easyml.plugins.api.providers.ProviderPlugin;
-import com.quicklink.easyml.plugins.api.providers.Record;
 import com.quicklink.easyml.plugins.api.providers.Serie;
+import com.quicklink.easyml.plugins.api.providers.TimedValue;
 import com.quicklink.niagara.model.NiagaraAbout;
 import com.quicklink.niagara.model.SerieDetailsModel;
+import com.quicklink.niagara.model.SerieDetailsModel.Data;
 import com.quicklink.niagara.model.SeriesModel;
 import com.quicklink.niagara.model.request.SerieDetailsBody;
+import java.time.Instant;
 import java.util.Calendar;
-import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -39,7 +40,7 @@ import org.jetbrains.annotations.NotNull;
 public class NiagaraPlugin extends ProviderPlugin {
 
   private Gson gson;
-  private Map<Integer, NiagaraAuthClient> cacheAccess;
+  private Map<UUID, NiagaraAuthClient> cacheAccess;
 
   public NiagaraPlugin() {
     super("Niagara", "1.0.0",
@@ -77,7 +78,12 @@ public class NiagaraPlugin extends ProviderPlugin {
 
 
   @Override
-  public @NotNull Collection<Serie> getSeries(@NotNull ProviderContext ctx) {
+  public void onCreate(@NotNull ProviderContext providerContext) {
+
+  }
+
+  @Override
+  public @NotNull List<Serie> getSeries(@NotNull ProviderContext ctx) {
     String seriesResponse;
 
     var protocol = ctx.param(PROTOCOL);
@@ -86,7 +92,7 @@ public class NiagaraPlugin extends ProviderPlugin {
     var username = ctx.param(USERNAME);
     var password = ctx.param(PASSWORD);
 
-    var client = cacheAccess.computeIfAbsent(ctx.idApp(), id -> {
+    var client = cacheAccess.computeIfAbsent(ctx.providerId(), id -> {
       try {
         return NiagaraAuthClient.parametersCreator(NiagaraPlugin.this, protocol, host,
             String.valueOf(port), username,
@@ -106,7 +112,7 @@ public class NiagaraPlugin extends ProviderPlugin {
       } catch (Exception e) {
         throw new RuntimeException(e);
       }
-      cacheAccess.put(ctx.idApp(), c);
+      cacheAccess.put(ctx.providerId(), c);
       return c;
     };
 
@@ -122,22 +128,21 @@ public class NiagaraPlugin extends ProviderPlugin {
 //    System.out.println(seriesResponse); Debug response
 
     SeriesModel seriesModel = gson.fromJson(seriesResponse, SeriesModel.class);
-    var list = seriesModel.series().stream()
+    return seriesModel.series().stream()
         .map(serieModel -> new Serie(serieModel.id(), serieModel.displayName(), serieModel.tags()))
         .toList();
-    return list;
   }
 
   @Override
-  public @NotNull List<Record> getSerieData(ProviderContext ctx, String serieId, long startTs,
-      long endTs) {
+  public @NotNull LinkedList<TimedValue> getSerieData(ProviderContext ctx, @NotNull String serieId, @NotNull Instant startTs,
+      @NotNull Instant endTs) {
     var protocol = ctx.param(PROTOCOL);
     var host = ctx.param(HOST);
     var port = ctx.param(PORT);
     var username = ctx.param(USERNAME);
     var password = ctx.param(PASSWORD);
 
-    var client = cacheAccess.computeIfAbsent(ctx.idApp(), id -> {
+    var client = cacheAccess.computeIfAbsent(ctx.providerId(), id -> {
       try {
         return NiagaraAuthClient.parametersCreator(NiagaraPlugin.this, protocol, host,
             String.valueOf(port), username,
@@ -157,7 +162,7 @@ public class NiagaraPlugin extends ProviderPlugin {
       } catch (Exception e) {
         throw new RuntimeException(e);
       }
-      cacheAccess.put(ctx.idApp(), c);
+      cacheAccess.put(ctx.providerId(), c);
       return c;
     };
 
@@ -166,16 +171,19 @@ public class NiagaraPlugin extends ProviderPlugin {
     // ---------------------------------------------------------------------------------------------
 
     NiagaraAuthClient finalClient = client;
-    return ctx.dateRangeStream(Calendar.WEEK_OF_MONTH).flatMap(
-            dateRange -> {
-              try {
-                return sendRequests(finalClient, serieId, dateRange.start().getTime(),
-                    dateRange.end().getTime());
-              } catch (Exception e) {
-                throw new RuntimeException(e);
-              }
-            })
-        .collect(Collectors.toList());
+    LinkedList<TimedValue> records = new LinkedList<>();
+
+    ctx.dateRangeStream(Calendar.WEEK_OF_MONTH)
+        .forEachOrdered(dateRange -> {
+          try {
+            records.addAll(sendRequests(finalClient, serieId, dateRange.start().getTime(),
+                dateRange.end().getTime()));
+          } catch (Exception e) {
+            throw new RuntimeException(e);
+          }
+        });
+
+    return records;
   }
 
   @Override
@@ -187,7 +195,7 @@ public class NiagaraPlugin extends ProviderPlugin {
     var password = ctx.param(PASSWORD);
 
     try {
-      var client = cacheAccess.computeIfAbsent(ctx.idApp(),
+      var client = cacheAccess.computeIfAbsent(ctx.providerId(),
           integer -> {
             try {
               return NiagaraAuthClient.parametersCreator(NiagaraPlugin.this, protocol, host,
@@ -209,7 +217,7 @@ public class NiagaraPlugin extends ProviderPlugin {
         } catch (Exception e) {
           throw new RuntimeException(e);
         }
-        cacheAccess.put(ctx.idApp(), c);
+        cacheAccess.put(ctx.providerId(), c);
         return c;
       };
 
@@ -228,7 +236,7 @@ public class NiagaraPlugin extends ProviderPlugin {
   }
 
 
-  private Stream<Record> sendRequests(NiagaraAuthClient client, String serieId, long startTs,
+  private LinkedList<TimedValue> sendRequests(NiagaraAuthClient client, String serieId, long startTs,
       long endTs) throws Exception {
     getLogger().ifPresent(
         logger -> logger.info("Sending {} from {} to {}", serieId, startTs, endTs));
@@ -243,8 +251,12 @@ public class NiagaraPlugin extends ProviderPlugin {
     SerieDetailsModel serieDetailsModel = gson.fromJson(serieDataResponse, SerieDetailsModel.class);
 //        System.out.println(serieDetailsModel);
 
-    var list = serieDetailsModel.data().stream()
-        .map(data -> new Record(data.timestamp(), data.value())).toList();
-    return list.stream();
+    LinkedList<TimedValue> records = new LinkedList<>();
+
+    for (Data datum : serieDetailsModel.data()) {
+      records.add(new TimedValue(datum.timestamp(), datum.value()));
+    }
+
+    return records;
   }
 }

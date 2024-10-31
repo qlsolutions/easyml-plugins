@@ -17,16 +17,16 @@ import com.quicklink.easyml.plugins.api.providers.Serie;
 import com.quicklink.easyml.plugins.api.providers.TimedValue;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -65,65 +65,76 @@ public class OpenMeteoPlugin extends ProviderPlugin {
   }
 
   @Override
-  public @NotNull Collection<Serie> getSeries(ProviderContext ctx) {
+  public @NotNull List<Serie> getSeries(ProviderContext ctx) {
     return serieList;
   }
 
   @Override
-  public @NotNull List<TimedValue> getSerieData(ProviderContext ctx, String serieId,
+  public @NotNull LinkedList<TimedValue> getSerieData(ProviderContext ctx, @NotNull String serieId,
       @NotNull Instant start,
-      Instant end) {
+      @NotNull Instant end) {
     var latitude = ctx.param(LATITUDE);
     var longitude = ctx.param(LONGITUDE);
     var apiKey = ctx.param(API_KEY);
 
-    return ctx.dateRangeStream(Calendar.DAY_OF_MONTH)
-        .flatMap(dateRange -> sendRequest(apiKey, latitude, longitude, serieId, dateRange.start()
-            .toInstant(), dateRange.end().toInstant(), false))
-        .toList();
+    LinkedList<TimedValue> records = new LinkedList<>();
+    ctx.dateRangeStream(Calendar.DAY_OF_MONTH)
+        .forEachOrdered(dateRange -> {
+          records.addAll(sendRequest(apiKey, latitude, longitude, serieId, dateRange.start()
+              .toInstant(), dateRange.end().toInstant(), false));
+        });
+
+    return records;
   }
 
   @Override
-  public @NotNull About status(ProviderContext ctx) {
+  public @NotNull About status(@NotNull ProviderContext ctx) {
     return new About(true, "hostId", "1.0.0");
   }
 
   @Override
-  public @NotNull List<TimedValue> getFutureData(ProviderContext ctx, @NotNull String serieId,
+  public @NotNull LinkedList<TimedValue> getFutureData(ProviderContext ctx, @NotNull String serieId,
       @NotNull Instant start, @NotNull Instant end) {
     var latitude = ctx.param(LATITUDE);
     var longitude = ctx.param(LONGITUDE);
     var apiKey = ctx.param(API_KEY);
 
-    return sendRequest(apiKey, latitude, longitude, serieId, start, end,
-        true).toList();
+    return sendRequest(apiKey, latitude, longitude, serieId, start, end, true);
+
   }
 
-  private Stream<TimedValue> sendRequest(String apiKey, String latitude, String longitude,
+  private @NotNull LinkedList<TimedValue> sendRequest(String apiKey, String latitude,
+      String longitude,
       String serieId, Instant start, Instant end, boolean forecast) {
     getLogger().ifPresent(logger -> logger.info("Sending {} from {} to {}", serieId, start, end));
+    LinkedList<TimedValue> records = new LinkedList<>();
 
     String request;
+
+    // iso8601
+    String startFormat = DateTimeFormatter.ISO_INSTANT.format(start).substring(0, 10);
+    String endFormat = DateTimeFormatter.ISO_INSTANT.format(end).substring(0, 10);
+
     if (apiKey.isEmpty()) {
       if (forecast) {
         request = String.format(
             "https://api.open-meteo.com/v1/forecast?latitude=%s&longitude=%s&hourly=%s&start_date=%s&end_date=%s",
-            latitude, longitude, serieId, timestampToYYYYMMGG(start), timestampToYYYYMMGG(end));
+            latitude, longitude, serieId, startFormat, endFormat);
       } else {
         request = String.format(
             "https://archive-api.open-meteo.com/v1/archive?latitude=%s&longitude=%s&hourly=%s&start_date=%s&end_date=%s",
-            latitude, longitude, serieId, timestampToYYYYMMGG(start), timestampToYYYYMMGG(end));
+            latitude, longitude, serieId, startFormat, endFormat);
       }
     } else {
       // commercial plan
       if (forecast) {
         request = String.format(
             "https://customer-api.open-meteo.com/v1/forecast?latitude=%s&longitude=%s&hourly=%s&start_date=%s&end_date=%s",
-            latitude, longitude, serieId, timestampToYYYYMMGG(start), timestampToYYYYMMGG(end));
+            latitude, longitude, serieId, startFormat, endFormat);
       } else {
         request = String.format(
             "https://customer-archive-api.open-meteo.com/v1/archive?latitude=%s&longitude=%s&hourly=%s&start_date=%s&end_date=%s",
-            latitude, longitude, serieId, timestampToYYYYMMGG(start), timestampToYYYYMMGG(end));
+            latitude, longitude, serieId, startFormat, endFormat);
       }
 
       request += "&apikey=" + apiKey;
@@ -137,22 +148,20 @@ public class OpenMeteoPlugin extends ProviderPlugin {
       // error
       getLogger().ifPresent(logger -> logger.error("Error request: " + response.response()));
 
-      return Stream.empty();
+      return records;
     }
 
     var json = gson.fromJson(response.response(), ResponseOpenMeteo.class).hourly();
-
-    List<TimedValue> records = new ArrayList<>();
 
     var time = json.get("time");
     var data = json.get(serieId);
     if (data != null) {
       for (int i = 0; i < data.size(); i++) {
-        var instant = Instant.parse((String) time.get(i));
+        var instant = Instant.parse((String) time.get(i) + ":00Z");
         records.add(new TimedValue(instant, (double) data.get(i)));
       }
     }
-    return records.stream();
+    return records;
   }
 
   private void loadSeries() {
