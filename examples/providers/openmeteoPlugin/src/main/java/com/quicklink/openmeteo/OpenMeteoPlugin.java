@@ -17,7 +17,6 @@ import com.quicklink.easyml.plugins.api.providers.Serie;
 import com.quicklink.easyml.plugins.api.providers.TimedValue;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -106,7 +105,7 @@ public class OpenMeteoPlugin extends ProviderPlugin {
   private @NotNull LinkedList<TimedValue> sendRequest(String apiKey, String latitude,
       String longitude,
       String serieId, Instant start, Instant end, boolean forecast) {
-    getLogger().ifPresent(logger -> logger.info("Sending {} from {} to {}", serieId, start, end));
+    getLogger().info("Sending {} from {} to {}", serieId, start, end);
     LinkedList<TimedValue> records = new LinkedList<>();
 
     String request;
@@ -141,13 +140,11 @@ public class OpenMeteoPlugin extends ProviderPlugin {
     }
 
     var finalRequest = request;
-    getLogger().ifPresent(logger -> logger.info("Request to " + finalRequest));
-
+    getLogger().info("Request to " + finalRequest);
     var response = EasyHttp.get(request);
     if (response.responseCode() > 299) {
       // error
-      getLogger().ifPresent(logger -> logger.error("Error request: " + response.response()));
-
+      getLogger().error("Error request: " + response.response());
       return records;
     }
 

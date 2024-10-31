@@ -61,7 +61,7 @@ public class NiagaraPlugin extends ProviderPlugin {
         // renew token
         client.renewAccessReq();
       } catch (Exception e) {
-        getLogger().ifPresent(logger -> logger.info("Error renewing token", e));
+        getLogger().info("Error renewing token", e);
         // new login if renew fails
         client = updateClient.get();
       }
@@ -73,7 +73,7 @@ public class NiagaraPlugin extends ProviderPlugin {
   public void onEnable() {
     gson = new Gson();
     cacheAccess = new ConcurrentHashMap<>();
-    getLogger().ifPresent(logger -> logger.info("Loaded"));
+    getLogger().info("Loaded");
   }
 
 
@@ -134,7 +134,8 @@ public class NiagaraPlugin extends ProviderPlugin {
   }
 
   @Override
-  public @NotNull LinkedList<TimedValue> getSerieData(ProviderContext ctx, @NotNull String serieId, @NotNull Instant startTs,
+  public @NotNull LinkedList<TimedValue> getSerieData(ProviderContext ctx, @NotNull String serieId,
+      @NotNull Instant startTs,
       @NotNull Instant endTs) {
     var protocol = ctx.param(PROTOCOL);
     var host = ctx.param(HOST);
@@ -230,16 +231,16 @@ public class NiagaraPlugin extends ProviderPlugin {
       NiagaraAbout niagaraAbout = gson.fromJson(aboutResponse, NiagaraAbout.class);
       return new About(true, niagaraAbout.host_id(), niagaraAbout.version());
     } catch (Exception e) {
-      getLogger().ifPresent(logger -> logger.error("Error retrieving status", e));
+      getLogger().error("Error retrieving status", e);
       return new About(false, null, null);
     }
   }
 
 
-  private LinkedList<TimedValue> sendRequests(NiagaraAuthClient client, String serieId, long startTs,
+  private LinkedList<TimedValue> sendRequests(NiagaraAuthClient client, String serieId,
+      long startTs,
       long endTs) throws Exception {
-    getLogger().ifPresent(
-        logger -> logger.info("Sending {} from {} to {}", serieId, startTs, endTs));
+    getLogger().info("Sending {} from {} to {}", serieId, startTs, endTs);
 
     String serieDataResponse;
 

@@ -241,7 +241,7 @@ public class NiagaraAuthClient {
       sendGetRequest(loginUrl);
     } catch (Exception e) {
       //#ifdef DEBUG
-      plugin.getLogger().ifPresent(logger -> logger.error("Error login", e));
+      plugin.getLogger().error("Error login", e);
       //#endif
       throw new AuthenticationException();
     }
@@ -399,7 +399,7 @@ public class NiagaraAuthClient {
       sendGetRequest(loginUrl);
     } catch (Exception e) {
       //#ifdef DEBUG
-      plugin.getLogger().ifPresent(logger -> logger.error("Error login", e));
+      plugin.getLogger().error("Error login", e);
       //#endif
       throw new AuthenticationException();
     }
@@ -667,7 +667,7 @@ public class NiagaraAuthClient {
   }
 
   private void log(String msg) {
-    plugin.getLogger().ifPresent(logger -> logger.error("[NiagaraAuthClient] " + msg));
+    plugin.getLogger().error("[NiagaraAuthClient] " + msg);
   }
 
   @Override

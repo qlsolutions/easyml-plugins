@@ -26,6 +26,7 @@ public class PrivateConfig {
   public final List<Parameter> parameters;
   @NotNull
   final Logger logger;
+  public boolean enabled = false;
 
   public PrivateConfig(@NotNull AbstractPlugin plugin, @NotNull ClassLoader cl, @NotNull List<Parameter<?>> keys) {
     this.plugin = plugin;
