@@ -57,6 +57,11 @@ public class HookEmailPlugin extends HookPlugin {
 
 
   @Override
+  public void onCreate(@NotNull HookContext hookContext) {
+
+  }
+
+  @Override
   public void run(@NotNull HookContext ctx) {
 
     TransportStrategy strategy;
@@ -64,9 +69,7 @@ public class HookEmailPlugin extends HookPlugin {
       strategy = TransportStrategy.valueOf(ctx.param(smtp_transport_strategy));
     } catch (IllegalArgumentException e) {
 
-      getLogger().ifPresent(
-          logger -> logger.error("Invalid strategy of type " + ctx.param(smtp_transport_strategy),
-              e));
+      getLogger().error("Invalid strategy of type " + ctx.param(smtp_transport_strategy), e);
 
       return;
     }
@@ -100,15 +103,15 @@ public class HookEmailPlugin extends HookPlugin {
         .withTransportStrategy(strategy).buildMailer()) {
 
       mailer.sendMail(email);
-      getLogger().ifPresent(logger -> logger.info("Sent email"));
+      getLogger().info("Sent email");
 
     } catch (Exception e) {
-      getLogger().ifPresent(logger -> logger.error("Error sending the email", e));
+      getLogger().error("Error sending the email", e);
     }
   }
 
   @Override
   public void onEnable() {
-    getLogger().ifPresent(logger -> logger.info("Loaded"));
+    getLogger().info("Loaded");
   }
 }

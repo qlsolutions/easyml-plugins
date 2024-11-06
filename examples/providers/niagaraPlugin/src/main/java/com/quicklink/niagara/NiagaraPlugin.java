@@ -43,10 +43,7 @@ public class NiagaraPlugin extends ProviderPlugin {
   private Map<UUID, NiagaraAuthClient> cacheAccess;
 
   public NiagaraPlugin() {
-    super("Niagara", "1.0.0",
-        5,
-        new ParamLang("Limit", "Weeks limit for request"),
-        new ParamLang("Limite", "Limite di settimane per richiesta"),
+    super("Niagara", "1.0.0", 5,
         PROTOCOL, HOST, PORT, USERNAME, PASSWORD);
   }
 

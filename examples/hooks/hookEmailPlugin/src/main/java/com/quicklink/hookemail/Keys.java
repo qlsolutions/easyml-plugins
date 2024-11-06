@@ -6,6 +6,7 @@ package com.quicklink.hookemail;
 
 
 import com.quicklink.easyml.plugins.api.Parameter;
+import com.quicklink.easyml.plugins.api.Parameter.AccessType;
 import java.util.Locale;
 
 /**
@@ -108,7 +109,7 @@ public final class Keys {
 
   static Parameter<String> smtp_password = Parameter
       .create("SMTP-Password", "")
-      .secret()
+      .access(AccessType.write_only)
       .lang(Locale.ENGLISH, "SMTP Password", "SMTP server password")
       .lang(Locale.ITALIAN, "Password SMTP", "Password del server SMTP")
       .build();

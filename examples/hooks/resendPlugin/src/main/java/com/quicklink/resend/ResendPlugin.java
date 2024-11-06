@@ -50,6 +50,11 @@ public class ResendPlugin extends HookPlugin {
 
 
   @Override
+  public void onCreate(@NotNull HookContext hookContext) {
+
+  }
+
+  @Override
   public void run(@NotNull HookContext ctx) {
 
     String object, content;
@@ -80,15 +85,15 @@ public class ResendPlugin extends HookPlugin {
 
     try {
       CreateEmailResponse data = resend.emails().send(params);
-      getLogger().ifPresent(logger -> logger.info("Sent email with id " + data.getId()));
+      getLogger().info("Sent email with id " + data.getId());
 
     } catch (ResendException e) {
-      getLogger().ifPresent(logger -> logger.error("Error sending the email", e));
+      getLogger().error("Error sending the email", e);
     }
   }
 
   @Override
   public void onEnable() {
-    getLogger().ifPresent(logger -> logger.info("Loaded"));
+    getLogger().info("Loaded");
   }
 }

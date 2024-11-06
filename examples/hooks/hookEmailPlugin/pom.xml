@@ -30,7 +30,7 @@
       <artifactId>api</artifactId>
       <groupId>com.github.qlsolutions.easyml-plugins</groupId>
       <scope>provided</scope>
-      <version>0.1.5</version>
+      <version>0.8.1</version>
     </dependency>
     <dependency>
       <artifactId>slf4j-simple</artifactId>

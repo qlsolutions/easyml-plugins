@@ -50,6 +50,11 @@ public class WebServerPlugin extends HookPlugin {
   }
 
   @Override
+  public void onCreate(@NotNull HookContext hookContext) {
+
+  }
+
+  @Override
   public void run(@NotNull HookContext ctx) {
     var url = "%s://%s".formatted(ctx.param(protocol).toLowerCase(), ctx.param(addr));
 
@@ -80,16 +85,16 @@ public class WebServerPlugin extends HookPlugin {
       var build = req.build();
       try (var response = client.newCall(build).execute()) {
 //        response.body().string();
-        getLogger().ifPresent(logger -> logger.info("Sent request"));
+        getLogger().info("Sent request");
       }
     } catch (IOException e) {
-      getLogger().ifPresent(logger -> logger.error("Error making the request", e));
+      getLogger().error("Error making the request", e);
     }
 
   }
 
   @Override
   public void onEnable() {
-    getLogger().ifPresent(logger -> logger.info("Loaded"));
+    getLogger().info("Loaded");
   }
 }

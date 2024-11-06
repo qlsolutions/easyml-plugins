@@ -6,6 +6,7 @@ package com.quicklink.webserver;
 
 
 import com.quicklink.easyml.plugins.api.Parameter;
+import com.quicklink.easyml.plugins.api.Parameter.AccessType;
 import java.util.Locale;
 
 /**
@@ -84,7 +85,7 @@ public final class Keys {
       .create("password", "")
       .lang(Locale.ENGLISH, "password", "Password for authentication")
       .lang(Locale.ITALIAN, "password", "Password per l'autenticazione")
-      .secret()
+      .access(AccessType.write_only)
       .build();
 
 }

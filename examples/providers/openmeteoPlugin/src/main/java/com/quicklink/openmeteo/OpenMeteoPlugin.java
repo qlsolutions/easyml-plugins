@@ -42,10 +42,7 @@ public class OpenMeteoPlugin extends ProviderPlugin {
   private final Pattern regexSeries = Pattern.compile("([a-zA-Z0-9_]+) +\\| +([a-zA-Z,]+)");
 
   public OpenMeteoPlugin() {
-    super("OpenMeteo", "1.0.0",
-        5,
-        new ParamLang("Limit", "Days limit for request"),
-        new ParamLang("Limite", "Limite di giorni per richiesta"),
+    super("OpenMeteo", "1.0.0", 1,
         LATITUDE, LONGITUDE, API_KEY);
   }
 

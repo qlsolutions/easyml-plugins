@@ -6,6 +6,7 @@ package com.quicklink.resend;
 
 
 import com.quicklink.easyml.plugins.api.Parameter;
+import com.quicklink.easyml.plugins.api.Parameter.AccessType;
 import java.util.Locale;
 
 /**
@@ -87,7 +88,7 @@ public final class Keys {
 
   static Parameter<String> api_key = Parameter
       .create("apiKey", "re_123456789")
-      .secret()
+      .access(AccessType.write_only)
       .lang(Locale.ENGLISH, "API Key", "API key obtained from https://resend.com/")
       .lang(Locale.ITALIAN, "Chiave API", "Chiave API ottenuta da https://resend.com/")
       .build();
