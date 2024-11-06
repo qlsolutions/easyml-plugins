@@ -170,8 +170,7 @@ public class NiagaraPlugin extends ProviderPlugin {
     try {
       return getData(finalClient, serieId, startTs.toEpochMilli(), endTs.toEpochMilli());
     } catch (Exception e) {
-      getLogger().error("Error retrieving data", e);
-      return new LinkedList<>();
+      throw new RuntimeException("Error retrieving data", e);
     }
   }
 
@@ -219,8 +218,7 @@ public class NiagaraPlugin extends ProviderPlugin {
       NiagaraAbout niagaraAbout =  EasyML.getJsonMapper().fromJsonString(aboutResponse, NiagaraAbout.class);
       return new About(true, niagaraAbout.host_id(), niagaraAbout.version());
     } catch (Exception e) {
-      getLogger().error("Error retrieving status", e);
-      return new About(false, null, null);
+      throw new RuntimeException("Error retrieving status", e);
     }
   }
 

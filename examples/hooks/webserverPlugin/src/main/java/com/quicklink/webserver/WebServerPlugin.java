@@ -88,7 +88,7 @@ public class WebServerPlugin extends HookPlugin {
         getLogger().info("Sent request");
       }
     } catch (IOException e) {
-      getLogger().error("Error making the request", e);
+      throw new RuntimeException("Error making the request", e);
     }
 
   }

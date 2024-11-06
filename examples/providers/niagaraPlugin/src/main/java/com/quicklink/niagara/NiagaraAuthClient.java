@@ -190,8 +190,8 @@ public class NiagaraAuthClient {
 
       return client;
     } catch (Exception e) {
-      client.log("failed to log in");
-      throw e;
+//      client.log();
+      throw new RuntimeException("failed to log in", e);
     }
   }
 
@@ -241,9 +241,9 @@ public class NiagaraAuthClient {
       sendGetRequest(loginUrl);
     } catch (Exception e) {
       //#ifdef DEBUG
-      plugin.getLogger().error("Error login", e);
+//      plugin.getLogger().error("Error login", e);
       //#endif
-      throw new AuthenticationException();
+      throw new RuntimeException("Error login");
     }
 
     return sessionId;
@@ -399,9 +399,9 @@ public class NiagaraAuthClient {
       sendGetRequest(loginUrl);
     } catch (Exception e) {
       //#ifdef DEBUG
-      plugin.getLogger().error("Error login", e);
+//      plugin.getLogger().error();
       //#endif
-      throw new AuthenticationException();
+      throw new RuntimeException("Error login", e);
     }
     return sessionId;
   }
@@ -667,7 +667,7 @@ public class NiagaraAuthClient {
   }
 
   private void log(String msg) {
-    plugin.getLogger().error("[NiagaraAuthClient] " + msg);
+    plugin.getLogger().info("[NiagaraAuthClient] " + msg);
   }
 
   @Override

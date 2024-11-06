@@ -16,6 +16,7 @@ import com.quicklink.easyml.plugins.api.providers.ProviderPlugin;
 import com.quicklink.easyml.plugins.api.providers.Serie;
 import com.quicklink.easyml.plugins.api.providers.TimedValue;
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.format.DateTimeFormatter;
@@ -100,7 +101,6 @@ public class OpenMeteoPlugin extends ProviderPlugin {
       String longitude,
       String serieId, Instant start, Instant end, boolean forecast) {
     getLogger().info("Sending {} from {} to {}", serieId, start, end);
-    LinkedList<TimedValue> records = new LinkedList<>();
 
     String request;
 
@@ -136,14 +136,15 @@ public class OpenMeteoPlugin extends ProviderPlugin {
     getLogger().info("Request to " + request);
     try (var response = client.newCall(new Builder().url(request).get().build()).execute()) {
       if(response.body() == null) {
-        getLogger().error("Body is null: " + response.code());
-        return records;
+        throw new RuntimeException("Body is null: " + response.code());
       }
 
       var json = EasyML.getJsonMapper().fromJsonString(response.body().string(), ResponseOpenMeteo.class).hourly();
 
       var time = json.get("time");
       var data = json.get(serieId);
+      LinkedList<TimedValue> records = new LinkedList<>();
+
       if (data != null) {
         for (int i = 0; i < data.size(); i++) {
           var instant = Instant.parse((String) time.get(i) + ":00Z");
@@ -152,8 +153,7 @@ public class OpenMeteoPlugin extends ProviderPlugin {
       }
       return records;
     } catch (IOException e) {
-      getLogger().error("Error request to " + request, e);
-      return records;
+      throw new UncheckedIOException("Error request to " + request, e);
     }
   }
 

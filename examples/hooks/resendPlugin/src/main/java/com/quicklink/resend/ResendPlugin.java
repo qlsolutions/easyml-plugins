@@ -88,7 +88,7 @@ public class ResendPlugin extends HookPlugin {
       getLogger().info("Sent email with id " + data.getId());
 
     } catch (ResendException e) {
-      getLogger().error("Error sending the email", e);
+      throw new RuntimeException("Error sending the email", e);
     }
   }
 

@@ -68,10 +68,7 @@ public class HookEmailPlugin extends HookPlugin {
     try {
       strategy = TransportStrategy.valueOf(ctx.param(smtp_transport_strategy));
     } catch (IllegalArgumentException e) {
-
-      getLogger().error("Invalid strategy of type " + ctx.param(smtp_transport_strategy), e);
-
-      return;
+      throw new RuntimeException("Invalid strategy of type " + ctx.param(smtp_transport_strategy), e);
     }
 
     String object, content;
@@ -106,7 +103,7 @@ public class HookEmailPlugin extends HookPlugin {
       getLogger().info("Sent email");
 
     } catch (Exception e) {
-      getLogger().error("Error sending the email", e);
+      throw new RuntimeException("Error sending the email", e);
     }
   }
 
