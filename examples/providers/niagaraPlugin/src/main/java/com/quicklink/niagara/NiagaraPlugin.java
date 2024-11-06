@@ -10,8 +10,7 @@ import static com.quicklink.niagara.Keys.PORT;
 import static com.quicklink.niagara.Keys.PROTOCOL;
 import static com.quicklink.niagara.Keys.USERNAME;
 
-import com.google.gson.Gson;
-import com.quicklink.easyml.plugins.api.ParamLang;
+import com.quicklink.easyml.plugins.api.EasyML;
 import com.quicklink.easyml.plugins.api.providers.About;
 import com.quicklink.easyml.plugins.api.providers.ProviderContext;
 import com.quicklink.easyml.plugins.api.providers.ProviderPlugin;
@@ -39,7 +38,6 @@ import org.jetbrains.annotations.NotNull;
  */
 public class NiagaraPlugin extends ProviderPlugin {
 
-  private Gson gson;
   private Map<UUID, NiagaraAuthClient> cacheAccess;
 
   public NiagaraPlugin() {
@@ -68,7 +66,6 @@ public class NiagaraPlugin extends ProviderPlugin {
 
   @Override
   public void onEnable() {
-    gson = new Gson();
     cacheAccess = new ConcurrentHashMap<>();
     getLogger().info("Loaded");
   }
@@ -124,7 +121,7 @@ public class NiagaraPlugin extends ProviderPlugin {
 
 //    System.out.println(seriesResponse); Debug response
 
-    SeriesModel seriesModel = gson.fromJson(seriesResponse, SeriesModel.class);
+    SeriesModel seriesModel = EasyML.getJsonMapper().fromJsonString(seriesResponse, SeriesModel.class);
     return seriesModel.series().stream()
         .map(serieModel -> new Serie(serieModel.id(), serieModel.displayName(), serieModel.tags()))
         .toList();
@@ -219,7 +216,7 @@ public class NiagaraPlugin extends ProviderPlugin {
 
       var aboutResponse = NiagaraAuthClient.sendGet(client, "about");
 
-      NiagaraAbout niagaraAbout = gson.fromJson(aboutResponse, NiagaraAbout.class);
+      NiagaraAbout niagaraAbout =  EasyML.getJsonMapper().fromJsonString(aboutResponse, NiagaraAbout.class);
       return new About(true, niagaraAbout.host_id(), niagaraAbout.version());
     } catch (Exception e) {
       getLogger().error("Error retrieving status", e);
@@ -237,10 +234,10 @@ public class NiagaraPlugin extends ProviderPlugin {
 
 //            var body = new SerieDetailsBody(Long.parseLong("1662336000000"), Long.parseLong("1662365505000"), 0L);
     var body = new SerieDetailsBody(startTs, endTs, 0L);
-    serieDataResponse = NiagaraAuthClient.sendPost(client, "serie/" + serieId, gson.toJson(body));
+    serieDataResponse = NiagaraAuthClient.sendPost(client, "serie/" + serieId, EasyML.getJsonMapper().toJsonString(body));
 //            System.out.println("SerieDataResponse " + serieDataResponse);
 
-    SerieDetailsModel serieDetailsModel = gson.fromJson(serieDataResponse, SerieDetailsModel.class);
+    SerieDetailsModel serieDetailsModel =  EasyML.getJsonMapper().fromJsonString(serieDataResponse, SerieDetailsModel.class);
 //        System.out.println(serieDetailsModel);
 
     LinkedList<TimedValue> records = new LinkedList<>();

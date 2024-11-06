@@ -8,13 +8,14 @@ import static com.quicklink.openmeteo.Keys.API_KEY;
 import static com.quicklink.openmeteo.Keys.LATITUDE;
 import static com.quicklink.openmeteo.Keys.LONGITUDE;
 
-import com.google.gson.Gson;
-import com.quicklink.easyml.plugins.api.ParamLang;
+
+import com.quicklink.easyml.plugins.api.EasyML;
 import com.quicklink.easyml.plugins.api.providers.About;
 import com.quicklink.easyml.plugins.api.providers.ProviderContext;
 import com.quicklink.easyml.plugins.api.providers.ProviderPlugin;
 import com.quicklink.easyml.plugins.api.providers.Serie;
 import com.quicklink.easyml.plugins.api.providers.TimedValue;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.format.DateTimeFormatter;
@@ -26,6 +27,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Request.Builder;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -35,11 +39,11 @@ import org.jetbrains.annotations.NotNull;
  */
 public class OpenMeteoPlugin extends ProviderPlugin {
 
-  final Gson gson = new Gson();
   final DateTimeFormatter formatter =
       DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm", Locale.ENGLISH);
   final List<Serie> serieList = new ArrayList<>();
   private final Pattern regexSeries = Pattern.compile("([a-zA-Z0-9_]+) +\\| +([a-zA-Z,]+)");
+  private final OkHttpClient client = new OkHttpClient();
 
   public OpenMeteoPlugin() {
     super("OpenMeteo", "1.0.0", 1,
@@ -129,26 +133,28 @@ public class OpenMeteoPlugin extends ProviderPlugin {
       request += "&apikey=" + apiKey;
     }
 
-    var finalRequest = request;
-    getLogger().info("Request to " + finalRequest);
-    var response = EasyHttp.get(request);
-    if (response.responseCode() > 299) {
-      // error
-      getLogger().error("Error request: " + response.response());
+    getLogger().info("Request to " + request);
+    try (var response = client.newCall(new Builder().url(request).get().build()).execute()) {
+      if(response.body() == null) {
+        getLogger().error("Body is null: " + response.code());
+        return records;
+      }
+
+      var json = EasyML.getJsonMapper().fromJsonString(response.body().string(), ResponseOpenMeteo.class).hourly();
+
+      var time = json.get("time");
+      var data = json.get(serieId);
+      if (data != null) {
+        for (int i = 0; i < data.size(); i++) {
+          var instant = Instant.parse((String) time.get(i) + ":00Z");
+          records.add(new TimedValue(instant, (double) data.get(i)));
+        }
+      }
+      return records;
+    } catch (IOException e) {
+      getLogger().error("Error request to " + request, e);
       return records;
     }
-
-    var json = gson.fromJson(response.response(), ResponseOpenMeteo.class).hourly();
-
-    var time = json.get("time");
-    var data = json.get(serieId);
-    if (data != null) {
-      for (int i = 0; i < data.size(); i++) {
-        var instant = Instant.parse((String) time.get(i) + ":00Z");
-        records.add(new TimedValue(instant, (double) data.get(i)));
-      }
-    }
-    return records;
   }
 
   private void loadSeries() {
