@@ -76,14 +76,7 @@ public class OpenMeteoPlugin extends ProviderPlugin {
     var longitude = ctx.param(LONGITUDE);
     var apiKey = ctx.param(API_KEY);
 
-    LinkedList<TimedValue> records = new LinkedList<>();
-    ctx.dateRangeStream(Calendar.DAY_OF_MONTH)
-        .forEachOrdered(dateRange -> {
-          records.addAll(sendRequest(apiKey, latitude, longitude, serieId, dateRange.start()
-              .toInstant(), dateRange.end().toInstant(), false));
-        });
-
-    return records;
+    return getData(apiKey, latitude, longitude, serieId, start, end, false);
   }
 
   @Override
@@ -98,11 +91,11 @@ public class OpenMeteoPlugin extends ProviderPlugin {
     var longitude = ctx.param(LONGITUDE);
     var apiKey = ctx.param(API_KEY);
 
-    return sendRequest(apiKey, latitude, longitude, serieId, start, end, true);
+    return getData(apiKey, latitude, longitude, serieId, start, end, true);
 
   }
 
-  private @NotNull LinkedList<TimedValue> sendRequest(String apiKey, String latitude,
+  private @NotNull LinkedList<TimedValue> getData(String apiKey, String latitude,
       String longitude,
       String serieId, Instant start, Instant end, boolean forecast) {
     getLogger().info("Sending {} from {} to {}", serieId, start, end);

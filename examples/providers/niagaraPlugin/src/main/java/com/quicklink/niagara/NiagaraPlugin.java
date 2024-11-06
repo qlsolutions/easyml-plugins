@@ -172,19 +172,13 @@ public class NiagaraPlugin extends ProviderPlugin {
     // ---------------------------------------------------------------------------------------------
 
     NiagaraAuthClient finalClient = client;
-    LinkedList<TimedValue> records = new LinkedList<>();
 
-    ctx.dateRangeStream(Calendar.WEEK_OF_MONTH)
-        .forEachOrdered(dateRange -> {
-          try {
-            records.addAll(sendRequests(finalClient, serieId, dateRange.start().getTime(),
-                dateRange.end().getTime()));
-          } catch (Exception e) {
-            throw new RuntimeException(e);
-          }
-        });
-
-    return records;
+    try {
+      return getData(finalClient, serieId, startTs.toEpochMilli(), endTs.toEpochMilli());
+    } catch (Exception e) {
+      getLogger().error("Error retrieving data", e);
+      return new LinkedList<>();
+    }
   }
 
   @Override
@@ -237,7 +231,7 @@ public class NiagaraPlugin extends ProviderPlugin {
   }
 
 
-  private LinkedList<TimedValue> sendRequests(NiagaraAuthClient client, String serieId,
+  private LinkedList<TimedValue> getData(NiagaraAuthClient client, String serieId,
       long startTs,
       long endTs) throws Exception {
     getLogger().info("Sending {} from {} to {}", serieId, startTs, endTs);
