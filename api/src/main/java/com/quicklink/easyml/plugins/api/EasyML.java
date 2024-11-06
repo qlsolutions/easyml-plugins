@@ -4,6 +4,7 @@
 
 package com.quicklink.easyml.plugins.api;
 
+import com.quicklink.easyml.plugins.api.json.JsonMapper;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 
@@ -19,11 +20,19 @@ public final class EasyML {
   }
 
   private static Server server;
+  private static JsonMapper jsonMapper;
 
   public static @NotNull Server getServer() {
     if(server == null) {
       throw new IllegalStateException("Error retrieving server from plugin");
     }
     return server;
+  }
+
+  public static @NotNull JsonMapper getJsonMapper() {
+    if(jsonMapper == null) {
+      throw new IllegalStateException("Error retrieving jsonMapper from plugin");
+    }
+    return jsonMapper;
   }
 }
