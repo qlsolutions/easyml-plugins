@@ -23,6 +23,13 @@
       <scope>provided</scope>
       <version>2.17.2</version>
     </dependency>
+
+    <dependency>
+      <artifactId>okhttp</artifactId>
+      <groupId>com.squareup.okhttp3</groupId>
+      <version>4.12.0</version>
+      <scope>provided</scope>
+    </dependency>
   </dependencies>
 
   <modelVersion>4.0.0</modelVersion>
@@ -30,7 +37,7 @@
   <parent>
     <artifactId>PluginService</artifactId>
     <groupId>com.quicklink.pluginservice</groupId>
-    <version>0.8.2</version>
+    <version>0.8.3</version>
   </parent>
 
   <properties>
