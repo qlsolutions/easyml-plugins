@@ -6,7 +6,6 @@ package com.quicklink.easyml.plugins.api.providers;
 
 
 import com.quicklink.easyml.plugins.api.AbstractPlugin;
-import com.quicklink.easyml.plugins.api.ParamLang;
 import com.quicklink.easyml.plugins.api.Parameter;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -28,9 +27,8 @@ public abstract class ProviderPlugin extends AbstractPlugin {
 
   private final boolean limitParameterSupported;
 
-  public ProviderPlugin(@NotNull String name, @NotNull String version, int limit,
-      @NotNull ParamLang eng, @NotNull ParamLang it, Parameter<?>... keys) {
-    super(name, version, genParams(limit, eng, it, keys));
+  public ProviderPlugin(@NotNull String name, @NotNull String version, int weeksLimit, Parameter<?>... keys) {
+    super(name, version, genParams(weeksLimit, keys));
     limitParameterSupported = true;
   }
 
@@ -43,14 +41,13 @@ public abstract class ProviderPlugin extends AbstractPlugin {
     return limitParameterSupported;
   }
 
-  private static List<Parameter<?>> genParams(int limit, @NotNull ParamLang eng,
-      @NotNull ParamLang it, Parameter<?>... keys) {
+  private static List<Parameter<?>> genParams(int limit, Parameter<?>... keys) {
     var list = new ArrayList<Parameter<?>>();
 
     list.add(Parameter
         .create("limit", limit)
-        .lang(Locale.ENGLISH, eng.title(), eng.description())
-        .lang(Locale.ITALIAN, it.title(), it.description())
+        .lang(Locale.ENGLISH, "Limit","Weeks limit for request")
+        .lang(Locale.ITALIAN, "Limite", "Limite di settimane per richiesta")
         .build());
 
     list.addAll(Arrays.asList(keys));
