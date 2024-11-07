@@ -148,7 +148,13 @@ public class OpenMeteoPlugin extends ProviderPlugin {
       if (data != null) {
         for (int i = 0; i < data.size(); i++) {
           var instant = Instant.parse((String) time.get(i) + ":00Z");
-          records.add(new TimedValue(instant, (double) data.get(i)));
+          double tmp;
+          try {
+            tmp = (double) data.get(i);
+          } catch (ClassCastException e) {
+            tmp = (int) data.get(i);
+          }
+          records.add(new TimedValue(instant, tmp));
         }
       }
       return records;
