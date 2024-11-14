@@ -6,6 +6,7 @@ package com.quicklink.easyml.plugins.api.providers;
 
 
 import java.time.Instant;
+import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 import org.jetbrains.annotations.NotNull;
 
@@ -16,31 +17,35 @@ import org.jetbrains.annotations.NotNull;
  */
 public final class TimedValue {
 
-  private long millis;
+  private @NotNull String time;
   private double value;
 
   /**
-   *
+   * Main Constructor
    */
-  public TimedValue(long millis, double value) {
-    this.millis = millis;
+  public TimedValue(@NotNull String time, double value) {
+    this.time = time;
     this.value = value;
   }
 
-  public TimedValue(@NotNull Instant instant, double value) {
-    this(instant.toEpochMilli(), value);
+  public TimedValue(@NotNull Instant time, double value) {
+    this(DateTimeFormatter.ISO_INSTANT.format(time), value);
   }
 
-  public long getMillis() {
-    return millis;
+  public TimedValue(long timeMillis, double value) {
+    this(Instant.ofEpochMilli(timeMillis), value);
+  }
+
+  public @NotNull String getTime() {
+    return time;
   }
 
   public double getValue() {
     return value;
   }
 
-  public void setMillis(long millis) {
-    this.millis = millis;
+  public void setTime(@NotNull String time) {
+    this.time = time;
   }
 
   public void setValue(double value) {
@@ -56,19 +61,19 @@ public final class TimedValue {
       return false;
     }
     var that = (TimedValue) obj;
-    return this.millis == that.millis &&
+    return Objects.equals(this.time, that.time) &&
         Double.doubleToLongBits(this.value) == Double.doubleToLongBits(that.value);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(millis, value);
+    return Objects.hash(time, value);
   }
 
   @Override
   public String toString() {
     return "TimedValue[" +
-        "millis=" + millis + ", " +
+        "time=" + time + ", " +
         "value=" + value + ']';
   }
 
