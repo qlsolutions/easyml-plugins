@@ -27,8 +27,8 @@ import org.jetbrains.annotations.Nullable;
 @Internal
 public final class ParameterImpl implements Parameter {
 
-
-  private final Map<UUID, Object> current_values = new ConcurrentHashMap<>();
+  @JsonIgnore
+  private Map<UUID, Object> current_values = null;
 
   private String key;
   private Type type;
@@ -56,6 +56,12 @@ public final class ParameterImpl implements Parameter {
   @NotNull
   @Override
   public Object get(@NotNull UUID id) {
+    if(current_values == null) {
+      throw new RuntimeException("parameter '%s' not created from Parameter.builder".formatted(key));
+    }
+    if(!current_values.containsKey(id)) {
+      throw new RuntimeException("parameter '%s' not initialized".formatted(key));
+    }
     return current_values.get(id);
   }
 

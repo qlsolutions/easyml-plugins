@@ -8,6 +8,7 @@ import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Pattern;
 import org.jetbrains.annotations.ApiStatus.Internal;
 import org.jetbrains.annotations.NotNull;
@@ -112,7 +113,7 @@ public interface Parameter<E> {
     }
 
     public Parameter<E> build() {
-      var param = new ParameterImpl(id, type, (E) defaultValue, accessType, null, lang);
+      var param = new ParameterImpl(new ConcurrentHashMap<>(), id, type, (E) defaultValue, accessType, null, lang);
 
       if (select != null) {
         param.setExtra(new LinkedHashMap<>());
