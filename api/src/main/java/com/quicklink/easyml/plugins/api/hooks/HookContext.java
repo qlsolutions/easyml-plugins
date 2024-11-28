@@ -6,6 +6,7 @@ package com.quicklink.easyml.plugins.api.hooks;
 
 
 import com.quicklink.easyml.plugins.api.Parameter;
+import com.quicklink.easyml.plugins.api.ParameterImpl;
 import java.time.Instant;
 import java.util.Map;
 import org.jetbrains.annotations.NotNull;
@@ -86,7 +87,7 @@ public class HookContext {
   }
 
   public @Nullable <T> T param(@NotNull Parameter<T> key) {
-    return (T) parameters.getOrDefault(key.key(), null);
+    return (T) parameters.getOrDefault(key.getKey(), null);
   }
 
   public @NotNull String parseString(@NotNull String s) {

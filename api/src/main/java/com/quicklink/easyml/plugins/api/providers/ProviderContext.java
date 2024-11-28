@@ -6,12 +6,9 @@ package com.quicklink.easyml.plugins.api.providers;
 
 
 import com.quicklink.easyml.plugins.api.Parameter;
-import java.time.Instant;
-import java.util.Calendar;
-import java.util.Date;
+import com.quicklink.easyml.plugins.api.ParameterImpl;
 import java.util.Map;
 import java.util.UUID;
-import java.util.stream.Stream;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -43,7 +40,7 @@ public class ProviderContext {
   }
 
   public @Nullable <T> T param(@NotNull Parameter<T> key) {
-    return (T) parameters.getOrDefault(key.key(), null);
+    return (T) parameters.getOrDefault(key.getKey(), null);
   }
 
 }

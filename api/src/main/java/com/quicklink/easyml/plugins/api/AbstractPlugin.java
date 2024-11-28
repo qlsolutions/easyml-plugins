@@ -6,7 +6,6 @@ package com.quicklink.easyml.plugins.api;
 
 
 import java.util.List;
-import java.util.Optional;
 import org.jetbrains.annotations.ApiStatus.Internal;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;

@@ -6,7 +6,6 @@ package com.quicklink.easyml.plugins.api;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +22,7 @@ public class PrivateConfig {
   @NotNull
   public final ClassLoader classLoader;
   @NotNull
-  public final List<Parameter> parameters;
+  public final List<Parameter<?>> parameters;
   @NotNull
   final Logger logger;
   public boolean enabled = false;

@@ -6,9 +6,9 @@ package com.quicklink.easyml.plugins.api.hooks;
 
 import com.quicklink.easyml.plugins.api.AbstractPlugin;
 import com.quicklink.easyml.plugins.api.Parameter;
+import com.quicklink.easyml.plugins.api.ParameterImpl;
 import java.util.Arrays;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * HookPlugin - Class to be implemented by a Hook plugin.
