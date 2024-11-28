@@ -56,19 +56,18 @@ public abstract class ProviderPlugin extends AbstractPlugin {
     return list;
   }
 
-  public abstract void onCreate(@NotNull ProviderContext ctx);
+  public abstract void onCreate(@NotNull UUID id);
 
-  public abstract @NotNull List<Serie> getSeries(
-      ProviderContext ctx);
+  public abstract @NotNull List<Serie> getSeries(@NotNull UUID id);
 
   public abstract @NotNull LinkedList<TimedValue> getSerieData(
-      @NotNull ProviderContext ctx, @NotNull String serieId,
+      @NotNull UUID id, @NotNull String serieId,
       @NotNull Instant start,
       @NotNull Instant end);
 
-  public abstract @NotNull About status(@NotNull ProviderContext ctx);
+  public abstract boolean status(@NotNull UUID id);
 
-  public @NotNull LinkedList<TimedValue> getFutureData(@NotNull ProviderContext ctx, @NotNull String serieId,
+  public @NotNull LinkedList<TimedValue> getFutureData(@NotNull UUID id, @NotNull String serieId,
       @NotNull Instant start, @NotNull Instant end) {
     throw notImplementedExc;
   }

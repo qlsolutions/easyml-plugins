@@ -4,8 +4,6 @@
 
 package com.quicklink.easyml.plugins.api;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -13,7 +11,6 @@ import java.util.UUID;
 import java.util.regex.Pattern;
 import org.jetbrains.annotations.ApiStatus.Internal;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * Parameter - Plugin's parameters. Supported types: "float64", "integer", "string", "bool".
@@ -24,7 +21,7 @@ public interface Parameter<E> {
 
   @NotNull String getKey();
 
-  @NotNull E getValue(@NotNull UUID id);
+  @NotNull E get(@NotNull UUID id);
 
   @NotNull Type getType();
 

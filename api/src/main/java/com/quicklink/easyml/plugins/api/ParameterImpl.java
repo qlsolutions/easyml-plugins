@@ -55,7 +55,7 @@ public final class ParameterImpl implements Parameter {
 
   @NotNull
   @Override
-  public Object getValue(@NotNull UUID id) {
+  public Object get(@NotNull UUID id) {
     return current_values.get(id);
   }
 

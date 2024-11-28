@@ -5,12 +5,9 @@
 package com.quicklink.easyml.plugins.api.hooks;
 
 
-import com.quicklink.easyml.plugins.api.Parameter;
-import com.quicklink.easyml.plugins.api.ParameterImpl;
 import java.time.Instant;
 import java.util.Map;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * HookContext - Context received by easmly-app on anomaly detection.
@@ -27,9 +24,6 @@ public class HookContext {
   private final Double minPredicted;
   private final Double maxPredicted;
   private final Double observed;
-
-  private final Map<String, ?> parameters;
-
 
   public HookContext(
       int hookId,
@@ -50,7 +44,6 @@ public class HookContext {
     this.minPredicted = minPredicted;
     this.maxPredicted = maxPredicted;
     this.observed = observed;
-    this.parameters = parameters;
 
   }
 
@@ -84,10 +77,6 @@ public class HookContext {
 
   public @NotNull Double getObserved() {
     return observed;
-  }
-
-  public @Nullable <T> T param(@NotNull Parameter<T> key) {
-    return (T) parameters.getOrDefault(key.getKey(), null);
   }
 
   public @NotNull String parseString(@NotNull String s) {
