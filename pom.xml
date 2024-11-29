@@ -10,7 +10,10 @@
     <module>api</module>
     <module>examples/providers/openmeteoPlugin</module>
     <module>examples/providers/niagaraPlugin</module>
-    <module>examples/hooks/hookEmailPlugin</module>
+    <module>examples/providers/SMAPlugin</module>
+    <module>examples/providers/niagaraCloudPlugin</module>
+
+    <module>examples/hooks/emailPlugin</module>
     <module>examples/hooks/webserverPlugin</module>
     <module>examples/hooks/resendPlugin</module>
 

@@ -33,9 +33,9 @@ import org.simplejavamail.mailer.MailerBuilder;
  *
  * @author Denis Mehilli
  */
-public class HookEmailPlugin extends HookPlugin {
+public class EmailPlugin extends HookPlugin {
 
-  public HookEmailPlugin() {
+  public EmailPlugin() {
     super("Email", "1.0.0",
         tolerance_high,
         tolerance_low,
