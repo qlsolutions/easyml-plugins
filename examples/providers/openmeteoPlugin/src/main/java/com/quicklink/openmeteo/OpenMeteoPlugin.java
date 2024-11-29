@@ -10,8 +10,6 @@ import static com.quicklink.openmeteo.Keys.LONGITUDE;
 
 
 import com.quicklink.easyml.plugins.api.EasyML;
-import com.quicklink.easyml.plugins.api.providers.About;
-import com.quicklink.easyml.plugins.api.providers.ProviderContext;
 import com.quicklink.easyml.plugins.api.providers.ProviderPlugin;
 import com.quicklink.easyml.plugins.api.providers.Serie;
 import com.quicklink.easyml.plugins.api.providers.TimedValue;
@@ -22,14 +20,13 @@ import java.time.Instant;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
+import java.util.UUID;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import okhttp3.OkHttpClient;
-import okhttp3.Request;
 import okhttp3.Request.Builder;
 import org.jetbrains.annotations.NotNull;
 
@@ -61,39 +58,33 @@ public class OpenMeteoPlugin extends ProviderPlugin {
   }
 
   @Override
-  public void onCreate(@NotNull ProviderContext ctx) {
+  public void onCreate(@NotNull UUID providerId) {
 
   }
 
   @Override
-  public @NotNull List<Serie> getSeries(ProviderContext ctx) {
+  public @NotNull List<Serie> getSeries(@NotNull UUID providerId) {
     return serieList;
   }
 
   @Override
-  public @NotNull LinkedList<TimedValue> getSerieData(ProviderContext ctx, @NotNull String serieId,
+  public @NotNull LinkedList<TimedValue> getSerieData(@NotNull UUID providerId, @NotNull String serieId,
       @NotNull Instant start,
       @NotNull Instant end) {
-    var latitude = ctx.param(LATITUDE);
-    var longitude = ctx.param(LONGITUDE);
-    var apiKey = ctx.param(API_KEY);
 
-    return getData(apiKey, latitude, longitude, serieId, start, end, false);
+    return getData(API_KEY.get(providerId),LATITUDE.get(providerId), LONGITUDE.get(providerId), serieId, start, end, false);
   }
 
   @Override
-  public @NotNull About status(@NotNull ProviderContext ctx) {
-    return new About(true, "hostId", "1.0.0");
+  public boolean status(@NotNull UUID providerId) {
+    return true;
   }
 
   @Override
-  public @NotNull LinkedList<TimedValue> getFutureData(ProviderContext ctx, @NotNull String serieId,
+  public @NotNull LinkedList<TimedValue> getFutureData(@NotNull UUID providerId, @NotNull String serieId,
       @NotNull Instant start, @NotNull Instant end) {
-    var latitude = ctx.param(LATITUDE);
-    var longitude = ctx.param(LONGITUDE);
-    var apiKey = ctx.param(API_KEY);
 
-    return getData(apiKey, latitude, longitude, serieId, start, end, true);
+    return getData(API_KEY.get(providerId),LATITUDE.get(providerId), LONGITUDE.get(providerId), serieId, start, end, true);
 
   }
 

@@ -11,8 +11,6 @@ import static com.quicklink.niagara.Keys.PROTOCOL;
 import static com.quicklink.niagara.Keys.USERNAME;
 
 import com.quicklink.easyml.plugins.api.EasyML;
-import com.quicklink.easyml.plugins.api.providers.About;
-import com.quicklink.easyml.plugins.api.providers.ProviderContext;
 import com.quicklink.easyml.plugins.api.providers.ProviderPlugin;
 import com.quicklink.easyml.plugins.api.providers.Serie;
 import com.quicklink.easyml.plugins.api.providers.TimedValue;
@@ -22,7 +20,6 @@ import com.quicklink.niagara.model.SerieDetailsModel.Data;
 import com.quicklink.niagara.model.SeriesModel;
 import com.quicklink.niagara.model.request.SerieDetailsBody;
 import java.time.Instant;
-import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -72,25 +69,24 @@ public class NiagaraPlugin extends ProviderPlugin {
 
 
   @Override
-  public void onCreate(@NotNull ProviderContext providerContext) {
+  public void onCreate(@NotNull UUID providerId) {
 
   }
 
   @Override
-  public @NotNull List<Serie> getSeries(@NotNull ProviderContext ctx) {
+  public @NotNull List<Serie> getSeries(@NotNull UUID providerId) {
+    var protocol = PROTOCOL.get(providerId);
+    var host = HOST.get(providerId);
+    var port = PORT.get(providerId);
+    var username = USERNAME.get(providerId);
+    var password = PASSWORD.get(providerId);
+
     String seriesResponse;
 
-    var protocol = ctx.param(PROTOCOL);
-    var host = ctx.param(HOST);
-    var port = ctx.param(PORT);
-    var username = ctx.param(USERNAME);
-    var password = ctx.param(PASSWORD);
-
-    var client = cacheAccess.computeIfAbsent(ctx.providerId(), id -> {
+    var client = cacheAccess.computeIfAbsent(providerId, id -> {
       try {
-        return NiagaraAuthClient.parametersCreator(NiagaraPlugin.this, protocol, host,
-            String.valueOf(port), username,
-            password);
+        return NiagaraAuthClient.parametersCreator(NiagaraPlugin.this, protocol,
+            host, String.valueOf(port), username, password);
       } catch (Exception e) {
         throw new RuntimeException(e);
       }
@@ -100,13 +96,12 @@ public class NiagaraPlugin extends ProviderPlugin {
     Supplier<NiagaraAuthClient> updateClient = () -> {
       NiagaraAuthClient c;
       try {
-        c = NiagaraAuthClient.parametersCreator(NiagaraPlugin.this, protocol, host,
-            String.valueOf(port), username,
-            password);
+        c = NiagaraAuthClient.parametersCreator(NiagaraPlugin.this, protocol,
+            host, String.valueOf(port), username, password);
       } catch (Exception e) {
         throw new RuntimeException(e);
       }
-      cacheAccess.put(ctx.providerId(), c);
+      cacheAccess.put(providerId, c);
       return c;
     };
 
@@ -121,23 +116,25 @@ public class NiagaraPlugin extends ProviderPlugin {
 
 //    System.out.println(seriesResponse); Debug response
 
-    SeriesModel seriesModel = EasyML.getJsonMapper().fromJsonString(seriesResponse, SeriesModel.class);
+    SeriesModel seriesModel = EasyML.getJsonMapper()
+        .fromJsonString(seriesResponse, SeriesModel.class);
     return seriesModel.series().stream()
         .map(serieModel -> new Serie(serieModel.id(), serieModel.displayName(), serieModel.tags()))
         .toList();
   }
 
   @Override
-  public @NotNull LinkedList<TimedValue> getSerieData(ProviderContext ctx, @NotNull String serieId,
+  public @NotNull LinkedList<TimedValue> getSerieData(@NotNull UUID providerId,
+      @NotNull String serieId,
       @NotNull Instant startTs,
       @NotNull Instant endTs) {
-    var protocol = ctx.param(PROTOCOL);
-    var host = ctx.param(HOST);
-    var port = ctx.param(PORT);
-    var username = ctx.param(USERNAME);
-    var password = ctx.param(PASSWORD);
+    var protocol = PROTOCOL.get(providerId);
+    var host = HOST.get(providerId);
+    var port = PORT.get(providerId);
+    var username = USERNAME.get(providerId);
+    var password = PASSWORD.get(providerId);
 
-    var client = cacheAccess.computeIfAbsent(ctx.providerId(), id -> {
+    var client = cacheAccess.computeIfAbsent(providerId, id -> {
       try {
         return NiagaraAuthClient.parametersCreator(NiagaraPlugin.this, protocol, host,
             String.valueOf(port), username,
@@ -157,7 +154,7 @@ public class NiagaraPlugin extends ProviderPlugin {
       } catch (Exception e) {
         throw new RuntimeException(e);
       }
-      cacheAccess.put(ctx.providerId(), c);
+      cacheAccess.put(providerId, c);
       return c;
     };
 
@@ -175,15 +172,14 @@ public class NiagaraPlugin extends ProviderPlugin {
   }
 
   @Override
-  public @NotNull About status(ProviderContext ctx) {
-    var protocol = ctx.param(PROTOCOL);
-    var host = ctx.param(HOST);
-    var port = ctx.param(PORT);
-    var username = ctx.param(USERNAME);
-    var password = ctx.param(PASSWORD);
+  public boolean status(@NotNull UUID providerId) {
+    var protocol = PROTOCOL.get(providerId);
+    var host = HOST.get(providerId);
+    var port = PORT.get(providerId);
+    var username = USERNAME.get(providerId);
+    var password = PASSWORD.get(providerId);
 
-    try {
-      var client = cacheAccess.computeIfAbsent(ctx.providerId(),
+      var client = cacheAccess.computeIfAbsent(providerId,
           integer -> {
             try {
               return NiagaraAuthClient.parametersCreator(NiagaraPlugin.this, protocol, host,
@@ -205,7 +201,7 @@ public class NiagaraPlugin extends ProviderPlugin {
         } catch (Exception e) {
           throw new RuntimeException(e);
         }
-        cacheAccess.put(ctx.providerId(), c);
+        cacheAccess.put(providerId, c);
         return c;
       };
 
@@ -213,13 +209,17 @@ public class NiagaraPlugin extends ProviderPlugin {
 
       // -------------------------------------------------------------------------------------------
 
-      var aboutResponse = NiagaraAuthClient.sendGet(client, "about");
-
-      NiagaraAbout niagaraAbout =  EasyML.getJsonMapper().fromJsonString(aboutResponse, NiagaraAbout.class);
-      return new About(true, niagaraAbout.host_id(), niagaraAbout.version());
+    String aboutResponse = null;
+    try {
+      aboutResponse = NiagaraAuthClient.sendGet(client, "about");
     } catch (Exception e) {
-      throw new RuntimeException("Error retrieving status", e);
+      return false;
     }
+
+    NiagaraAbout niagaraAbout = EasyML.getJsonMapper().fromJsonString(aboutResponse, NiagaraAbout.class);
+//      return new About(true, niagaraAbout.host_id(), niagaraAbout.version());
+    return true;
+
   }
 
 
@@ -232,10 +232,12 @@ public class NiagaraPlugin extends ProviderPlugin {
 
 //            var body = new SerieDetailsBody(Long.parseLong("1662336000000"), Long.parseLong("1662365505000"), 0L);
     var body = new SerieDetailsBody(startTs, endTs, 0L);
-    serieDataResponse = NiagaraAuthClient.sendPost(client, "serie/" + serieId, EasyML.getJsonMapper().toJsonString(body));
+    serieDataResponse = NiagaraAuthClient.sendPost(client, "serie/" + serieId,
+        EasyML.getJsonMapper().toJsonString(body));
 //            System.out.println("SerieDataResponse " + serieDataResponse);
 
-    SerieDetailsModel serieDetailsModel =  EasyML.getJsonMapper().fromJsonString(serieDataResponse, SerieDetailsModel.class);
+    SerieDetailsModel serieDetailsModel = EasyML.getJsonMapper()
+        .fromJsonString(serieDataResponse, SerieDetailsModel.class);
 //        System.out.println(serieDetailsModel);
 
     LinkedList<TimedValue> records = new LinkedList<>();
