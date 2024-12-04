@@ -2,10 +2,12 @@
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xmlns="http://maven.apache.org/POM/4.0.0"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <artifactId>PluginService</artifactId>
+  <modelVersion>4.0.0</modelVersion>
 
   <groupId>com.quicklink.pluginservice</groupId>
-  <modelVersion>4.0.0</modelVersion>
+  <artifactId>PluginService</artifactId>
+  <version>0.10.1</version>
+
   <modules>
     <module>api</module>
     <module>examples/providers/openmeteoPlugin</module>
@@ -25,7 +27,5 @@
     <maven.compiler.target>17</maven.compiler.target>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
-
-  <version>0.10.1</version>
 
 </project>
