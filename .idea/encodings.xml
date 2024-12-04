@@ -13,6 +13,8 @@
     <file url="file://$PROJECT_DIR$/examples/hooks/webserverPlugin/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/examples/providers/SMAPlugin/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/examples/providers/SMAPlugin/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/examples/providers/niagaraCloudPlugin/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/examples/providers/niagaraCloudPlugin/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/examples/providers/niagaraPlugin/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/examples/providers/niagaraPlugin/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/examples/providers/openmeteoPlugin/src/main/java" charset="UTF-8" />

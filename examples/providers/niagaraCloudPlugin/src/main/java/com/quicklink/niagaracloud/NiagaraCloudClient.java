@@ -154,13 +154,20 @@ public class NiagaraCloudClient {
     PointsResponse pointsResponse;
 
     do {
+//      System.out.println( "REQ: https://www.niagara-cloud.com/api/v1/entitymodel/customers/" + CUSTOMER_ID.get(providerId)
+//          + "/tagValues?page=" + page + "&size=200&count=true&sortBy=id&sortDir=asc");
+//
+//      System.out.println("BODY: " + "{\"systemGuid\":\"%s\",\"searchType\":\"tagValue\",\"searchItems\":[\"n:type=history:HistoryConfig\"],\"comparisonType\":\"any\"}".formatted(
+//          systemGuid));
+//      System.out.println();
+
       HttpRequest request = HttpRequest.newBuilder()
           .uri(URI.create(
               "https://www.niagara-cloud.com/api/v1/entitymodel/customers/" + CUSTOMER_ID.get(providerId)
                   + "/tagValues?page=" + page + "&size=200&count=true&sortBy=id&sortDir=asc"))
 
           .POST(BodyPublishers.ofString(
-              "{\"systemGuid\":\"%s\",\"searchType\":\"tagValue\",\"searchItems\":[\"n:type=history:HistoryConfig\"],\"comparisonType\":\"any\"}".formatted(
+              "{\"systemGuid\":\"%s\",\"searchType\":\"tagValue\",\"searchItems\":[],\"comparisonType\":\"any\"}".formatted(
                   systemGuid)))
 
           .header("Content-Type", "application/json")
@@ -170,6 +177,9 @@ public class NiagaraCloudClient {
 
       HttpResponse<String> response = httpClient.send(request,
           BodyHandlers.ofString());
+
+//      System.out.println("RES: " + response.body());
+
       pointsResponse = EasyML.getJsonMapper()
           .fromJsonString(response.body(), PointsResponse.class);
 
@@ -194,6 +204,7 @@ public class NiagaraCloudClient {
 
     } while (pointsResponse.getPage().getTotalPages() > page);
 
+
     return series;
 
   }
@@ -203,6 +214,9 @@ public class NiagaraCloudClient {
 
     LinkedList<TimedValue> serieData = new LinkedList<>();
     ;
+
+//    System.out.println("BODY: " +  "{\"systemGuid\":\"%s\",\"cloudId\":[\"%s\"],\"recordLimit\":\"50000\",\"startTime\":\"%s\",\"endTime\":\"%s\"}"
+//        .formatted(systemGuid, serieId, startTime, endTime));
 
     HttpRequest request = HttpRequest.newBuilder()
         .uri(URI.create("https://www.niagara-cloud.com/api/v1/egress/telemetry"))
@@ -218,6 +232,9 @@ public class NiagaraCloudClient {
 
     HttpResponse<String> response = httpClient.send(request, BodyHandlers.ofString());
     HistoryResponse historyResponse = EasyML.getJsonMapper().fromJsonString(response.body(), HistoryResponse.class);
+
+//    System.out.println("RES: " + historyResponse.getPointDetails());
+//    System.out.println("RES SIZE: " + historyResponse.getPointDetails().size());
 
 
     if(historyResponse.getPointDetails().isEmpty()) {
