@@ -2,7 +2,7 @@
  *  Copyright 2024, QuickLink Solutions - All Rights Reserved.
  */
 
-package com.quicklink.hookemail;
+package com.quicklink.email;
 
 
 import com.quicklink.easyml.plugins.api.Parameter;

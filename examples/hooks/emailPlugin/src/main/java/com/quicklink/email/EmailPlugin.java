@@ -2,23 +2,23 @@
  *  Copyright 2024, QuickLink Solutions - All Rights Reserved.
  */
 
-package com.quicklink.hookemail;
+package com.quicklink.email;
 
-import static com.quicklink.hookemail.Keys.content_end;
-import static com.quicklink.hookemail.Keys.content_start;
-import static com.quicklink.hookemail.Keys.from_address;
-import static com.quicklink.hookemail.Keys.from_name;
-import static com.quicklink.hookemail.Keys.object_end;
-import static com.quicklink.hookemail.Keys.object_start;
-import static com.quicklink.hookemail.Keys.smtp_host;
-import static com.quicklink.hookemail.Keys.smtp_password;
-import static com.quicklink.hookemail.Keys.smtp_port;
-import static com.quicklink.hookemail.Keys.smtp_transport_strategy;
-import static com.quicklink.hookemail.Keys.smtp_username;
-import static com.quicklink.hookemail.Keys.to_address;
-import static com.quicklink.hookemail.Keys.to_name;
-import static com.quicklink.hookemail.Keys.tolerance_high;
-import static com.quicklink.hookemail.Keys.tolerance_low;
+import static com.quicklink.email.Keys.content_end;
+import static com.quicklink.email.Keys.content_start;
+import static com.quicklink.email.Keys.from_address;
+import static com.quicklink.email.Keys.from_name;
+import static com.quicklink.email.Keys.object_end;
+import static com.quicklink.email.Keys.object_start;
+import static com.quicklink.email.Keys.smtp_host;
+import static com.quicklink.email.Keys.smtp_password;
+import static com.quicklink.email.Keys.smtp_port;
+import static com.quicklink.email.Keys.smtp_transport_strategy;
+import static com.quicklink.email.Keys.smtp_username;
+import static com.quicklink.email.Keys.to_address;
+import static com.quicklink.email.Keys.to_name;
+import static com.quicklink.email.Keys.tolerance_high;
+import static com.quicklink.email.Keys.tolerance_low;
 
 import com.quicklink.easyml.plugins.api.hooks.HookContext;
 import com.quicklink.easyml.plugins.api.hooks.HookPlugin;
