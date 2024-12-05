@@ -1,7 +1,5 @@
 package com.quicklink.sma;
 
-import com.quicklink.easyml.plugins.api.providers.About;
-import com.quicklink.easyml.plugins.api.providers.ProviderContext;
 import com.quicklink.easyml.plugins.api.providers.ProviderPlugin;
 import com.quicklink.easyml.plugins.api.providers.Serie;
 import com.quicklink.easyml.plugins.api.providers.TimedValue;
@@ -14,7 +12,6 @@ import java.time.Instant;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -40,18 +37,18 @@ public class SMAPlugin extends ProviderPlugin {
   }
 
   @Override
-  public void onCreate(@NotNull ProviderContext providerContext) {
+  public void onCreate(@NotNull UUID providerId) {
 
   }
 
   @Override
 
-  public @NotNull List<Serie> getSeries(ProviderContext ctx) {
-    var CLIENT_ID = ctx.param(Keys.CLIENT_ID);
-    var CLIENT_SECRET = ctx.param(Keys.CLIENT_SECRET);
-    var DEVICE_ID = ctx.param(Keys.DEVICE_ID);
-    var MODE = ctx.param(Keys.MODE);
-    var EMAIL = ctx.param(Keys.EMAIL);
+  public @NotNull List<Serie> getSeries(@NotNull UUID providerId) {
+    var CLIENT_ID = Keys.CLIENT_ID.get(providerId);
+    var CLIENT_SECRET = Keys.CLIENT_SECRET.get(providerId);
+    var DEVICE_ID = Keys.DEVICE_ID.get(providerId);
+    var MODE = Keys.MODE.get(providerId);
+    var EMAIL = Keys.EMAIL.get(providerId);
 
     Mode mode;
     try {
@@ -61,30 +58,33 @@ public class SMAPlugin extends ProviderPlugin {
     }
 
     // get cached client or create new
-    var client = cacheAccess.computeIfAbsent(ctx.providerId(),
+    var client = cacheAccess.computeIfAbsent(providerId,
         id -> new SMAClient(getLogger(), CLIENT_ID, CLIENT_SECRET, mode));
     if (!client.clientId.equals(CLIENT_ID) || !client.clientSecret.equals(CLIENT_SECRET)) {
       // updated client id or client secret?
       client = new SMAClient(getLogger(), CLIENT_ID, CLIENT_SECRET, mode);
-      cacheAccess.put(ctx.providerId(), client);
+      cacheAccess.put(providerId, client);
     }
 
     var status = client.getStatus(EMAIL);
     var permissionState = status.state();
-    if(permissionState.equals("Pending")) {
-      throw new RuntimeException("Permission not accepted yet, current state is '%s'".formatted(permissionState));
+    if (permissionState.equals("Pending")) {
+      throw new RuntimeException(
+          "Permission not accepted yet, current state is '%s'".formatted(permissionState));
     }
     if (!permissionState.equals("Accepted")) {
 
       var emailSentStatus = client.sendEmail(EMAIL);
 
-      if(!emailSentStatus.state().equals("Pending")) {
-        throw new RuntimeException("Permission email sent, but state was expected to be 'Pending' but is '%s'".formatted(emailSentStatus.state()));
+      if (!emailSentStatus.state().equals("Pending")) {
+        throw new RuntimeException(
+            "Permission email sent, but state was expected to be 'Pending' but is '%s'".formatted(
+                emailSentStatus.state()));
       }
 
-      throw new RuntimeException("Permission not sent yet, current state is '%s'".formatted(permissionState));
+      throw new RuntimeException(
+          "Permission not sent yet, current state is '%s'".formatted(permissionState));
     }
-
 
     var sets = client.getSets(DEVICE_ID);
 
@@ -101,15 +101,15 @@ public class SMAPlugin extends ProviderPlugin {
 
 
   @Override
-  public @NotNull LinkedList<TimedValue> getSerieData(ProviderContext ctx, @NotNull String serieId,
+  public @NotNull LinkedList<TimedValue> getSerieData(@NotNull UUID providerId,
+      @NotNull String serieId,
       @NotNull Instant startTs,
       @NotNull Instant endTs) {
-
-    var CLIENT_ID = ctx.param(Keys.CLIENT_ID);
-    var CLIENT_SECRET = ctx.param(Keys.CLIENT_SECRET);
-    var DEVICE_ID = ctx.param(Keys.DEVICE_ID);
-    var MODE = ctx.param(Keys.MODE);
-    var EMAIL = ctx.param(Keys.EMAIL);
+    var CLIENT_ID = Keys.CLIENT_ID.get(providerId);
+    var CLIENT_SECRET = Keys.CLIENT_SECRET.get(providerId);
+    var DEVICE_ID = Keys.DEVICE_ID.get(providerId);
+    var MODE = Keys.MODE.get(providerId);
+    var EMAIL = Keys.EMAIL.get(providerId);
 
     Mode mode;
     try {
@@ -119,37 +119,40 @@ public class SMAPlugin extends ProviderPlugin {
     }
 
     // get cached client or create new
-    var client = cacheAccess.computeIfAbsent(ctx.providerId(),
+    var client = cacheAccess.computeIfAbsent(providerId,
         id -> new SMAClient(getLogger(), CLIENT_ID, CLIENT_SECRET, mode));
     if (!client.clientId.equals(CLIENT_ID) || !client.clientSecret.equals(CLIENT_SECRET)) {
       // updated client id or client secret?
       client = new SMAClient(getLogger(), CLIENT_ID, CLIENT_SECRET, mode);
-      cacheAccess.put(ctx.providerId(), client);
+      cacheAccess.put(providerId, client);
     }
 
     var status = client.getStatus(EMAIL);
 
     var permissionState = status.state();
-    if(permissionState.equals("Pending")) {
-      throw new RuntimeException("Permission not accepted yet, current state is '%s'".formatted( permissionState));
+    if (permissionState.equals("Pending")) {
+      throw new RuntimeException(
+          "Permission not accepted yet, current state is '%s'".formatted(permissionState));
     }
     if (!permissionState.equals("Accepted")) {
       var emailSentStatus = client.sendEmail(EMAIL);
 
-      if(!emailSentStatus.state().equals("Pending")) {
-        throw new RuntimeException("Permission email sent, but state was expected to be 'Pending' but is '%s'".formatted(emailSentStatus.state()));
+      if (!emailSentStatus.state().equals("Pending")) {
+        throw new RuntimeException(
+            "Permission email sent, but state was expected to be 'Pending' but is '%s'".formatted(
+                emailSentStatus.state()));
       }
 
-      throw new RuntimeException("Permission not sent yet, current state is '%s'".formatted( permissionState));
+      throw new RuntimeException(
+          "Permission not sent yet, current state is '%s'".formatted(permissionState));
     }
-
 
     return getData(serieId, startTs, endTs, client, DEVICE_ID);
   }
 
   @Override
-  public @NotNull About status(@NotNull ProviderContext ctx) {
-    return new About(true, "hostId", "1.0.0");
+  public boolean status(@NotNull UUID providerId) {
+    return true;
   }
 
   @Override
@@ -160,7 +163,8 @@ public class SMAPlugin extends ProviderPlugin {
 
 
   @NotNull
-  private LinkedList<TimedValue> getData(String serieId, Instant start, Instant end, SMAClient client,
+  private LinkedList<TimedValue> getData(String serieId, Instant start, Instant end,
+      SMAClient client,
       String deviceId) {
     var setType = SMASetType.valueOf(Utils.setTypeFromSerieId(serieId));
     var serie = Utils.serieFromSerieId(serieId);
@@ -169,8 +173,9 @@ public class SMAPlugin extends ProviderPlugin {
     var setsValues = client.getData(serieId, setType, deviceId, startWeekDate);
 
     if (setsValues.set().isEmpty()) {
-      throw new RuntimeException("Device '%s': Serie '%s' of setType '%s' has no data in %s".formatted(
-          deviceId, serie, setType, ISO8601.format(start)));
+      throw new RuntimeException(
+          "Device '%s': Serie '%s' of setType '%s' has no data in %s".formatted(
+              deviceId, serie, setType, ISO8601.format(start)));
     }
 
     var list = new LinkedList<TimedValue>();
@@ -181,7 +186,7 @@ public class SMAPlugin extends ProviderPlugin {
         continue;
       }
       Instant time = ISO8601.parse(setValue.time() + "Z");
-      if(time.isAfter(end)) {
+      if (time.isAfter(end)) {
         continue;
       }
       list.add(new TimedValue(time, value));
