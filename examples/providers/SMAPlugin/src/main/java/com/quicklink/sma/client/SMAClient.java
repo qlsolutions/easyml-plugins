@@ -14,6 +14,7 @@ import com.quicklink.sma.client.model.SetValueDeserializer;
 import com.quicklink.sma.client.model.SetsResponse;
 import java.io.IOException;
 import java.io.UncheckedIOException;
+import java.time.Instant;
 import java.util.UUID;
 import java.util.function.Supplier;
 import okhttp3.FormBody;
@@ -43,7 +44,11 @@ public class SMAClient {
   final Logger logger;
   private final OkHttpClient client = new OkHttpClient();
   private final Gson gson;
+
   private LoginResponse token;
+  private Instant expires_in;
+  private Instant refresh_expires_in;
+
 
   public SMAClient(UUID providerId, @NotNull Logger logger) {
     this.providerId = providerId;
@@ -70,10 +75,7 @@ public class SMAClient {
         .add("client_id", Keys.CLIENT_ID.get(providerId))
         .add("client_secret", Keys.CLIENT_SECRET.get(providerId))
         .build();
-//    System.out.println("client id: " + Keys.CLIENT_ID.get(providerId));
-//    System.out.println("client secret: " + Keys.CLIENT_SECRET.get(providerId));
-//
-//    System.out.println("form body: " + formBody.toString());
+
     var req = new Request.Builder()
         .url(getMode() == Mode.SANDBOX ? "https://sandbox-auth.smaapis.de/oauth2/token"
             : "https://auth.smaapis.de/oauth2/token")
@@ -84,8 +86,9 @@ public class SMAClient {
         throw new RuntimeException("Body is null");
       }
       String responseBody = response.body().string();
-//      System.out.println(responseBody);
       token = gson.fromJson(responseBody, LoginResponse.class);
+      expires_in = Instant.now().plusSeconds(token.expires_in());
+      refresh_expires_in = Instant.now().plusSeconds(token.refresh_expires_in());
     } catch (IOException e) {
       throw new UncheckedIOException(e);
     }
@@ -109,38 +112,30 @@ public class SMAClient {
         throw new RuntimeException("Body is null");
       }
       token = gson.fromJson(response.body().string(), LoginResponse.class);
+      expires_in = Instant.now().plusSeconds(token.expires_in());
     } catch (IOException e) {
       throw new UncheckedIOException(e);
     }
   }
 
   private <T> @NotNull T authenticateAndRequest(Supplier<T> fun) {
-    if (token == null) {
+    Instant now = Instant.now();
+
+    if (token == null || now.isAfter(refresh_expires_in)) {
       try {
         login();
+        logger.info("(DataProvider={}: Logged in", providerId);
       } catch (Exception e) {
         throw new RuntimeException("Login failed", e);
       }
     }
 
-    try {
-      // call function
-      return fun.get();
-    } catch (Exception ignored) {
-      try {
-        // try refresh token and call function
-        refreshToken();
-        return fun.get();
-      } catch (Exception ignored0) {
-          try {
-            // retry login and call function
-            login();
-            return fun.get();
-          } catch (Exception ignored2) {}
-      }
+    if(now.isBefore(refresh_expires_in) && now.isAfter(expires_in)) {
+      refreshToken();
+      logger.info("(DataProvider={}: Refreshed token", providerId);
     }
 
-    throw new RuntimeException("Request not available");
+    return fun.get();
   }
 
 
@@ -302,7 +297,7 @@ public class SMAClient {
 
 
   public @NotNull AuthorizeResponse sendEmail() {
-    return authenticateAndRequest(() -> sendEmailInternal());
+    return authenticateAndRequest(this::sendEmailInternal);
   }
 
   private @NotNull AuthorizeResponse sendEmailInternal() {
