@@ -42,31 +42,12 @@ public class SMAPlugin extends ProviderPlugin {
   }
 
   @Override
-
   public @NotNull List<Serie> getSeries(@NotNull UUID providerId) {
-    var CLIENT_ID = Keys.CLIENT_ID.get(providerId);
-    var CLIENT_SECRET = Keys.CLIENT_SECRET.get(providerId);
-    var DEVICE_ID = Keys.DEVICE_ID.get(providerId);
-    var MODE = Keys.MODE.get(providerId);
-    var EMAIL = Keys.EMAIL.get(providerId);
-
-    Mode mode;
-    try {
-      mode = Mode.valueOf(MODE);
-    } catch (IllegalArgumentException e) {
-      throw new RuntimeException("Invalid SMAClient Mode '%s'".formatted(MODE));
-    }
 
     // get cached client or create new
-    var client = cacheAccess.computeIfAbsent(providerId,
-        id -> new SMAClient(getLogger(), CLIENT_ID, CLIENT_SECRET, mode));
-    if (!client.clientId.equals(CLIENT_ID) || !client.clientSecret.equals(CLIENT_SECRET)) {
-      // updated client id or client secret?
-      client = new SMAClient(getLogger(), CLIENT_ID, CLIENT_SECRET, mode);
-      cacheAccess.put(providerId, client);
-    }
+    var client = cacheAccess.computeIfAbsent(providerId, id -> new SMAClient(providerId, getLogger()));
 
-    var status = client.getStatus(EMAIL);
+    var status = client.getStatus();
     var permissionState = status.state();
     if (permissionState.equals("Pending")) {
       throw new RuntimeException(
@@ -74,7 +55,7 @@ public class SMAPlugin extends ProviderPlugin {
     }
     if (!permissionState.equals("Accepted")) {
 
-      var emailSentStatus = client.sendEmail(EMAIL);
+      var emailSentStatus = client.sendEmail();
 
       if (!emailSentStatus.state().equals("Pending")) {
         throw new RuntimeException(
@@ -86,7 +67,7 @@ public class SMAPlugin extends ProviderPlugin {
           "Permission not sent yet, current state is '%s'".formatted(permissionState));
     }
 
-    var sets = client.getSets(DEVICE_ID);
+    var sets = client.getSets();
 
     List<Serie> series = new ArrayList<>();
     for (var setType : sets.sets()) {
@@ -105,29 +86,12 @@ public class SMAPlugin extends ProviderPlugin {
       @NotNull String serieId,
       @NotNull Instant startTs,
       @NotNull Instant endTs) {
-    var CLIENT_ID = Keys.CLIENT_ID.get(providerId);
-    var CLIENT_SECRET = Keys.CLIENT_SECRET.get(providerId);
-    var DEVICE_ID = Keys.DEVICE_ID.get(providerId);
-    var MODE = Keys.MODE.get(providerId);
-    var EMAIL = Keys.EMAIL.get(providerId);
-
-    Mode mode;
-    try {
-      mode = Mode.valueOf(MODE);
-    } catch (IllegalArgumentException e) {
-      throw new RuntimeException("SMAClient Mode '%s'".formatted(MODE));
-    }
 
     // get cached client or create new
     var client = cacheAccess.computeIfAbsent(providerId,
-        id -> new SMAClient(getLogger(), CLIENT_ID, CLIENT_SECRET, mode));
-    if (!client.clientId.equals(CLIENT_ID) || !client.clientSecret.equals(CLIENT_SECRET)) {
-      // updated client id or client secret?
-      client = new SMAClient(getLogger(), CLIENT_ID, CLIENT_SECRET, mode);
-      cacheAccess.put(providerId, client);
-    }
+        id -> new SMAClient(providerId, getLogger()));
 
-    var status = client.getStatus(EMAIL);
+    var status = client.getStatus();
 
     var permissionState = status.state();
     if (permissionState.equals("Pending")) {
@@ -135,7 +99,7 @@ public class SMAPlugin extends ProviderPlugin {
           "Permission not accepted yet, current state is '%s'".formatted(permissionState));
     }
     if (!permissionState.equals("Accepted")) {
-      var emailSentStatus = client.sendEmail(EMAIL);
+      var emailSentStatus = client.sendEmail();
 
       if (!emailSentStatus.state().equals("Pending")) {
         throw new RuntimeException(
@@ -147,7 +111,7 @@ public class SMAPlugin extends ProviderPlugin {
           "Permission not sent yet, current state is '%s'".formatted(permissionState));
     }
 
-    return getData(serieId, startTs, endTs, client, DEVICE_ID);
+    return getData(serieId, startTs, endTs, client);
   }
 
   @Override
@@ -163,19 +127,17 @@ public class SMAPlugin extends ProviderPlugin {
 
 
   @NotNull
-  private LinkedList<TimedValue> getData(String serieId, Instant start, Instant end,
-      SMAClient client,
-      String deviceId) {
+  private LinkedList<TimedValue> getData(String serieId, Instant start, Instant end, SMAClient client) {
     var setType = SMASetType.valueOf(Utils.setTypeFromSerieId(serieId));
     var serie = Utils.serieFromSerieId(serieId);
 
     var startWeekDate = formatter.format(start.atZone(ZoneOffset.UTC).toLocalDate());
-    var setsValues = client.getData(serieId, setType, deviceId, startWeekDate);
+    var setsValues = client.getData(serieId, setType, startWeekDate);
 
     if (setsValues.set().isEmpty()) {
       throw new RuntimeException(
           "Device '%s': Serie '%s' of setType '%s' has no data in %s".formatted(
-              deviceId, serie, setType, ISO8601.format(start)));
+              Keys.DEVICE_ID.get(client.providerId), serie, setType, ISO8601.format(start)));
     }
 
     var list = new LinkedList<TimedValue>();

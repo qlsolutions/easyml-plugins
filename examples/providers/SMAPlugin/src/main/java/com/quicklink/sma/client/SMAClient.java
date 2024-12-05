@@ -2,6 +2,7 @@ package com.quicklink.sma.client;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.quicklink.sma.Keys;
 import com.quicklink.sma.SMAException;
 import com.quicklink.sma.SMASetType;
 import com.quicklink.sma.client.model.AuthorizeResponse;
@@ -13,6 +14,7 @@ import com.quicklink.sma.client.model.SetValueDeserializer;
 import com.quicklink.sma.client.model.SetsResponse;
 import java.io.IOException;
 import java.io.UncheckedIOException;
+import java.util.UUID;
 import java.util.function.Supplier;
 import okhttp3.FormBody;
 import okhttp3.MediaType;
@@ -36,23 +38,16 @@ public class SMAClient {
     PRODUCTION
   }
 
+  public final UUID providerId;
   @NotNull
   final Logger logger;
-
-  final Mode mode;
-  public final String clientId;
-  public final String clientSecret;
-
   private final OkHttpClient client = new OkHttpClient();
   private final Gson gson;
   private LoginResponse token;
 
-  public SMAClient(@NotNull Logger logger, @Nullable String clientId, @NotNull String clientSecret,
-      @NotNull Mode mode) {
+  public SMAClient(UUID providerId, @NotNull Logger logger) {
+    this.providerId = providerId;
     this.logger = logger;
-    this.clientId = clientId;
-    this.clientSecret = clientSecret;
-    this.mode = mode;
 
     // Creare una nuova istanza di Gson con il deserializzatore personalizzato
     GsonBuilder gsonBuilder = new GsonBuilder();
@@ -60,15 +55,27 @@ public class SMAClient {
     gson = gsonBuilder.create();
   }
 
+  private Mode getMode() {
+    String mode = Keys.MODE.get(providerId);
+    try {
+      return Mode.valueOf(mode);
+    } catch (IllegalArgumentException e) {
+      throw new RuntimeException("Invalid mode " + mode);
+    }
+  }
+
   private void login() {
     RequestBody formBody = new FormBody.Builder()
         .add("grant_type", "client_credentials")
-        .add("client_id", clientId)
-        .add("client_secret", clientSecret)
+        .add("client_id", Keys.CLIENT_ID.get(providerId))
+        .add("client_secret", Keys.CLIENT_SECRET.get(providerId))
         .build();
-
+//    System.out.println("client id: " + Keys.CLIENT_ID.get(providerId));
+//    System.out.println("client secret: " + Keys.CLIENT_SECRET.get(providerId));
+//
+//    System.out.println("form body: " + formBody.toString());
     var req = new Request.Builder()
-        .url(mode == Mode.SANDBOX ? "https://sandbox-auth.smaapis.de/oauth2/token"
+        .url(getMode() == Mode.SANDBOX ? "https://sandbox-auth.smaapis.de/oauth2/token"
             : "https://auth.smaapis.de/oauth2/token")
         .post(formBody);
     var build = req.build();
@@ -76,8 +83,9 @@ public class SMAClient {
       if (response.body() == null) {
         throw new RuntimeException("Body is null");
       }
-//      System.out.println(response.body().string());
-      token = gson.fromJson(response.body().string(), LoginResponse.class);
+      String responseBody = response.body().string();
+//      System.out.println(responseBody);
+      token = gson.fromJson(responseBody, LoginResponse.class);
     } catch (IOException e) {
       throw new UncheckedIOException(e);
     }
@@ -86,13 +94,13 @@ public class SMAClient {
   private void refreshToken() {
     RequestBody formBody = new FormBody.Builder()
         .add("grant_type", "refresh_token")
-        .add("client_id", clientId)
-        .add("client_secret", clientSecret)
+        .add("client_id", Keys.CLIENT_ID.get(providerId))
+        .add("client_secret", Keys.CLIENT_SECRET.get(providerId))
         .add("refresh_token", token.refresh_token())
         .build();
 
     var req = new Request.Builder()
-        .url(mode == Mode.SANDBOX ? "https://sandbox-auth.smaapis.de/oauth2/token"
+        .url(getMode() == Mode.SANDBOX ? "https://sandbox-auth.smaapis.de/oauth2/token"
             : "https://auth.smaapis.de/oauth2/token")
         .post(formBody);
     var build = req.build();
@@ -142,7 +150,7 @@ public class SMAClient {
 
   private PlantsListResponse getPlantsListInternal() {
     var req = new Request.Builder()
-        .url(mode == Mode.SANDBOX ? "https://sandbox.smaapis.de/monitoring/v1/plants"
+        .url(getMode() == Mode.SANDBOX ? "https://sandbox.smaapis.de/monitoring/v1/plants"
             : "https://monitoring.smaapis.de/v1/plants")
         .addHeader("Authorization", "Bearer " + token.access_token())
         .get();
@@ -167,13 +175,14 @@ public class SMAClient {
   }
 
 
-  public @NotNull SetsResponse getSets(String deviceId) {
-    return authenticateAndRequest(() -> getSetsInternal(deviceId));
+  public @NotNull SetsResponse getSets() {
+    return authenticateAndRequest(this::getSetsInternal);
   }
 
-  private SetsResponse getSetsInternal(String deviceId) {
+  private SetsResponse getSetsInternal() {
+    String deviceId = Keys.DEVICE_ID.get(providerId);
     var req = new Request.Builder().url(
-            mode == Mode.SANDBOX ?
+            getMode() == Mode.SANDBOX ?
                 "https://sandbox.smaapis.de/monitoring/v1/devices/" + deviceId + "/measurements/sets"
                 : "https://monitoring.smaapis.de/v1/devices/" + deviceId + "/measurements/sets"
         )
@@ -203,16 +212,17 @@ public class SMAClient {
 
 
   public @NotNull DataResponse getData(String serieId,
-      SMASetType setType, String deviceId, String fromDate) {
+      SMASetType setType, String fromDate) {
     return authenticateAndRequest(
-        () -> getDataInternal(serieId, setType, deviceId, fromDate));
+        () -> getDataInternal(serieId, setType, fromDate));
   }
 
   private @NotNull DataResponse getDataInternal(String serieId,
-      SMASetType setType, String deviceId, String fromDate) {
+      SMASetType setType, String fromDate) {
+    String deviceId = Keys.DEVICE_ID.get(providerId);
     var req = new Request.Builder()
         .url(
-            mode == Mode.SANDBOX ?
+            getMode() == Mode.SANDBOX ?
                 "https://sandbox.smaapis.de/monitoring/v1/devices/%s/measurements/sets/%s/Week?Date=%s".formatted(
                     deviceId,
                     setType.name(),
@@ -248,16 +258,17 @@ public class SMAClient {
     }
   }
 
-  public @NotNull AuthorizeResponse getStatus(String email) {
-    return authenticateAndRequest(() -> getStatusInternal(email));
+  public @NotNull AuthorizeResponse getStatus() {
+    return authenticateAndRequest(this::getStatusInternal);
   }
 
-  private @NotNull AuthorizeResponse getStatusInternal(String email) {
+  private @NotNull AuthorizeResponse getStatusInternal() {
 
+    String email = Keys.EMAIL.get(providerId);
 
     var req = new Request.Builder()
         .url(
-            mode == Mode.SANDBOX ?
+            getMode() == Mode.SANDBOX ?
                 "https://sandbox.smaapis.de/oauth2/v2/bc-authorize/" + email :
                 "https://async-auth.smaapis.de/oauth2/v2/bc-authorize/" + email
 
@@ -290,11 +301,12 @@ public class SMAClient {
       = MediaType.parse("application/json; charset=utf-8");
 
 
-  public @NotNull AuthorizeResponse sendEmail(String email) {
-    return authenticateAndRequest(() -> sendEmail(email));
+  public @NotNull AuthorizeResponse sendEmail() {
+    return authenticateAndRequest(() -> sendEmailInternal());
   }
 
-  private @NotNull AuthorizeResponse sendEmailInternal(String email) {
+  private @NotNull AuthorizeResponse sendEmailInternal() {
+     String email = Keys.EMAIL.get(providerId);
 
      var json = """
         {
@@ -304,7 +316,7 @@ public class SMAClient {
 
     RequestBody body = RequestBody.create(json, JSON); // new
     var req = new Request.Builder()
-        .url(mode == Mode.SANDBOX ? "https://sandbox.smaapis.de/oauth2/v2/bc-authorize"
+        .url(getMode() == Mode.SANDBOX ? "https://sandbox.smaapis.de/oauth2/v2/bc-authorize"
             : "https://async-auth.smaapis.de/oauth2/v2/bc-authorize")
         .post(body);
     var build = req.build();
