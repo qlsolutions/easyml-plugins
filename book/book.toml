@@ -1,0 +1,10 @@
+[book]
+authors = ["Denis Mehilli"]
+language = "en"
+multilingual = false
+src = "src"
+title = "EasyML Plugins Documentation"
+
+[output.html]
+default-theme = "navy"
+preferred-dark-theme = "navy"
