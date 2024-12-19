@@ -5,8 +5,9 @@
 - [Installation](./installation.md)
     - [Maven](installation/maven.md)
     - [Gradle](installation/gradle.md)
+- [Hello World](hello-world.md)
 
-# Reference Guide
+# Guide
 
 - [Plugins Introduction](plugins-introduction.md)
   - [DataProvider](dataprovider.md)

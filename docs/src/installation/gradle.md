@@ -29,4 +29,4 @@ compileOnly("com.github.qlsolutions.easyml-plugins:api:0.10.1")
 
 <br />
 
-**3.** Once you’re done, you may now proceed creating your first plugin.
+**3.** Once you’re done, you may now proceed creating your [first plugin](../hello-world.md).

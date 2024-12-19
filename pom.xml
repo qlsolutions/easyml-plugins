@@ -10,14 +10,18 @@
 
   <modules>
     <module>api</module>
-    <module>examples/providers/openmeteoPlugin</module>
-    <module>examples/providers/niagaraPlugin</module>
-    <module>examples/providers/SMAPlugin</module>
-    <module>examples/providers/niagaraCloudPlugin</module>
 
-    <module>examples/hooks/emailPlugin</module>
-    <module>examples/hooks/webserverPlugin</module>
-    <module>examples/hooks/resendPlugin</module>
+    <module>template</module>
+
+
+    <module>official/providers/openmeteoPlugin</module>
+    <module>official/providers/niagaraPlugin</module>
+    <module>official/providers/SMAPlugin</module>
+    <module>official/providers/niagaraCloudPlugin</module>
+
+    <module>official/hooks/emailPlugin</module>
+    <module>official/hooks/webserverPlugin</module>
+    <module>official/hooks/resendPlugin</module>
 
   </modules>
   <packaging>pom</packaging>
@@ -27,5 +31,14 @@
     <maven.compiler.target>17</maven.compiler.target>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
+
+  <dependencies>
+    <dependency>
+      <artifactId>annotations</artifactId>
+      <groupId>org.jetbrains</groupId>
+      <scope>compile</scope>
+      <version>24.0.1</version>
+    </dependency>
+  </dependencies>
 
 </project>

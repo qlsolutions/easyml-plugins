@@ -3,27 +3,29 @@
   <component name="Encoding">
     <file url="file://$PROJECT_DIR$/api/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/api/src/main/resources" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/examples/hooks/emailPlugin/src/main/java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/examples/hooks/emailPlugin/src/main/resources" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/examples/hooks/hookEmailPlugin/src/main/java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/examples/hooks/hookEmailPlugin/src/main/resources" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/examples/hooks/resendPlugin/src/main/java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/examples/hooks/resendPlugin/src/main/resources" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/examples/hooks/webserverPlugin/src/main/java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/examples/hooks/webserverPlugin/src/main/resources" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/examples/providers/SMAPlugin/src/main/java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/examples/providers/SMAPlugin/src/main/resources" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/examples/providers/niagaraCloudPlugin/src/main/java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/examples/providers/niagaraCloudPlugin/src/main/resources" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/examples/providers/niagaraPlugin/src/main/java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/examples/providers/niagaraPlugin/src/main/resources" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/examples/providers/openmeteoPlugin/src/main/java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/examples/providers/openmeteoPlugin/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/official/hooks/emailPlugin/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/official/hooks/emailPlugin/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/official/hooks/hookEmailPlugin/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/official/hooks/hookEmailPlugin/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/official/hooks/resendPlugin/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/official/hooks/resendPlugin/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/official/hooks/webserverPlugin/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/official/hooks/webserverPlugin/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/official/providers/SMAPlugin/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/official/providers/SMAPlugin/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/official/providers/niagaraCloudPlugin/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/official/providers/niagaraCloudPlugin/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/official/providers/niagaraPlugin/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/official/providers/niagaraPlugin/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/official/providers/openmeteoPlugin/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/official/providers/openmeteoPlugin/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/providers-niagaraPlugin/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/providers-niagaraPlugin/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/providers-openmeteoPlugin/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/providers-openmeteoPlugin/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/template/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/template/src/main/resources" charset="UTF-8" />
   </component>
 </project>

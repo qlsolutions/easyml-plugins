@@ -33,4 +33,4 @@ The prerequisites:
 
 <br />
 
-**3.** Once you’re done, you may now proceed creating your first plugin.
+**3.** Once you’re done, you may now proceed creating your [first plugin](../hello-world.md).

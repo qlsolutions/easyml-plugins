@@ -27,12 +27,6 @@
 
   <dependencies>
     <dependency>
-      <artifactId>annotations</artifactId>
-      <groupId>org.jetbrains</groupId>
-      <scope>provided</scope>
-      <version>24.0.1</version>
-    </dependency>
-    <dependency>
       <artifactId>slf4j-simple</artifactId>
       <groupId>org.slf4j</groupId>
       <scope>provided</scope>
