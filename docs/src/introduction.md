@@ -1,5 +1,9 @@
 # Introduction
 
+_Get familiar with EasyML Plugins._
+
+## What is EasyML Plugins 
+
 EasyMl-Plugins is an API that allows adding functionalities within `EasyML`.
 
 At the moment, plugins of the following types can be added:
