@@ -4,19 +4,9 @@
 
 ## Start programming
 
-**1.** Register HoloEasy api.
-
-```java
-@Override
-public void onEnable() {
-    HoloEasy.bind(plugin, PacketImpl.ProtocolLib /* PacketImpl.PacketEvents */ );
-}
-```
-
-<br />
 
 
-**2.** Define your first Plugin class.
+**1.** Define your first Plugin class.
 
 ```java
 public class HelloWorldPlugin extends ProviderPlugin {
@@ -65,6 +55,6 @@ public class HelloWorldPlugin extends ProviderPlugin {
 <br />
 
 
-**3.** Now you can do the build and the .jar file you can place it in `/easyml/plugins/providers`.
+**2.** Now you can do the build and the .jar file you can place it in `/easyml/plugins/providers`.
 
-**4.** Congratulations! You have created your first plugin.
+**3.** Congratulations! You have created your first plugin.
