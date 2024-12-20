@@ -39,6 +39,12 @@
       <scope>compile</scope>
       <version>24.0.1</version>
     </dependency>
+    <dependency>
+      <artifactId>slf4j-simple</artifactId>
+      <groupId>org.slf4j</groupId>
+      <scope>provided</scope>
+      <version>2.0.7</version>
+    </dependency>
   </dependencies>
 
 </project>

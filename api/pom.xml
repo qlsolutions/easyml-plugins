@@ -26,12 +26,6 @@
   </repositories>
 
   <dependencies>
-    <dependency>
-      <artifactId>slf4j-simple</artifactId>
-      <groupId>org.slf4j</groupId>
-      <scope>provided</scope>
-      <version>2.0.7</version>
-    </dependency>
     <!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-annotations -->
     <dependency>
       <artifactId>jackson-annotations</artifactId>
