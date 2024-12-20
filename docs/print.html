@@ -1,7 +1,3 @@
-<!--
-  ~  Copyright 2024, QuickLink Solutions - All Rights Reserved.
-  -->
-
 <!DOCTYPE HTML>
 <html lang="en" class="navy sidebar-visible" dir="ltr">
     <head>
@@ -157,24 +153,25 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="introduction"><a class="header" href="#introduction">Introduction</a></h1>
+                        <div id="introduction"></div><h1 id="introduction-introduction"><a class="header" href="#introduction-introduction">Introduction</a></h1>
 <p><em>Get familiar with EasyML Plugins.</em></p>
-<h2 id="what-is-easyml-plugins"><a class="header" href="#what-is-easyml-plugins">What is EasyML Plugins</a></h2>
+<h2 id="introduction-what-is-easyml-plugins"><a class="header" href="#introduction-what-is-easyml-plugins">What is EasyML Plugins</a></h2>
 <p>EasyMl-Plugins is an API that allows adding functionalities within <code>EasyML</code>.</p>
 <p>At the moment, plugins of the following types can be added:</p>
 <ul>
 <li><strong>Provider</strong>: will aim to return data within a certain period of time.</li>
 <li><strong>Hook</strong>: send the details regarding a found anomaly to an external system</li>
 </ul>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="installation"><a class="header" href="#installation">Installation</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><div id="native"></div><h1 id="native-native-plugins"><a class="header" href="#native-native-plugins">Native Plugins</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><div id="installation"></div><h1 id="installation-installation"><a class="header" href="#installation-installation">Installation</a></h1>
 <p>Learn how to install and integrate EasyML Plugins in your projects.</p>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="maven"><a class="header" href="#maven">Maven</a></h1>
-<h2 id="requirements"><a class="header" href="#requirements">Requirements</a></h2>
+<div style="break-before: page; page-break-before: always;"></div><div id="installation-maven"></div><h1 id="installation-maven-maven"><a class="header" href="#installation-maven-maven">Maven</a></h1>
+<h2 id="installation-maven-requirements"><a class="header" href="#installation-maven-requirements">Requirements</a></h2>
 <p>The prerequisites:</p>
 <ul>
 <li>Java 17</li>
 </ul>
-<h2 id="installation-1"><a class="header" href="#installation-1">Installation</a></h2>
+<h2 id="installation-maven-installation"><a class="header" href="#installation-maven-installation">Installation</a></h2>
 <p><strong>1.</strong> Add the JitPack repository to your build file.</p>
 <pre><code class="language-xml">&lt;repositories&gt;
     &lt;repository&gt;
@@ -193,14 +190,14 @@
 &lt;/dependency&gt;
 </code></pre>
 <br />
-<p><strong>3.</strong> Once you’re done, you may now proceed creating your <a href="hello-world.html">first plugin</a>.</p>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="gradle"><a class="header" href="#gradle">Gradle</a></h1>
-<h2 id="requirements-1"><a class="header" href="#requirements-1">Requirements</a></h2>
+<p><strong>3.</strong> Once you’re done, you may now proceed creating your <a href="#hello-world">first plugin</a>.</p>
+<div style="break-before: page; page-break-before: always;"></div><div id="installation-gradle"></div><h1 id="installation-gradle-gradle"><a class="header" href="#installation-gradle-gradle">Gradle</a></h1>
+<h2 id="installation-gradle-requirements"><a class="header" href="#installation-gradle-requirements">Requirements</a></h2>
 <p>The prerequisites:</p>
 <ul>
 <li>Java 17</li>
 </ul>
-<h2 id="installation-2"><a class="header" href="#installation-2">Installation</a></h2>
+<h2 id="installation-gradle-installation"><a class="header" href="#installation-gradle-installation">Installation</a></h2>
 <p><strong>1.</strong> Add the JitPack repository to your build file.</p>
 <pre><code class="language-groovy">dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
@@ -215,10 +212,10 @@
 <pre><code class="language-groovy">compileOnly("com.github.qlsolutions.easyml-plugins:api:0.10.1")
 </code></pre>
 <br />
-<p><strong>3.</strong> Once you’re done, you may now proceed creating your <a href="hello-world.html">first plugin</a>.</p>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="hello-world"><a class="header" href="#hello-world">Hello World</a></h1>
+<p><strong>3.</strong> Once you’re done, you may now proceed creating your <a href="#hello-world">first plugin</a>.</p>
+<div style="break-before: page; page-break-before: always;"></div><div id="hello-world"></div><h1 id="hello-world-hello-world"><a class="header" href="#hello-world-hello-world">Hello World</a></h1>
 <p><em>Your first plugin.</em></p>
-<h2 id="start-programming"><a class="header" href="#start-programming">Start programming</a></h2>
+<h2 id="hello-world-start-programming"><a class="header" href="#hello-world-start-programming">Start programming</a></h2>
 <p><strong>1.</strong> Define your first Plugin class.</p>
 <pre><code class="language-java">public class HelloWorldPlugin extends ProviderPlugin {
 
@@ -265,9 +262,69 @@
 <br />
 <p><strong>2.</strong> Now you can do the build and the .jar file you can place it in <code>/easyml/plugins/providers</code>.</p>
 <p><strong>3.</strong> Congratulations! You have created your first plugin.</p>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="plugins-introduction"><a class="header" href="#plugins-introduction">Plugins Introduction</a></h1>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="dataprovider"><a class="header" href="#dataprovider">DataProvider</a></h1>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="changelog"><a class="header" href="#changelog">Changelog</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><div id="iot"></div><h1 id="iot-iot-plugins"><a class="header" href="#iot-iot-plugins">IoT Plugins</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><div id="iot-signature"></div><h1 id="iot-signature-sharedaccesssignature-guide"><a class="header" href="#iot-signature-sharedaccesssignature-guide">SharedAccessSignature Guide</a></h1>
+<h2 id="iot-signature-step-1-create-an-iot-dataprovider"><a class="header" href="#iot-signature-step-1-create-an-iot-dataprovider">Step 1: Create an IoT DataProvider</a></h2>
+<p>First, create a <strong>DataProvider</strong> of type IoT. Once this is done, you will need to generate a <em>SharedAccessSignature</em> to use the IoT API of the DataProviders. This signature will be passed in the <code>Authorization</code> header.</p>
+<hr />
+<h2 id="iot-signature-step-2-define-the-sharedaccesssignature-structure"><a class="header" href="#iot-signature-step-2-define-the-sharedaccesssignature-structure">Step 2: Define the SharedAccessSignature Structure</a></h2>
+<p>The <em>SharedAccessSignature</em> consists of the following fields. Here's an illustrative example in Go:</p>
+<pre><code class="language-go">type TokenAccessType string
+
+const (
+	TokenAccessType_Read      TokenAccessType = "r"
+	TokenAccessType_Write     TokenAccessType = "w"
+	TokenAccessType_Delete    TokenAccessType = "d"
+	TokenAccessType_ReadWrite TokenAccessType = "rw"
+)
+
+type SharedAccessSignature struct {
+    Version        string
+    CreatedAt      string // ISO 8601
+    ExpireAt       string // ISO 8601
+    Access         TokenAccessType
+    DataProviderId string
+}
+</code></pre>
+<h3 id="iot-signature-key-field-dataproviderid"><a class="header" href="#iot-signature-key-field-dataproviderid">Key Field: <code>DataProviderId</code></a></h3>
+<p>This field should contain the <strong>ID</strong> of the IoT DataProvider.</p>
+<hr />
+<h2 id="iot-signature-step-3-parse-the-signature-data"><a class="header" href="#iot-signature-step-3-parse-the-signature-data">Step 3: Parse the Signature Data</a></h2>
+<p>The signature is built from a string called <em>data</em>, which is created using the <code>Parse</code> function. This function concatenates the fields as follows:</p>
+<pre><code class="language-go">func (this *SharedAccessSignature) Parse() string {
+    return fmt.Sprintf("sv=%s&amp;st=%s&amp;se=%s&amp;sp=%v&amp;sr=%s", this.Version, this.CreatedAt, this.ExpireAt, this.Access, this.DataProviderId)
+}
+</code></pre>
+<hr />
+<h2 id="iot-signature-step-4-encrypt-the-data"><a class="header" href="#iot-signature-step-4-encrypt-the-data">Step 4: Encrypt the Data</a></h2>
+<p>Encrypt the <em>data</em> string using the HMAC-SHA256 algorithm. Use the <code>secretKey</code> parameter from the DataProvider as the key. Here's an example function to perform this encryption:</p>
+<pre><code class="language-go">// Function to encrypt a string using HMAC-SHA256
+func EncryptHMACSHA256(message, secretKey string) string {
+    // Create a new HMAC object using SHA256
+    hmacSha256 := hmac.New(sha256.New, []byte(secretKey))
+
+	// Write the message to the HMAC object
+	hmacSha256.Write([]byte(message))
+
+	// Compute the HMAC code
+	encryptedMessage := hmacSha256.Sum(nil)
+
+	// Convert the result to a hexadecimal string
+	return hex.EncodeToString(encryptedMessage)
+}
+</code></pre>
+<blockquote>
+<p><strong>Note:</strong> The resulting encrypted string is encoded in hexadecimal, not Base64.</p>
+</blockquote>
+<hr />
+<h2 id="iot-signature-step-5-concatenate-the-final-signature"><a class="header" href="#iot-signature-step-5-concatenate-the-final-signature">Step 5: Concatenate the Final Signature</a></h2>
+<p>The final <em>SharedAccessSignature</em> is created by concatenating the components as shown below:</p>
+<pre><code class="language-go">"SharedAccessSignature " + data + "&amp;sig=" + signature
+</code></pre>
+<hr />
+<h2 id="iot-signature-summary"><a class="header" href="#iot-signature-summary">Summary</a></h2>
+<p>With the final <em>SharedAccessSignature</em> string ready, you can now use it in the <code>Authorization</code> header to authenticate your requests to the IoT API of the DataProvider.</p>
+<div style="break-before: page; page-break-before: always;"></div><div id="iot-hello-world"></div><h1 id="iot-hello-world-hello-world"><a class="header" href="#iot-hello-world-hello-world">Hello World</a></h1>
 
                     </main>
 
@@ -286,22 +343,6 @@
 
         </div>
 
-        <!-- Livereload script (if served using the cli tool) -->
-        <script>
-            const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
-            const wsAddress = wsProtocol + "//" + location.host + "/" + "__livereload";
-            const socket = new WebSocket(wsAddress);
-            socket.onmessage = function (event) {
-                if (event.data === "reload") {
-                    socket.close();
-                    location.reload();
-                }
-            };
-
-            window.onbeforeunload = function() {
-                socket.close();
-            }
-        </script>
 
 
 
