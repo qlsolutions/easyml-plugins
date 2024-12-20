@@ -14,8 +14,10 @@
 
 - [IoT Plugins](iot.md)
   - [SharedAccessSignature](iot/signature.md)
-  - [Hello World](iot/hello-world.md)
-
+  - [Add Series](iot/add-series.md)
+  - [Synced Series](iot/synced-series.md)
+  - [Add Data](iot/add-data.md)
+  
 -----------
 
 [Changelog]()

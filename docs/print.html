@@ -153,26 +153,48 @@
 
                 <div id="content" class="content">
                     <main>
-                        <div id="introduction"></div><h1 id="introduction-introduction"><a class="header" href="#introduction-introduction">Introduction</a></h1>
+                        <div id="introduction"></div><h1 id="introduction-introduction-to-easyml-plugins"><a class="header" href="#introduction-introduction-to-easyml-plugins">Introduction to EasyML Plugins</a></h1>
 <p><em>Get familiar with EasyML Plugins.</em></p>
-<h2 id="introduction-what-is-easyml-plugins"><a class="header" href="#introduction-what-is-easyml-plugins">What is EasyML Plugins</a></h2>
-<p>EasyMl-Plugins is an API that allows adding functionalities within <code>EasyML</code>.</p>
-<p>At the moment, plugins of the following types can be added:</p>
-<ul>
-<li><strong>Provider</strong>: will aim to return data within a certain period of time.</li>
-<li><strong>Hook</strong>: send the details regarding a found anomaly to an external system</li>
-</ul>
+<h2 id="introduction-what-is-easyml-plugins"><a class="header" href="#introduction-what-is-easyml-plugins">What Is EasyML Plugins?</a></h2>
+<p>EasyML Plugins is an API that allows you to extend the functionality of <code>EasyML</code>.</p>
+<p>Currently, plugins of the following types can be added:</p>
+<h3 id="introduction-native-plugins"><a class="header" href="#introduction-native-plugins">Native Plugins</a></h3>
+<p>Native plugins can be written in any language from the JVM ecosystem, such as <strong>Java</strong> or <strong>Kotlin</strong>. These plugins are placed in the <code>/easyml/plugins</code> directory and are loaded when EasyML starts.</p>
+<p>For more details, refer to the <a href="#native">Native Plugins Guide</a>.</p>
+<h3 id="introduction-iot-plugins"><a class="header" href="#introduction-iot-plugins">IoT Plugins</a></h3>
+<p>IoT plugins can be written in any language and interact with EasyML via <strong>HTTP calls</strong>.</p>
+<p>For more details, refer to the <a href="#iot">IoT Plugins Guide</a>.</p>
+<hr />
+<h2 id="introduction-key-difference-between-plugin-types"><a class="header" href="#introduction-key-difference-between-plugin-types">Key Difference Between Plugin Types</a></h2>
+<ol>
+<li><strong>Native Plugins</strong>: EasyML calls the implementation provided by the plugin.</li>
+<li><strong>IoT Plugins</strong>: Plugin authors interact with EasyML by making HTTP calls.</li>
+</ol>
+<hr />
+<p>Choose the plugin type that best suits your use case and start extending EasyML’s capabilities!</p>
 <div style="break-before: page; page-break-before: always;"></div><div id="native"></div><h1 id="native-native-plugins"><a class="header" href="#native-native-plugins">Native Plugins</a></h1>
+<p>Currently, you can develop two types of native plugins for EasyML:</p>
+<h2 id="native-1-provider-plugins"><a class="header" href="#native-1-provider-plugins">1. <strong>Provider Plugins</strong></a></h2>
+<p>Provider plugins are designed to <strong>return data within a specific period of time</strong>.</p>
+<p>Use this type of plugin when you need to fetch or manage data that EasyML processes.</p>
+<h2 id="native-2-hook-plugins"><a class="header" href="#native-2-hook-plugins">2. <strong>Hook Plugins</strong></a></h2>
+<p>Hook plugins are used to <strong>send details of detected anomalies to an external system</strong>.</p>
+<p>Choose this type of plugin to integrate EasyML’s anomaly detection with external monitoring, notification, or logging systems.</p>
+<hr />
+<p>Select the plugin type that fits your requirements and start building your native EasyML plugins!</p>
 <div style="break-before: page; page-break-before: always;"></div><div id="installation"></div><h1 id="installation-installation"><a class="header" href="#installation-installation">Installation</a></h1>
-<p>Learn how to install and integrate EasyML Plugins in your projects.</p>
-<div style="break-before: page; page-break-before: always;"></div><div id="installation-maven"></div><h1 id="installation-maven-maven"><a class="header" href="#installation-maven-maven">Maven</a></h1>
+<p>Learn how to install and integrate EasyML Plugins into your projects.</p>
+<div style="break-before: page; page-break-before: always;"></div><div id="installation-maven"></div><h1 id="installation-maven-maven-setup"><a class="header" href="#installation-maven-maven-setup">Maven Setup</a></h1>
+<p>Follow these steps to set up your environment for EasyML plugin development using Maven.</p>
 <h2 id="installation-maven-requirements"><a class="header" href="#installation-maven-requirements">Requirements</a></h2>
-<p>The prerequisites:</p>
+<p>Ensure you have the following prerequisites installed:</p>
 <ul>
-<li>Java 17</li>
+<li><strong>Java 17</strong></li>
 </ul>
+<hr />
 <h2 id="installation-maven-installation"><a class="header" href="#installation-maven-installation">Installation</a></h2>
-<p><strong>1.</strong> Add the JitPack repository to your build file.</p>
+<h3 id="installation-maven-step-1-add-the-jitpack-repository"><a class="header" href="#installation-maven-step-1-add-the-jitpack-repository">Step 1: Add the JitPack Repository</a></h3>
+<p>Include the JitPack repository in your Maven build file (<code>pom.xml</code>):</p>
 <pre><code class="language-xml">&lt;repositories&gt;
     &lt;repository&gt;
         &lt;id&gt;jitpack.io&lt;/id&gt;
@@ -180,8 +202,9 @@
     &lt;/repository&gt;
 &lt;/repositories&gt;
 </code></pre>
-<br />
-<p><strong>2.</strong> Add the dependency.</p>
+<hr />
+<h3 id="installation-maven-step-2-add-the-dependency"><a class="header" href="#installation-maven-step-2-add-the-dependency">Step 2: Add the Dependency</a></h3>
+<p>Add the EasyML Plugins API dependency to your <code>pom.xml</code> file:</p>
 <pre><code class="language-xml">&lt;dependency&gt;
   &lt;groupId&gt;com.github.qlsolutions.easyml-plugins&lt;/groupId&gt;
   &lt;artifactId&gt;api&lt;/artifactId&gt;
@@ -189,16 +212,21 @@
   &lt;scope&gt;provided&lt;/scope&gt;
 &lt;/dependency&gt;
 </code></pre>
-<br />
-<p><strong>3.</strong> Once you’re done, you may now proceed creating your <a href="#hello-world">first plugin</a>.</p>
-<div style="break-before: page; page-break-before: always;"></div><div id="installation-gradle"></div><h1 id="installation-gradle-gradle"><a class="header" href="#installation-gradle-gradle">Gradle</a></h1>
+<hr />
+<h3 id="installation-maven-step-3-start-developing-your-plugin"><a class="header" href="#installation-maven-step-3-start-developing-your-plugin">Step 3: Start Developing Your Plugin</a></h3>
+<p>Once the setup is complete, you can begin creating your <a href="#hello-world">first plugin</a>.</p>
+<p>Enjoy extending EasyML with custom functionality!</p>
+<div style="break-before: page; page-break-before: always;"></div><div id="installation-gradle"></div><h1 id="installation-gradle-gradle-setup"><a class="header" href="#installation-gradle-gradle-setup">Gradle Setup</a></h1>
+<p>Follow these steps to set up your environment for EasyML plugin development using Gradle.</p>
 <h2 id="installation-gradle-requirements"><a class="header" href="#installation-gradle-requirements">Requirements</a></h2>
-<p>The prerequisites:</p>
+<p>Ensure you have the following prerequisites installed:</p>
 <ul>
-<li>Java 17</li>
+<li><strong>Java 17</strong></li>
 </ul>
+<hr />
 <h2 id="installation-gradle-installation"><a class="header" href="#installation-gradle-installation">Installation</a></h2>
-<p><strong>1.</strong> Add the JitPack repository to your build file.</p>
+<h3 id="installation-gradle-step-1-add-the-jitpack-repository"><a class="header" href="#installation-gradle-step-1-add-the-jitpack-repository">Step 1: Add the JitPack Repository</a></h3>
+<p>Include the JitPack repository in your Gradle build file (<code>build.gradle</code>):</p>
 <pre><code class="language-groovy">dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
@@ -207,16 +235,19 @@
     }
 }
 </code></pre>
-<br />
-<p><strong>2.</strong> Add the dependency.</p>
+<hr />
+<h3 id="installation-gradle-step-2-add-the-dependency"><a class="header" href="#installation-gradle-step-2-add-the-dependency">Step 2: Add the Dependency</a></h3>
+<p>Add the EasyML Plugins API dependency to your <code>build.gradle</code> file:</p>
 <pre><code class="language-groovy">compileOnly("com.github.qlsolutions.easyml-plugins:api:0.10.1")
 </code></pre>
-<br />
-<p><strong>3.</strong> Once you’re done, you may now proceed creating your <a href="#hello-world">first plugin</a>.</p>
+<hr />
+<h3 id="installation-gradle-step-3-start-developing-your-plugin"><a class="header" href="#installation-gradle-step-3-start-developing-your-plugin">Step 3: Start Developing Your Plugin</a></h3>
+<p>Once the setup is complete, you can begin creating your <a href="#hello-world">first plugin</a>.</p>
+<p>Enjoy extending EasyML with custom functionality!</p>
 <div style="break-before: page; page-break-before: always;"></div><div id="hello-world"></div><h1 id="hello-world-hello-world"><a class="header" href="#hello-world-hello-world">Hello World</a></h1>
 <p><em>Your first plugin.</em></p>
-<h2 id="hello-world-start-programming"><a class="header" href="#hello-world-start-programming">Start programming</a></h2>
-<p><strong>1.</strong> Define your first Plugin class.</p>
+<h2 id="hello-world-step-1-define-your-first-plugin-class"><a class="header" href="#hello-world-step-1-define-your-first-plugin-class">Step 1: Define Your First Plugin Class</a></h2>
+<p>Begin by defining your first plugin class. Here’s an example implementation in Java:</p>
 <pre><code class="language-java">public class HelloWorldPlugin extends ProviderPlugin {
 
   public HelloWorldPlugin() {
@@ -259,11 +290,28 @@
   }
 }
 </code></pre>
-<br />
-<p><strong>2.</strong> Now you can do the build and the .jar file you can place it in <code>/easyml/plugins/providers</code>.</p>
-<p><strong>3.</strong> Congratulations! You have created your first plugin.</p>
+<h3 id="hello-world-key-methods-in-the-plugin-class"><a class="header" href="#hello-world-key-methods-in-the-plugin-class">Key Methods in the Plugin Class:</a></h3>
+<ol>
+<li><strong><code>onEnable()</code></strong>: Logs a message when the plugin is enabled.</li>
+<li><strong><code>onCreate(UUID id)</code></strong>: Reserved for initialization tasks when creating a DataProvider using this plugin.</li>
+<li><strong><code>getSeries(UUID id)</code></strong>: Returns a list of series available for the plugin (e.g., temperature).</li>
+<li><strong><code>getSerieData(UUID id, String serieId, Instant start, Instant end)</code></strong>: Provides data for a specific series within the given time range.</li>
+<li><strong><code>status(UUID id)</code></strong>: Returns the status of the plugin (always <code>true</code> in this example).</li>
+</ol>
+<hr />
+<h2 id="hello-world-step-2-build-the-plugin"><a class="header" href="#hello-world-step-2-build-the-plugin">Step 2: Build the Plugin</a></h2>
+<p>After defining your plugin class, build your project to generate the <code>.jar</code> file.</p>
+<p>Place the resulting <code>.jar</code> file in the following directory:<br />
+<code>/easyml/plugins/providers</code></p>
+<hr />
+<h2 id="hello-world-step-3-congratulations"><a class="header" href="#hello-world-step-3-congratulations">Step 3: Congratulations!</a></h2>
+<p>You’ve successfully created and deployed your first plugin. 🎉</p>
+<p>Your plugin is now ready to be used on EasyML!</p>
 <div style="break-before: page; page-break-before: always;"></div><div id="iot"></div><h1 id="iot-iot-plugins"><a class="header" href="#iot-iot-plugins">IoT Plugins</a></h1>
-<div style="break-before: page; page-break-before: always;"></div><div id="iot-signature"></div><h1 id="iot-signature-sharedaccesssignature-guide"><a class="header" href="#iot-signature-sharedaccesssignature-guide">SharedAccessSignature Guide</a></h1>
+<p>Currently, you can develop only one type of IoT plugin for EasyML: <strong>Provider Plugins</strong>.</p>
+<h2 id="iot-difference-between-iot-provider-plugins-and-native-dataprovider-plugins"><a class="header" href="#iot-difference-between-iot-provider-plugins-and-native-dataprovider-plugins">Difference Between IoT Provider Plugins and Native DataProvider Plugins</a></h2>
+<p>IoT Provider Plugins are logically similar to native DataProvider plugins, with the main difference being how EasyML receives the data.</p>
+<div style="break-before: page; page-break-before: always;"></div><div id="iot-signature"></div><h1 id="iot-signature-sharedaccesssignature"><a class="header" href="#iot-signature-sharedaccesssignature">SharedAccessSignature</a></h1>
 <h2 id="iot-signature-step-1-create-an-iot-dataprovider"><a class="header" href="#iot-signature-step-1-create-an-iot-dataprovider">Step 1: Create an IoT DataProvider</a></h2>
 <p>First, create a <strong>DataProvider</strong> of type IoT. Once this is done, you will need to generate a <em>SharedAccessSignature</em> to use the IoT API of the DataProviders. This signature will be passed in the <code>Authorization</code> header.</p>
 <hr />
@@ -324,7 +372,183 @@ func EncryptHMACSHA256(message, secretKey string) string {
 <hr />
 <h2 id="iot-signature-summary"><a class="header" href="#iot-signature-summary">Summary</a></h2>
 <p>With the final <em>SharedAccessSignature</em> string ready, you can now use it in the <code>Authorization</code> header to authenticate your requests to the IoT API of the DataProvider.</p>
-<div style="break-before: page; page-break-before: always;"></div><div id="iot-hello-world"></div><h1 id="iot-hello-world-hello-world"><a class="header" href="#iot-hello-world-hello-world">Hello World</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><div id="iot-add-series"></div><h1 id="iot-add-series-add-series"><a class="header" href="#iot-add-series-add-series">Add Series</a></h1>
+<h2 id="iot-add-series-step-1-generate-the-token-header"><a class="header" href="#iot-add-series-step-1-generate-the-token-header">Step 1: Generate the Token Header</a></h2>
+<p>Before proceeding, ensure you have generated the token header (<em>SharedAccessSignature</em>) to authenticate your request.</p>
+<hr />
+<h2 id="iot-add-series-step-2-api-endpoint"><a class="header" href="#iot-add-series-step-2-api-endpoint">Step 2: API Endpoint</a></h2>
+<p>To add series to a DataProvider, make a <code>POST</code> request to the following endpoint:</p>
+<pre><code class="language-http">{baseUrl}/api/v1/dataprovider/iotclient/series
+</code></pre>
+<p>Replace <code>{baseUrl}</code> with the base URL of your EasyML server address.</p>
+<hr />
+<h2 id="iot-add-series-step-3-request-body"><a class="header" href="#iot-add-series-step-3-request-body">Step 3: Request Body</a></h2>
+<p>The body of the <code>POST</code> request should include the series you want to add, structured as follows:</p>
+<pre><code class="language-json">{
+  "series": [
+    {
+       "id": "string",
+       "diplayName": "string",
+        "tags": [
+          "string"
+        ]
+    }
+  ]
+}
+</code></pre>
+<h3 id="iot-add-series-explanation-of-fields"><a class="header" href="#iot-add-series-explanation-of-fields">Explanation of Fields</a></h3>
+<ul>
+<li><strong><code>id</code></strong>: Unique identifier for the series.</li>
+<li><strong><code>displayName</code></strong>: Human-readable name for the series.</li>
+<li><strong><code>tags</code></strong>: Array of tags associated with the series.</li>
+</ul>
+<hr />
+<h2 id="iot-add-series-step-4-response-handling"><a class="header" href="#iot-add-series-step-4-response-handling">Step 4: Response Handling</a></h2>
+<h3 id="iot-add-series-success-response"><a class="header" href="#iot-add-series-success-response">Success Response</a></h3>
+<p>If the request is successful, the server will return an HTTP 200 response.</p>
+<h3 id="iot-add-series-error-response"><a class="header" href="#iot-add-series-error-response">Error Response</a></h3>
+<p>If there is an issue, you will receive a response detailing the cause of the failure. The response will look like this:</p>
+<pre><code class="language-json">{
+  "cause": "string",
+  "details": {},
+  "error": "string"
+}
+</code></pre>
+<h4 id="iot-add-series-error-fields"><a class="header" href="#iot-add-series-error-fields">Error Fields</a></h4>
+<ul>
+<li><strong><code>cause</code></strong>: Brief description of the issue.</li>
+<li><strong><code>details</code></strong>: Additional details about the error (may vary depending on the implementation).</li>
+<li><strong><code>error</code></strong>: Specific error message.</li>
+</ul>
+<hr />
+<h2 id="iot-add-series-summary"><a class="header" href="#iot-add-series-summary">Summary</a></h2>
+<ol>
+<li>Generate a valid token header.</li>
+<li>Make a <code>POST</code> request to <code>{baseUrl}/api/v1/dataprovider/iotclient/series</code>.</li>
+<li>Pass the series data in the request body.</li>
+<li>Handle the response based on whether it's a success (HTTP 200) or an error.</li>
+</ol>
+<p>This process allows you to add series to a DataProvider effectively.</p>
+<div style="break-before: page; page-break-before: always;"></div><div id="iot-synced-series"></div><h1 id="iot-synced-series-synced-series"><a class="header" href="#iot-synced-series-synced-series">Synced Series</a></h1>
+<h2 id="iot-synced-series-step-1-generate-the-token-header"><a class="header" href="#iot-synced-series-step-1-generate-the-token-header">Step 1: Generate the Token Header</a></h2>
+<p>Before proceeding, ensure you have generated the token header (<em>SharedAccessSignature</em>) to authenticate your request.</p>
+<hr />
+<h2 id="iot-synced-series-step-2-api-endpoint"><a class="header" href="#iot-synced-series-step-2-api-endpoint">Step 2: API Endpoint</a></h2>
+<p>To retrieve the synced series, make a <code>GET</code> request to the following endpoint:</p>
+<pre><code class="language-http">{baseUrl}/api/v1/dataprovider/iotclient/syncedseries
+</code></pre>
+<p>Replace <code>{baseUrl}</code> with the base URL of your EasyML server address.</p>
+<hr />
+<h2 id="iot-synced-series-step-3-understanding-the-response"><a class="header" href="#iot-synced-series-step-3-understanding-the-response">Step 3: Understanding the Response</a></h2>
+<h3 id="iot-synced-series-success-response"><a class="header" href="#iot-synced-series-success-response">Success Response</a></h3>
+<p>If the request is successful, the server will return an HTTP 200 response with the following structure:</p>
+<pre><code class="language-json">{
+  "series": [
+    {
+      "data": [
+        {
+          "start": "string",
+          "end": "string"
+        }
+      ],
+      "id": "string"
+    }
+  ]
+}
+</code></pre>
+<h4 id="iot-synced-series-explanation-of-fields"><a class="header" href="#iot-synced-series-explanation-of-fields">Explanation of Fields</a></h4>
+<ul>
+<li><strong><code>series</code></strong>: Array containing details of available series.</li>
+<li><strong><code>id</code></strong>: Unique identifier of the series.</li>
+<li><strong><code>start</code></strong> and <strong><code>end</code></strong>: Define the time range for the series in ISO 8601 format.</li>
+</ul>
+<blockquote>
+<p>Data outside this range will be <strong>excluded</strong>.</p>
+</blockquote>
+<hr />
+<h3 id="iot-synced-series-error-response"><a class="header" href="#iot-synced-series-error-response">Error Response</a></h3>
+<p>If there is an issue, you will receive a response detailing the cause of the failure. The response will look like this:</p>
+<pre><code class="language-json">{
+  "cause": "string",
+  "details": {},
+  "error": "string"
+}
+</code></pre>
+<h4 id="iot-synced-series-error-fields"><a class="header" href="#iot-synced-series-error-fields">Error Fields</a></h4>
+<ul>
+<li><strong><code>cause</code></strong>: Brief description of the issue.</li>
+<li><strong><code>details</code></strong>: Additional details about the error (may vary depending on the implementation).</li>
+<li><strong><code>error</code></strong>: Specific error message.</li>
+</ul>
+<hr />
+<h2 id="iot-synced-series-step-4-use-the-synced-series"><a class="header" href="#iot-synced-series-step-4-use-the-synced-series">Step 4: Use the Synced Series</a></h2>
+<p>Once the synced series are retrieved, you can use the <code>id</code>, <code>start</code>, and <code>end</code> fields to manage and send data for these series. Note that data outside the defined time range (<code>start</code> to <code>end</code>) will not be accepted.</p>
+<p>For adding data to a series, refer to the <a href="#iot-add-data">Add Data Guide</a>.</p>
+<hr />
+<h2 id="iot-synced-series-summary"><a class="header" href="#iot-synced-series-summary">Summary</a></h2>
+<ol>
+<li>Generate a valid token header.</li>
+<li>Make a <code>GET</code> request to <code>{baseUrl}/api/v1/dataprovider/iotclient/syncedseries</code>.</li>
+<li>Parse the response to retrieve the <code>id</code> and time range (<code>start</code>, <code>end</code>) for each series.</li>
+<li>Use the retrieved details to manage or add data to the series, ensuring data falls within the specified range.</li>
+</ol>
+<p>This process ensures efficient synchronization and data management for your series in the DataProvider.</p>
+<div style="break-before: page; page-break-before: always;"></div><div id="iot-add-data"></div><h1 id="iot-add-data-add-data"><a class="header" href="#iot-add-data-add-data">Add Data</a></h1>
+<h2 id="iot-add-data-step-1-generate-the-token-header"><a class="header" href="#iot-add-data-step-1-generate-the-token-header">Step 1: Generate the Token Header</a></h2>
+<p>Before proceeding, ensure you have generated the token header (<em>SharedAccessSignature</em>) to authenticate your request.</p>
+<hr />
+<h2 id="iot-add-data-step-2-api-endpoint"><a class="header" href="#iot-add-data-step-2-api-endpoint">Step 2: API Endpoint</a></h2>
+<p>To add data to a specific series in a DataProvider, make a <code>POST</code> request to the following endpoint:</p>
+<pre><code class="language-http">{baseUrl}/api/v1/dataprovider/iotclient/serie/{serieId}
+</code></pre>
+<p>Replace <code>{baseUrl}</code> with the base URL of your EasyML server address and <code>{serieId}</code> with the unique identifier of the serie to which the data will be added.</p>
+<hr />
+<h2 id="iot-add-data-step-3-request-body"><a class="header" href="#iot-add-data-step-3-request-body">Step 3: Request Body</a></h2>
+<p>The body of the <code>POST</code> request should include the data points you want to add, structured as follows:</p>
+<pre><code class="language-json">{
+  "data": [
+    {
+      "time": "string",
+      "value": 0
+    }
+  ]
+}
+</code></pre>
+<h3 id="iot-add-data-explanation-of-fields"><a class="header" href="#iot-add-data-explanation-of-fields">Explanation of Fields</a></h3>
+<ul>
+<li><strong><code>time</code></strong>: The timestamp of the data point, in ISO 8601 format.</li>
+<li><strong><code>value</code></strong>: The numeric value of the data point.</li>
+</ul>
+<blockquote>
+<p><strong>Note:</strong> The <code>time</code> field must strictly follow the ISO 8601 format.</p>
+</blockquote>
+<hr />
+<h2 id="iot-add-data-step-4-response-handling"><a class="header" href="#iot-add-data-step-4-response-handling">Step 4: Response Handling</a></h2>
+<h3 id="iot-add-data-success-response"><a class="header" href="#iot-add-data-success-response">Success Response</a></h3>
+<p>If the request is successful, the server will return an HTTP 200 response.</p>
+<h3 id="iot-add-data-error-response"><a class="header" href="#iot-add-data-error-response">Error Response</a></h3>
+<p>If there is an issue, you will receive a response detailing the cause of the failure. The response will look like this:</p>
+<pre><code class="language-json">{
+  "cause": "string",
+  "details": {},
+  "error": "string"
+}
+</code></pre>
+<h4 id="iot-add-data-error-fields"><a class="header" href="#iot-add-data-error-fields">Error Fields</a></h4>
+<ul>
+<li><strong><code>cause</code></strong>: Brief description of the issue.</li>
+<li><strong><code>details</code></strong>: Additional details about the error (may vary depending on the implementation).</li>
+<li><strong><code>error</code></strong>: Specific error message.</li>
+</ul>
+<hr />
+<h2 id="iot-add-data-summary"><a class="header" href="#iot-add-data-summary">Summary</a></h2>
+<ol>
+<li>Generate a valid token header.</li>
+<li>Make a <code>POST</code> request to <code>{baseUrl}/api/v1/dataprovider/iotclient/serie/{serieId}</code>.</li>
+<li>Pass the data points in the request body, ensuring <code>time</code> is in ISO 8601 format.</li>
+<li>Handle the response based on whether it's a success (HTTP 200) or an error.</li>
+</ol>
+<p>This process allows you to effectively add data to a specific series in your DataProvider.</p>
 
                     </main>
 

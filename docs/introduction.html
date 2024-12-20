@@ -152,15 +152,25 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="introduction"><a class="header" href="#introduction">Introduction</a></h1>
+                        <h1 id="introduction-to-easyml-plugins"><a class="header" href="#introduction-to-easyml-plugins">Introduction to EasyML Plugins</a></h1>
 <p><em>Get familiar with EasyML Plugins.</em></p>
-<h2 id="what-is-easyml-plugins"><a class="header" href="#what-is-easyml-plugins">What is EasyML Plugins</a></h2>
-<p>EasyMl-Plugins is an API that allows adding functionalities within <code>EasyML</code>.</p>
-<p>At the moment, plugins of the following types can be added:</p>
-<ul>
-<li><strong>Provider</strong>: will aim to return data within a certain period of time.</li>
-<li><strong>Hook</strong>: send the details regarding a found anomaly to an external system</li>
-</ul>
+<h2 id="what-is-easyml-plugins"><a class="header" href="#what-is-easyml-plugins">What Is EasyML Plugins?</a></h2>
+<p>EasyML Plugins is an API that allows you to extend the functionality of <code>EasyML</code>.</p>
+<p>Currently, plugins of the following types can be added:</p>
+<h3 id="native-plugins"><a class="header" href="#native-plugins">Native Plugins</a></h3>
+<p>Native plugins can be written in any language from the JVM ecosystem, such as <strong>Java</strong> or <strong>Kotlin</strong>. These plugins are placed in the <code>/easyml/plugins</code> directory and are loaded when EasyML starts.</p>
+<p>For more details, refer to the <a href="native.html">Native Plugins Guide</a>.</p>
+<h3 id="iot-plugins"><a class="header" href="#iot-plugins">IoT Plugins</a></h3>
+<p>IoT plugins can be written in any language and interact with EasyML via <strong>HTTP calls</strong>.</p>
+<p>For more details, refer to the <a href="iot.html">IoT Plugins Guide</a>.</p>
+<hr />
+<h2 id="key-difference-between-plugin-types"><a class="header" href="#key-difference-between-plugin-types">Key Difference Between Plugin Types</a></h2>
+<ol>
+<li><strong>Native Plugins</strong>: EasyML calls the implementation provided by the plugin.</li>
+<li><strong>IoT Plugins</strong>: Plugin authors interact with EasyML by making HTTP calls.</li>
+</ol>
+<hr />
+<p>Choose the plugin type that best suits your use case and start extending EasyML’s capabilities!</p>
 
                     </main>
 

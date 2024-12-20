@@ -2,11 +2,9 @@
 
 *Your first plugin.*
 
-## Start programming
+## Step 1: Define Your First Plugin Class
 
-
-
-**1.** Define your first Plugin class.
+Begin by defining your first plugin class. Here’s an example implementation in Java:
 
 ```java
 public class HelloWorldPlugin extends ProviderPlugin {
@@ -52,9 +50,26 @@ public class HelloWorldPlugin extends ProviderPlugin {
 }
 ```
 
-<br />
+### Key Methods in the Plugin Class:
+1. **`onEnable()`**: Logs a message when the plugin is enabled.
+2. **`onCreate(UUID id)`**: Reserved for initialization tasks when creating a DataProvider using this plugin.
+3. **`getSeries(UUID id)`**: Returns a list of series available for the plugin (e.g., temperature).
+4. **`getSerieData(UUID id, String serieId, Instant start, Instant end)`**: Provides data for a specific series within the given time range.
+5. **`status(UUID id)`**: Returns the status of the plugin (always `true` in this example).
 
+---
 
-**2.** Now you can do the build and the .jar file you can place it in `/easyml/plugins/providers`.
+## Step 2: Build the Plugin
 
-**3.** Congratulations! You have created your first plugin.
+After defining your plugin class, build your project to generate the `.jar` file.
+
+Place the resulting `.jar` file in the following directory:  
+`/easyml/plugins/providers`
+
+---
+
+## Step 3: Congratulations!
+
+You’ve successfully created and deployed your first plugin. 🎉
+
+Your plugin is now ready to be used on EasyML!

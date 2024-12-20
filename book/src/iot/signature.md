@@ -1,4 +1,4 @@
-# SharedAccessSignature Guide
+# SharedAccessSignature
 
 ## Step 1: Create an IoT DataProvider
 

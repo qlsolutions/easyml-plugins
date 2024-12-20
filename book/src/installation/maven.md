@@ -1,13 +1,19 @@
-# Maven
+# Maven Setup
+
+Follow these steps to set up your environment for EasyML plugin development using Maven.
 
 ## Requirements
 
-The prerequisites:
-- Java 17
+Ensure you have the following prerequisites installed:
+
+- **Java 17**
+
+---
 
 ## Installation
 
-**1.** Add the JitPack repository to your build file.
+### Step 1: Add the JitPack Repository
+Include the JitPack repository in your Maven build file (`pom.xml`):
 
 ```xml
 <repositories>
@@ -18,9 +24,10 @@ The prerequisites:
 </repositories>
 ```
 
-<br />
+---
 
-**2.** Add the dependency.
+### Step 2: Add the Dependency
+Add the EasyML Plugins API dependency to your `pom.xml` file:
 
 ```xml
 <dependency>
@@ -31,6 +38,9 @@ The prerequisites:
 </dependency>
 ```
 
-<br />
+---
 
-**3.** Once you’re done, you may now proceed creating your [first plugin](../hello-world.md).
+### Step 3: Start Developing Your Plugin
+Once the setup is complete, you can begin creating your [first plugin](../hello-world.md).
+
+Enjoy extending EasyML with custom functionality!
