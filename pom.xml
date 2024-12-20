@@ -14,14 +14,14 @@
     <module>template</module>
 
 
-    <module>official/providers/openmeteoPlugin</module>
-    <module>official/providers/niagaraPlugin</module>
-    <module>official/providers/SMAPlugin</module>
-    <module>official/providers/niagaraCloudPlugin</module>
+    <module>official-plugins/providers/openmeteoPlugin</module>
+    <module>official-plugins/providers/niagaraPlugin</module>
+    <module>official-plugins/providers/SMAPlugin</module>
+    <module>official-plugins/providers/niagaraCloudPlugin</module>
 
-    <module>official/hooks/emailPlugin</module>
-    <module>official/hooks/webserverPlugin</module>
-    <module>official/hooks/resendPlugin</module>
+    <module>official-plugins/hooks/emailPlugin</module>
+    <module>official-plugins/hooks/webserverPlugin</module>
+    <module>official-plugins/hooks/resendPlugin</module>
 
   </modules>
   <packaging>pom</packaging>

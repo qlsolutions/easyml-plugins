@@ -3,10 +3,24 @@
   <component name="Encoding">
     <file url="file://$PROJECT_DIR$/api/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/api/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/official-plugins/hooks/emailPlugin/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/official-plugins/hooks/emailPlugin/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/official-plugins/hooks/hookEmailPlugin/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/official-plugins/hooks/hookEmailPlugin/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/official-plugins/hooks/resendPlugin/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/official-plugins/hooks/resendPlugin/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/official-plugins/hooks/webserverPlugin/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/official-plugins/hooks/webserverPlugin/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/official-plugins/providers/SMAPlugin/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/official-plugins/providers/SMAPlugin/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/official-plugins/providers/niagaraCloudPlugin/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/official-plugins/providers/niagaraCloudPlugin/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/official-plugins/providers/niagaraPlugin/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/official-plugins/providers/niagaraPlugin/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/official-plugins/providers/openmeteoPlugin/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/official-plugins/providers/openmeteoPlugin/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/official/hooks/emailPlugin/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/official/hooks/emailPlugin/src/main/resources" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/official/hooks/hookEmailPlugin/src/main/java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/official/hooks/hookEmailPlugin/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/official/hooks/resendPlugin/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/official/hooks/resendPlugin/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/official/hooks/webserverPlugin/src/main/java" charset="UTF-8" />
