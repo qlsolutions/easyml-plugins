@@ -13,9 +13,9 @@ import org.jetbrains.annotations.NotNull;
  *
  * @author Denis Mehilli
  */
-public record Serie(@NotNull String id, @NotNull String diplayName, @NotNull List<String> tags) {
+public record Serie(@NotNull String id, @NotNull String displayName, @NotNull List<String> tags) {
 
-  public Serie(@NotNull String id, @NotNull String diplayName, String... tags) {
-    this(id, diplayName, Arrays.asList(tags));
+  public Serie(@NotNull String id, @NotNull String displayName, String... tags) {
+    this(id, displayName, Arrays.asList(tags));
   }
 }
