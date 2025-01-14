@@ -138,11 +138,15 @@ public class OpenMeteoPlugin extends ProviderPlugin {
 
       if (data != null) {
         for (int i = 0; i < data.size(); i++) {
+          Object dataObj = data.get(i);
+          if(dataObj == null) {
+            continue;
+          }
           double tmp;
           try {
-            tmp = (double) data.get(i);
+            tmp = (double) dataObj;
           } catch (ClassCastException e) {
-            tmp = (int) data.get(i);
+            tmp = (int) dataObj;
           }
           records.add(new TimedValue(time.get(i) + ":00Z", tmp));
         }
